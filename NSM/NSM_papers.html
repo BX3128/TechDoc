@@ -123,6 +123,55 @@
             --box-shadow: 0 0 15px rgba(99, 102, 241, 0.1);
         }
 
+        /* 經典護眼亮色 (Solarized Light) - 歷史悠久的程式碼配色，極致舒適 */
+        [data-theme="solarized-light"] {
+            --primary-color: #268bd2;
+            --bg-color: #fdf6e3;
+            --container-bg: #eee8d5;
+            --row-bg: #fdf6e3;
+            --summary-bg: #eee8d5;
+            --border: #d33682;
+            --text-main: #657b83;
+            --text-sub: #93a1a1;
+            --text-label: #cb4b16;
+            --label-bg: #eee8d5;
+            --th-bg: #073642;
+            --th-text: #fdf6e3;
+        }
+
+        /* 復古霓虹 (Synthwave) - 80年代賽博龐克風格，適合展示硬核技術 */
+        [data-theme="synthwave"] {
+            --primary-color: #ff7edb;
+            --bg-color: #241b2f;
+            --container-bg: #2d233f;
+            --row-bg: #2d233f;
+            --summary-bg: #241b2f;
+            --border: #72f1b8;
+            --text-main: #ffffff;
+            --text-sub: #fe4450;
+            --text-label: #36f9f6;
+            --label-bg: #241b2f;
+            --th-bg: #1a1423;
+            --th-text: #ffffff;
+            --box-shadow: 0 0 10px rgba(255, 126, 219, 0.3);
+        }
+
+        /* 硬核復古 (Gruvbox) - 追求「復古凹槽」感的專業工程師配色 */
+        [data-theme="gruvbox"] {
+            --primary-color: #fe8019;
+            --bg-color: #282828;
+            --container-bg: #3c3836;
+            --row-bg: #3c3836;
+            --summary-bg: #282828;
+            --border: #ebdbb2;
+            --text-main: #ebdbb2;
+            --text-sub: #a89984;
+            --text-label: #b8bb26;
+            --label-bg: #282828;
+            --th-bg: #1d2021;
+            --th-text: #ebdbb2;
+        }
+
         /* 2. 核心排版與樣式 */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", sans-serif;
@@ -385,6 +434,9 @@
                 <option value="dracula">極客深紫 (Dracula)</option>
                 <option value="forest">森林護眼 (Forest)</option>
                 <option value="midnight">午夜純黑 (Midnight)</option>
+                <option value="solarized-light">經典亮色 (Solarized)</option>
+                <option value="synthwave">復古霓虹 (Synthwave)</option>
+                <option value="gruvbox">硬核復古 (Gruvbox)</option>
             </select>
         </div>
 
