@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>">
     <title>NSM 學術文獻列表整理 (Powered by AI)</title>
     <style>
         /* 1. 佈景主題變數定義 (Theme Variables) */
@@ -54,6 +55,74 @@
             --box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.08);
         }
 
+        /* 北歐冰霜 (Nord) - 冷色調、低對比，適合長時間閱讀程式碼 */
+        [data-theme="nord"] {
+            --primary-color: #88c0d0;
+            --bg-color: #2e3440;
+            --container-bg: #3b4252;
+            --row-bg: #3b4252;
+            --summary-bg: #2e3440;
+            --border: #4c566a;
+            --text-main: #d8dee9;
+            --text-sub: #94a3b8;
+            --text-label: #88c0d0;
+            --label-bg: #434c5e;
+            --th-bg: #242933;
+            --th-text: #eceff4;
+            --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 極客深紫 (Dracula) - 經典高對比深色主題 */
+        [data-theme="dracula"] {
+            --primary-color: #bd93f9;
+            --bg-color: #282a36;
+            --container-bg: #44475a;
+            --row-bg: #44475a;
+            --summary-bg: #282a36;
+            --border: #6272a4;
+            --text-main: #f8f8f2;
+            --text-sub: #bd93f9;
+            --text-label: #ff79c6;
+            --label-bg: #282a36;
+            --th-bg: #21222c;
+            --th-text: #f8f8f2;
+            --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        /* 森林護眼 (Everforest) - 柔和綠色調，比 Sepia 更適合防藍光 */
+        [data-theme="forest"] {
+            --primary-color: #a7c080;
+            --bg-color: #2d353b;
+            --container-bg: #343f44;
+            --row-bg: #343f44;
+            --summary-bg: #2d353b;
+            --border: #475258;
+            --text-main: #d3c6aa;
+            --text-sub: #859289;
+            --text-label: #dbbc7f;
+            --label-bg: #3d484d;
+            --th-bg: #232a2e;
+            --th-text: #d3c6aa;
+            --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 午夜純黑 (Midnight) - 針對 OLED 螢幕優化，極致深邃 */
+        [data-theme="midnight"] {
+            --primary-color: #6366f1;
+            --bg-color: #000000;
+            --container-bg: #0a0a0a;
+            --row-bg: #0a0a0a;
+            --summary-bg: #000000;
+            --border: #1f1f1f;
+            --text-main: #ffffff;
+            --text-sub: #a1a1aa;
+            --text-label: #818cf8;
+            --label-bg: #111827;
+            --th-bg: #000000;
+            --th-text: #ffffff;
+            --box-shadow: 0 0 15px rgba(99, 102, 241, 0.1);
+        }
+
         /* 2. 核心排版與樣式 */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", sans-serif;
@@ -88,13 +157,41 @@
             margin-bottom: 30px;
             border: 1px solid var(--border);
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
             align-items: center;
             flex-wrap: wrap;
             gap: 15px;
         }
 
-        .controls-group { display: flex; align-items: center; gap: 15px; }
+        .controls-group { display: flex; align-items: center; gap: 5px; }
+
+        /* 清除設定按鈕樣式 */
+        #resetBtn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-sub);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.2s;
+        }
+
+        #resetBtn:not(:disabled):hover {
+            border-color: #ef4444; /* 刪除警告色 */
+            color: #ef4444;
+        }
+
+        #resetBtn:disabled {
+            opacity: 0.3;
+            cursor: default;
+            filter: grayscale(1);
+        }
+
+        .icon-reset { width: 1.2em; height: 1.2em; fill: currentColor; }
 
         .theme-section {
             background: var(--container-bg);
@@ -280,16 +377,29 @@
         <div class="controls-group">
             <label>佈景主題：</label>
             <select id="themeSelect">
-                <option value="auto">系統預設 (Auto)</option>
+                <option value="auto">依系統設置</option>
                 <option value="light">淺色 (Light)</option>
                 <option value="dark">深色 (Dark)</option>
                 <option value="sepia">護眼 (Sepia)</option>
+                <option value="nord">北歐冰霜 (Nord)</option>
+                <option value="dracula">極客深紫 (Dracula)</option>
+                <option value="forest">森林護眼 (Forest)</option>
+                <option value="midnight">午夜純黑 (Midnight)</option>
             </select>
         </div>
 
         <div class="controls-group">
             <input type="checkbox" id="masterToggle">
             <label for="masterToggle" style="cursor: pointer; font-weight: bold;">展開所有摘要</label>
+        </div>
+
+        <div class="controls-group">
+            <button id="resetBtn" title="恢復預設值並清理本地儲存">
+                <svg class="icon-reset" viewBox="0 0 24 24">
+                    <path d="M19 4h-3.5l-1-1h-5l-1 1H5v2h14V4zM6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9z"/>
+                </svg>
+                清除設定
+            </button>
         </div>
     </div>
 
@@ -744,6 +854,25 @@
         return saved;
     }
 
+    // 核心：檢查並更新按鈕狀態
+    function updateResetButtonState() {
+        const btn = document.getElementById('resetBtn');
+        // 如果 localStorage 裡沒東西，就禁用按鈕
+        btn.disabled = !localStorage.getItem(STORAGE_KEY);
+    }
+
+    // 修改點擊監聽器：取消 confirm 彈窗，直接執行
+    document.getElementById('resetBtn').addEventListener('click', () => {
+        localStorage.removeItem(STORAGE_KEY);
+        
+        // 執行重置流程
+        loadSettings();           // 恢復預設參數
+        applyTheme(document.getElementById('themeSelect').value); // 立即套用主題
+        render();                 // 重新渲染畫面
+        updateResetButtonState(); // 立即將按鈕變回 disabled
+    });
+    
+    // 修改原有的 saveSettings
     function saveSettings() {
         const settings = {
             sortMode: document.getElementById('sortMode').value,
@@ -751,6 +880,7 @@
             theme: document.getElementById('themeSelect').value
         };
         localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+        updateResetButtonState(); // 更新狀態
     }
 
     function applyTheme(themeValue) {
@@ -923,6 +1053,7 @@
 
     loadSettings();
     render();
+    updateResetButtonState();
 
 </script>
 </body>
