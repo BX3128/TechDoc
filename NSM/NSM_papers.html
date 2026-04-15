@@ -6,8 +6,6 @@
     <title>NSM 學術文獻列表整理 (Powered by AI)</title>
     <style>
         /* 1. 佈景主題變數定義 (Theme Variables) */
-        
-        /* 預設淺色主題 (Light) */
         :root {
             --primary-color: #1e40af;
             --bg-color: #f1f5f9;
@@ -24,7 +22,6 @@
             --box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.1);
         }
 
-        /* 深色主題 (Dark) */
         [data-theme="dark"] {
             --primary-color: #38bdf8;
             --bg-color: #0f172a;
@@ -41,7 +38,6 @@
             --box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.5);
         }
 
-        /* 護眼主題 (Sepia - 羊皮紙風格) */
         [data-theme="sepia"] {
             --primary-color: #8b5a2b;
             --bg-color: #f4ecd8;
@@ -69,7 +65,6 @@
             transition: background-color 0.3s, color 0.3s;
         }
 
-        /* 嚴格禁止斜體 */
         * { font-style: normal !important; }
 
         .container { max-width: 1400px; margin: 0 auto; }
@@ -99,13 +94,8 @@
             gap: 15px;
         }
 
-        .controls-group {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+        .controls-group { display: flex; align-items: center; gap: 15px; }
 
-        /* 主題獨立框框 */
         .theme-section {
             background: var(--container-bg);
             border-radius: 15px;
@@ -155,7 +145,18 @@
         .title-cell { display: flex; flex-direction: column; line-height: 1.2; }
         .title-zh { color: var(--text-sub); font-size: 0.9em; }
 
-        .link-icon { width: 1.8em; height: 1.8em; fill: var(--primary-color); vertical-align: middle; }
+        /* 圖示容器排版 */
+        .links-container {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 共用圖示大小控制 */
+        .link-icon { width: 1.8em; height: 1.8em; vertical-align: middle; transition: transform 0.1s; }
+        .link-icon:hover { transform: scale(1.1); }
+        .icon-scholar { fill: var(--primary-color); }
 
         .summary-row { background-color: var(--summary-bg) !important; }
         .summary-row.hidden { display: none !important; }
@@ -194,7 +195,6 @@
         /* 3. 響應式設計 (手機窄螢幕適應) */
         @media (max-width: 768px) {
             body { padding: 15px; }
-            
             header h1 { font-size: 20px !important; }
             
             .control-panel { flex-direction: column; align-items: stretch; gap: 15px; }
@@ -203,11 +203,9 @@
             
             .theme-section { padding: 15px; margin-bottom: 30px; }
             .theme-header { flex-direction: column; align-items: flex-start; font-size: 1.3em; gap: 5px; }
-            .meta-item { flex-direction: column; gap: 5px; margin-bottom: 10px; }
             
-            /* 表格轉為卡片式排版 */
             table, thead, tbody, th, td, tr { display: block; width: 100%; }
-            thead tr { position: absolute; top: -9999px; left: -9999px; } /* 隱藏表頭 */
+            thead tr { position: absolute; top: -9999px; left: -9999px; } 
             
             tr.main-row {
                 position: relative;
@@ -218,13 +216,12 @@
                 background: var(--row-bg);
                 box-sizing: border-box;
             }
-            
             td { padding: 0; border: none; text-align: left !important; }
             
-            /* SN 編號：變成卡片左上角獨立標籤 */
+            /* SN 編號 */
             tr.main-row td:nth-child(1) {
                 display: inline-block;
-                width: auto; /* 修正：解除繼承的 100% 寬度，避免產生遮蔽整行的深色底條 */
+                width: auto;
                 background: var(--th-bg);
                 color: var(--th-text) !important;
                 padding: 2px 8px;
@@ -233,33 +230,19 @@
                 margin-bottom: 10px;
             }
             
-            /* Link 圖示：固定在卡片右上角 */
+            /* Links 容器：固定在卡片右上角 */
             tr.main-row td:nth-child(2) {
                 position: absolute;
                 top: 15px;
                 right: 15px;
-                width: auto; /* 修正：縮小容器，避免干擾點擊 */
+                width: auto;
             }
             
-            /* Article Title：預留右側空間給 Link */
-            tr.main-row td:nth-child(3) {
-                padding-right: 35px; 
-                margin-bottom: 10px;
-            }
+            /* Article Title：預留更大空間給多個圖示 (100px) */
+            tr.main-row td:nth-child(3) { padding-right: 100px; margin-bottom: 10px; }
+            tr.main-row td:nth-child(4) { border-top: 1px dashed var(--border); padding-top: 10px; margin-bottom: 10px; }
+            tr.main-row td:nth-child(5) { text-align: right !important; }
             
-            /* Authors / Source：加入上方虛線分隔 */
-            tr.main-row td:nth-child(4) {
-                border-top: 1px dashed var(--border);
-                padding-top: 10px;
-                margin-bottom: 10px;
-            }
-            
-            /* 操作按鈕：靠右對齊 */
-            tr.main-row td:nth-child(5) {
-                text-align: right !important;
-            }
-            
-            /* 摘要列：無縫貼合主卡片下方 */
             tr.summary-row {
                 border: 1px solid var(--border);
                 border-top: none;
@@ -315,9 +298,24 @@
 
 <script>
     // ==========================================
-    // SVG 資源與資料注入區
+    // SVG 資源庫
     // ==========================================
-    const linkIconSvg = `<svg class="link-icon" viewBox="0 0 24 24"><path d="M10.59,13.41C11,13.8 11,14.44 10.59,14.83C10.2,15.22 9.56,15.22 9.17,14.83C7.22,12.88 7.22,9.71 9.17,7.76L12.71,4.22C14.66,2.27 17.83,2.27 19.78,4.22C21.73,6.17 21.73,9.34 19.78,11.29L18.29,12.78C18.3,12.28 18.22,11.78 18.06,11.28L19.07,10.27C20.25,9.1 20.25,7.21 19.07,6.04C17.9,4.87 16.01,4.87 14.84,6.04L11.29,9.59C10.12,10.76 10.12,12.65 11.29,13.82L10.59,13.41M13.41,10.59C13,10.2 13,9.56 13.41,9.17C13.8,8.78 14.44,8.78 14.83,9.17C16.78,11.12 16.78,14.29 14.83,16.24L11.29,19.78C9.34,21.73 6.17,21.73 4.22,19.78C2.27,17.83 2.27,14.66 4.22,12.71L5.71,11.22C5.7,11.72 5.78,12.22 5.94,12.72L4.93,13.73C3.75,14.9 3.75,16.79 4.93,17.96C6.1,19.13 7.99,19.13 9.16,17.96L12.71,14.41C13.88,13.24 13.88,11.35 12.71,10.18L13.41,10.59Z"></path></svg>`;
+    // 1. Scholar 搜尋圖示 (沿用原有的鏈結設計)
+    const scholarIconSvg = `<svg class="link-icon icon-scholar" viewBox="0 0 24 24"><path d="M10.59,13.41C11,13.8 11,14.44 10.59,14.83C10.2,15.22 9.56,15.22 9.17,14.83C7.22,12.88 7.22,9.71 9.17,7.76L12.71,4.22C14.66,2.27 17.83,2.27 19.78,4.22C21.73,6.17 21.73,9.34 19.78,11.29L18.29,12.78C18.3,12.28 18.22,11.78 18.06,11.28L19.07,10.27C20.25,9.1 20.25,7.21 19.07,6.04C17.9,4.87 16.01,4.87 14.84,6.04L11.29,9.59C10.12,10.76 10.12,12.65 11.29,13.82L10.59,13.41M13.41,10.59C13,10.2 13,9.56 13.41,9.17C13.8,8.78 14.44,8.78 14.83,9.17C16.78,11.12 16.78,14.29 14.83,16.24L11.29,19.78C9.34,21.73 6.17,21.73 4.22,19.78C2.27,17.83 2.27,14.66 4.22,12.71L5.71,11.22C5.7,11.72 5.78,12.22 5.94,12.72L4.93,13.73C3.75,14.9 3.75,16.79 4.93,17.96C6.1,19.13 7.99,19.13 9.16,17.96L12.71,14.41C13.88,13.24 13.88,11.35 12.71,10.18L13.41,10.59Z"></path></svg>`;
+
+    // 2. PDF 直連圖示 (紅底黑框)
+    const pdfIconSvg = `
+        <svg class="link-icon" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="4" width="28" height="24" rx="4" fill="#dc2626" stroke="#0f172a" stroke-width="2"/>
+            <text x="16" y="21" fill="white" font-family="-apple-system, sans-serif" font-size="11" font-weight="bold" text-anchor="middle" letter-spacing="0.5">PDF</text>
+        </svg>`;
+
+    // 3. HTML 直連圖示 (橘底黑框)
+    const htmlIconSvg = `
+        <svg class="link-icon" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="4" width="28" height="24" rx="4" fill="#ea580c" stroke="#0f172a" stroke-width="2"/>
+            <text x="16" y="21" fill="white" font-family="-apple-system, sans-serif" font-size="10" font-weight="bold" text-anchor="middle" letter-spacing="0.5">HTML</text>
+        </svg>`;
 
     // 第一部分資料：主題定義 (維持之前結構)
     const themeData = [
@@ -368,8 +366,9 @@
         {
             "sn": 1,
             "themeId": 1,
-            "link": "https://scholar.google.com/scholar?q=Password+Memorability+and+Security+Empirical+Results",
-            "title_en": "Password Memorability and Security Empirical Results",
+            "pdf": "https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=1341406",
+            "html": "https://ieeexplore.ieee.org/abstract/document/1341406",
+            "title_en": "Password Memorability and Security: Empirical Results",
             "title_zh": "密碼記憶性與安全性的實證研究結果",
             "authors": "A. Blackwell, R. Anderson, and A. Grant",
             "date": "2004",
@@ -379,7 +378,8 @@
         {
             "sn": 2,
             "themeId": 1,
-            "link": "https://scholar.google.com/scholar?q=Unconstrained+Biometric+Identification",
+            "pdf": "https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=5410709",
+            "html": "https://ieeexplore.ieee.org/abstract/document/5410709",
             "title_en": "Unconstrained Biometric Identification: Emerging Technologies",
             "title_zh": "非受限生物識別：新興技術",
             "authors": "K. Ricanek et al.",
@@ -390,9 +390,10 @@
         {
             "sn": 3,
             "themeId": 1,
-            "link": "https://scholar.google.com/scholar?q=Impact+of+Fingerprint+Image+Quality",
-            "title_en": "Impact of Digital Fingerprint Image Quality on Recognition Accuracy",
-            "title_zh": "數位指紋圖像品質對識別準確度的影響",
+            "pdf": "https://link.springer.com/content/pdf/10.1007/s11042-017-5537-5.pdf",
+            "html": "https://link.springer.com/article/10.1007/s11042-017-5537-5",
+            "title_en": "Impact of digital fingerprint image quality on the fingerprint recognition accuracy",
+            "title_zh": "數位指紋影像品質對指紋辨識準確度的影響",
             "authors": "M.A. Alsmirat et al.",
             "date": "2019",
             "journal": "Multimedia Tools",
@@ -401,17 +402,20 @@
         {
             "sn": 4,
             "themeId": 1,
-            "link": "https://scholar.google.com/scholar?q=Automated+Latent+Fingerprint+Recognition",
+            "pdf": "https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8322288",
+            "html": "https://ieeexplore.ieee.org/abstract/document/8322288",
             "title_en": "Automated Latent Fingerprint Recognition",
             "title_zh": "自動化潛伏指紋識別",
             "authors": "K. Cao & A.K. Jain",
             "date": "2019",
-            "journal": "IEEE TPAMI", "summary": "針對刑事鑑識 (Forensics) 應用，本研究解構了潛伏指紋 (Latent Fingerprint)（即犯罪現場殘缺且與背景噪聲混合的指紋）的识别挑戰。作者提出了一種自動化特徵提取演算法，能精確區分指紋特徵點與背景物理噪聲。研究突顯了在非理想資產下，特徵工程 (Feature Engineering) 如何透過底層算法對抗物理環境的雜訊，對 NSM 在極端高噪聲資產下的身份驗證具有重要啟發。"
+            "journal": "IEEE TPAMI",
+            "summary": "針對刑事鑑識 (Forensics) 應用，本研究解構了潛伏指紋 (Latent Fingerprint)（即犯罪現場殘缺且與背景噪聲混合的指紋）的识别挑戰。作者提出了一種自動化特徵提取演算法，能精確區分指紋特徵點與背景物理噪聲。研究突顯了在非理想資產下，特徵工程 (Feature Engineering) 如何透過底層算法對抗物理環境的雜訊，對 NSM 在極端高噪聲資產下的身份驗證具有重要啟發。"
         },
         {
             "sn": 5,
             "themeId": 1,
-            "link": "https://scholar.google.com/scholar?q=Iris+Recognition+The+Path+Forward",
+            "pdf": "https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=5410705",
+            "html": "https://ieeexplore.ieee.org/abstract/document/5410705",
             "title_en": "Iris Recognition: The Path Forward",
             "title_zh": "虹膜識別：前進之路",
             "authors": "A. Ross",
@@ -422,8 +426,9 @@
         {
             "sn": 6,
             "themeId": 1,
-            "link": "https://scholar.google.com/scholar?q=Robust+Iris+Segmentation+Improved+U-Net",
-            "title_en": "Robust Iris Segmentation with Improved U-Net",
+            "pdf": "https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8744291",
+            "html": "https://ieeexplore.ieee.org/abstract/document/8744291",
+            "title_en": "A Robust Iris Segmentation Scheme Based on Improved U-Net",
             "title_zh": "基於改進 U-Net 的強健虹膜分割",
             "authors": "W. Zhang et al.",
             "date": "2019",
@@ -433,8 +438,9 @@
         {
             "sn": 7,
             "themeId": 1,
-            "link": "https://scholar.google.com/scholar?q=Iris+Recognition+With+Off-the-Shelf+CNN",
-            "title_en": "Iris Recognition With Off-the-Shelf CNN Features",
+            "pdf": "https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8219390",
+            "html": "https://ieeexplore.ieee.org/abstract/document/8219390",
+            "title_en": "Iris Recognition With Off-the-Shelf CNN Features: A Deep Learning Perspective",
             "title_zh": "利用現成 CNN 特徵的虹膜識別",
             "authors": "K. Nguyen et al.",
             "date": "2018",
@@ -444,18 +450,21 @@
         {
             "sn": 8,
             "themeId": 1,
-            "link": "https://scholar.google.com/scholar?q=DeepFace+Closing+the+Gap",
-            "title_en": "DeepFace: Closing the Gap to Human-Level Performance",
-            "title_zh": "DeepFace：彌合人臉驗證與人類水準的差距",
+            "pdf": "https://openaccess.thecvf.com/content_cvpr_2014/papers/Taigman_DeepFace_Closing_the_2014_CVPR_paper.pdf",
+            "html": "https://openaccess.thecvf.com/content_cvpr_2014/html/Taigman_DeepFace_Closing_the_2014_CVPR_paper.html",
+            "title_en": "DeepFace: Closing the Gap to Human-Level Performance in Face Verification",
+            "title_zh": "DeepFace：縮小人類水平臉部驗證表現的差距",
             "authors": "Y. Taigman et al.",
-            "date": "2014", "journal": "CVPR",
+            "date": "2014",
+            "journal": "CVPR",
             "summary": "這篇基於巨量資料 (Big Data) 的里程碑論文，解構了如何克服人臉驗證中的類內差異 (Intra-class Variance)。核心技術在於三維對齊 (3D Alignment) 預處理，系統能生成一個 3D 形貌模型，將側臉像素拉平成正面正圓，消除姿態造成的物理差異。隨後透過巨量資料訓練的神經網絡進行分類。這展示了特徵工程與幾何幾何轉換在對抗物理資產差異時的突破性作用，是現代身份安全管理技術的理論支柱之一。"
         },
         {
             "sn": 9,
             "themeId": 1,
-            "link": "https://scholar.google.com/scholar?q=Virtual+U+Defeating+Face+Liveness",
-            "title_en": "Virtual U: Defeating Face Liveness Detection with Building Virtual Models",
+            "pdf": "https://www.usenix.org/system/files/conference/usenixsecurity16/sec16_paper_xu.pdf",
+            "html": "https://www.usenix.org/conference/usenixsecurity16/technical-sessions/presentation/xu",
+            "title_en": "Virtual U: Defeating Face Liveness Detection by Building Virtual Models from Your Public Photos",
             "title_zh": "Virtual U：利用構建虛擬模型破解人臉活體檢測",
             "authors": "Y. Xu et al.",
             "date": "2016", "journal": "USENIX Sec",
@@ -464,9 +473,10 @@
         {
             "sn": 10,
             "themeId": 1,
-            "link": "https://scholar.google.com/scholar?q=EchoPrint+Two-Factor+Authentication",
-            "title_en": "EchoPrint: Two-Factor Authentication using Acoustics and Vision",
-            "title_zh": "EchoPrint：利用聲學與視覺的雙因素驗證",
+            "pdf": "https://dl.acm.org/doi/pdf/10.1145/3241539.3241575",
+            "html": "https://dl.acm.org/doi/abs/10.1145/3241539.3241575",
+            "title_en": "EchoPrint: Two-Factor Authentication using Acoustics and Vision on Smartphones",
+            "title_zh": "EchoPrint：使用聲學和視覺在智慧型手機上的雙因素認證",
             "authors": "B. Zhou et al.",
             "date": "2018", "journal": "MobiCom",
             "summary": "本研究利用異構資產進行軟硬體協同設計。 EchoPrint 在智慧型手機端結合聲學與視覺感測器。它能利用智慧型手機揚聲器發送超音波，並通過麥克風捕捉人臉表面的聲學反射 (Echo Print)，同時利用相機拍攝眨眼。這種多模態融合 (Multimodal Fusion) 感測能有效區分 2D 照片欺騙、眨眼動畫與真實物理臉部表面物理形貌，顯著提升行動裝置 IAM 模組對抗重放攻擊 (Replay Attack) 的反欺騙效能。"
@@ -474,7 +484,8 @@
         {
             "sn": 11,
             "themeId": 2,
-            "link": "https://scholar.google.com/scholar?q=Dissecting+Android+Malware",
+            "pdf": "https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=6234407",
+            "html": "https://ieeexplore.ieee.org/abstract/document/6234407",
             "title_en": "Dissecting Android Malware: Characterization and Evolution",
             "title_zh": "Android 惡意軟體解剖：特徵與演進",
             "authors": "Y. Zhou & X. Jiang",
@@ -484,7 +495,8 @@
         {
             "sn": 12,
             "themeId": 2,
-            "link": "https://scholar.google.com/scholar?q=SMM+Rootkit+OS+Independent",
+            "pdf": "https://dl.acm.org/doi/pdf/10.1145/1460877.1460892",
+            "html": "https://dl.acm.org/doi/abs/10.1145/1460877.1460892",
             "title_en": "SMM Rootkit: A New Breed of OS Independent Malware",
             "title_zh": "SMM Rootkit：一種新型的作業系統無關惡意軟體",
             "authors": "S. Embleton et al.",
@@ -494,7 +506,8 @@
         {
             "sn": 13,
             "themeId": 2,
-            "link": "https://scholar.google.com/scholar?q=Defending+Against+Flooding+DDoS",
+            "pdf": "https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=295894",
+            "html": "https://ieeexplore.ieee.org/abstract/document/295894",
             "title_en": "Defending Against Flooding-Based DistributedDoS Attacks",
             "title_zh": "針對洪泛式 DDoS 攻擊的防禦策略",
             "authors": "R.K.C. Chang",
@@ -504,19 +517,22 @@
         {
             "sn": 14,
             "themeId": 2,
-            "link": "https://scholar.google.com/scholar?q=Amplification+and+DRDoS+Attack+Defense",
-            "title_en": "Amplification and DRDoS Attack Defense Survey",
-            "title_zh": "放大攻擊與反射式 DDoS 防禦綜述",
+            "pdf": "https://arxiv.org/pdf/1505.07892",
+            "html": "https://arxiv.org/abs/1505.07892",
+            "title_en": "Amplification and DRDoS Attack Defense -- A Survey and New Perspectives",
+            "title_zh": "放大攻擊與分散式反射拒絕服務攻擊防禦──一項調查與新視角",
             "authors": "F.J. Ryba et al.",
-            "date": "2015", "journal": "Technical Report",
+            "date": "2015", 
+            "journal": "ArXiv: 1505.07892",
             "summary": "本綜述專注於反射式阻斷服務攻擊 (DRDoS) 的 UDP 放大係數 (Amplification Factor) 計算邏輯與緩解策略。作者詳細統計了 DNS、NTP、SSDP 等無狀態 UDP 協議的放大比率。研究突顯了攻擊者如何利用這些協議的來源偽造漏洞，產生龐大的流量放大倍數。研究提供了對反射流量進行實體過濾與網路溯源的研究路徑分析，對 NSM 如何在 TB 數據流量環境中辨識反射流量與配置清洗引擎具備實務意義。"
         },
         {
             "sn": 15,
             "themeId": 3,
-            "link": "https://scholar.google.com/scholar?q=Trends+in+Firewall+Configuration+Errors",
-            "title_en": "Trends in Firewall Configuration Errors: suisse cheese",
-            "title_zh": "防火牆配置錯誤趨勢：瑞士乳酪模型",
+            "pdf": "https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=5440153",
+            "html": "https://ieeexplore.ieee.org/abstract/document/5440153",
+            "title_en": "Trends in Firewall Configuration Errors: Measuring the Holes in Swiss Cheese",
+            "title_zh": "防火牆配置錯誤的趨勢：測量瑞士起司上的漏洞",
             "authors": "A. Wool",
             "date": "2010", "journal": "IEEE IC",
             "summary": "此研究提供了對企業防火牆策略實體配置的一致性審計。作者量化統計了多個企業的防火牆規則，發現高複雜度的規則集必然導致嚴重的規則冗餘 (Redundancy) 與規則遮蔽 (Rule Shadowing)。數據顯示人為錯誤 (Human Error) 往往是網路存取控制矩陣 (Access Control Matrix) 失效的主因。研究突顯了防火牆衝突偵測演算法在維持管理策略一致性與合規性上的重要地位，對 NSM 管理平面 (Management Plane) 的效能優化極具參考價值。"
@@ -524,9 +540,10 @@
         {
             "sn": 16,
             "themeId": 3,
-            "link": "https://scholar.google.com/scholar?q=Firewall+fingerprinting",
-            "title_en": "Firewall Fingerprinting and Discovery",
-            "title_zh": "防火牆指紋識別與發現",
+            "pdf": "https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=6195544",
+            "html": "https://ieeexplore.ieee.org/abstract/document/6195544",
+            "title_en": "Firewall Fingerprinting",
+            "title_zh": "防火牆指紋識別",
             "authors": "A.R. Khakpour et al.",
             "date": "2012", "journal": "IEEE INFOCOM",
             "summary": "這是一篇關於如何探測防火牆過濾規則 (Filter Rules) 的指紋識別攻擊報告。作者展示了攻擊者如何利用防火牆對特定構造封包的物理回應差異（如處理延遲、TTL 變異），來推測其內部規則與網路拓撲防禦邊界。研究強調了防火牆設計端必須實作封包正規化 (Packet Normalization)，以消除系統特有的標頭處理特徵與延遲。這對 NSM 如何防止網路資產防禦策略被惡意映射具備實務意義。"
@@ -534,7 +551,8 @@
         {
             "sn": 17,
             "themeId": 3,
-            "link": "https://scholar.google.com/scholar?q=WAFFle+Fingerprinting+WAF",
+            "pdf": "https://www.usenix.org/system/files/conference/woot12/woot12-final2.pdf",
+            "html": "https://www.usenix.org/conference/woot12/workshop-program/presentation/schmitt",
             "title_en": "WAFFle: Fingerprinting Filter Rules of Web Application Firewalls",
             "title_zh": "WAFFle：Web 應用防火牆過濾規則指紋識別",
             "authors": "I. Schmitt et al.",
@@ -544,7 +562,8 @@
         {
             "sn": 18,
             "themeId": 3,
-            "link": "https://scholar.google.com/scholar?q=Efficient+Multimatch+Packet+Classification+TCAM",
+            "pdf": "https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=1411716",
+            "html": "https://ieeexplore.ieee.org/abstract/document/1411716",
             "title_en": "Efficient Multimatch Packet Classification and Lookup with TCAM",
             "title_zh": "基於 TCAM 的高效多匹配封包分類",
             "authors": "F. Yu et al.",
@@ -554,9 +573,10 @@
         {
             "sn": 19,
             "themeId": 3,
-            "link": "https://scholar.google.com/scholar?q=Performance+Improvement+of+2D+Packet+Classification",
-            "title_en": "Performance Improvement of Two-Dimensional Packet Classification",
-            "title_zh": "二維封包分類效能改進",
+            "pdf": "https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=4265611",
+            "html": "https://ieeexplore.ieee.org/abstract/document/4265611",
+            "title_en": "Performance Improvement of Two-Dimensional Packet Classification by Filter Rephrasing",
+            "title_zh": "透過過濾器重新表述提升二維封包分類的效能",
             "authors": "P.C. Wang et al.",
             "date": "2007", "journal": "IEEE/ACM ToN",
             "summary": "針對二維封包分類的效能瓶頸，作者提出了一種特徵改寫 (Filter Rephrasing) 與規則壓縮的技術核心。透過優化查找樹 (Search Tree) 深度與內容消耗，成功在 Tbps 級流量下解決了純軟體查找在記憶體頻寬 (Memory Bandwidth) 上的物理瓶頸。這對 NSM 在處理動態 Tbps 數據平面資產監控時的時間複雜度優化具有重要啟發。"
@@ -564,9 +584,10 @@
         {
             "sn": 20,
             "themeId": 3,
-            "link": "https://scholar.google.com/scholar?q=Fast+TCAM+Multi-match+Packet+Classification",
+            "pdf": "https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8386701",
+            "html": "https://ieeexplore.ieee.org/abstract/document/8386701",
             "title_en": "Fast TCAM-based Multi-match Packet Classification Using Discriminators",
-            "title_zh": "利用判別器的快速 TCAM 多匹配封包分類",
+            "title_zh": "基於快速 TCAM 的多匹配封包分類使用辨別器",
             "authors": "H.T. Lin et al.",
             "date": "2018", "journal": "IEEE TMSCS",
             "summary": "引入判別器 (Discriminator) 索引機制以優化 TCAM 空間利用。透過這種軟硬體協同優化思維，能突破 TCAM 的物理晶片面積與功耗限制，提升在長前綴匹配下的技術核心效能。這對 NSM 在 Tbps 級數據平面處理時解決硬體空間牆問題提供了可控常數級別查找複雜度的研究路徑分析。"
@@ -574,9 +595,10 @@
         {
             "sn": 21,
             "themeId": 3,
-            "link": "https://scholar.google.com/scholar?q=Hierarchical+Hash+Packet+Classification+SDN",
-            "title_en": "Hierarchical Hash based Multi-field Packet Classification for SDN Switches",
-            "title_zh": "基於層次哈希的 SDN 交換機多欄位封包分類",
+            "pdf": "https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=10878976",
+            "html": "https://ieeexplore.ieee.org/abstract/document/10878976",
+            "title_en": "Efficient Hierarchical Hash-Based Multi-Field Packet Classification With Fast Update for Software Switches",
+            "title_zh": "高效的分層哈希多字段封包分類及軟體交換機快速更新",
             "authors": "Y.K. Chang et al.",
             "date": "2025", "journal": "IEEE Access",
             "summary": "專為軟體定義網路 (SDN) 軟體交換機設計的層次哈希 (Hierarchical Hash) 演算法。在動態流表更新頻繁的 Tbps 環境下，傳統決策樹重構開銷過大。研究結論指出，層次雜湊碰撞 (Hash Collision) 處理機制能在純軟體查找 Tbps 下，保證常數級別查找複雜度 (Lookup Complexity)。這對網路安全管理中的動態 Tbps 數據平面資產監控之時間複雜度優化具有重要啟發。"
@@ -584,9 +606,10 @@
         {
             "sn": 22,
             "themeId": 3,
-            "link": "https://scholar.google.com/scholar?q=PartitionFilter+Adaptive+Packet+Classification",
-            "title_en": "PartitionFilter: An Adaptive Packet Classification Algorithm",
-            "title_zh": "PartitionFilter：一種自適應封包分類演算法",
+            "pdf": "https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=11050988",
+            "html": "https://ieeexplore.ieee.org/abstract/document/11050988",
+            "title_en": "PartitionFilter: A Fast Packet Classification Algorithm Based on Adaptive Partition and Filter",
+            "title_zh": "PartitionFilter：一種基於自適應分割和過濾的快速封包分類演算法",
             "authors": "Z. Li et al.",
             "date": "2026", "journal": "IEEE TNSE",
             "summary": "基於自適應分區 (Adaptive Partition) 實作快速封包分類。系統能根據 Tbps 環境下之流表動態特性，即時重構查找樹 (Search Tree)，確保 Tbps 級別流量監控下之效能穩定性。這對 NSM 在 Tbps 級數據平面處理時維持效能穩定與降低查找時間的拉鋸戰提供了技術核心解決方案。"
@@ -594,7 +617,8 @@
         {
             "sn": 23,
             "themeId": 3,
-            "link": "https://scholar.google.com/scholar?q=Detecting+and+Resolving+Packet+Filter+Conflicts",
+            "pdf": "https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=832496",
+            "html": "https://ieeexplore.ieee.org/abstract/document/832496",
             "title_en": "Detecting and Resolving Packet Filter Conflicts",
             "title_zh": "封包過濾器衝突偵測與解決",
             "authors": "A. Hari et al.",
@@ -604,7 +628,8 @@
         {
             "sn": 24,
             "themeId": 2,
-            "link": "https://scholar.google.com/scholar?q=Understanding+the+Mirai+Botnet",
+            "pdf": "https://www.usenix.org/system/files/conference/usenixsecurity17/sec17-antonakakis.pdf",
+            "html": "https://www.usenix.org/system/files/conference/usenixsecurity17/sec17-antonakakis.pdf",
             "title_en": "Understanding the Mirai Botnet",
             "title_zh": "理解 Mirai 殭屍網路",
             "authors": "C. Kolias et al.",
@@ -614,7 +639,8 @@
         {
             "sn": 25,
             "themeId": 3,
-            "link": "https://scholar.google.com/scholar?q=Fast+and+Complete+Conflict+Detection+Packet+Classifiers",
+            "pdf": "https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=6970771",
+            "html": "https://ieeexplore.ieee.org/document/6970771",
             "title_en": "Fast and Complete Conflict Detection for Packet Classifiers",
             "title_zh": "封包分類器的快速且完整衝突偵測",
             "authors": "C.Y. Lai & P.C. Wang",
@@ -624,17 +650,19 @@
         {
             "sn": 26,
             "themeId": 3,
-            "link": "https://scholar.google.com/scholar?q=Fast+Conflict+Detection+Multi-Dimensional+Packet+Filters",
+            "pdf": "https://www.mdpi.com/1999-4893/15/8/285/pdf?version=1661247704",
+            "html": "https://www.mdpi.com/1999-4893/15/8/285",
             "title_en": "Fast Conflict Detection for Multi-Dimensional Packet Filters",
             "title_zh": "多維度封包過濾器的快速衝突偵測",
-            "authors": "C.L. Lee et al.",
+            "authors": "李春良 et al.",
             "date": "2022", "journal": "Algorithms",
             "summary": "改良多維度過濾器的衝突偵測演算法，優化交集運算的時間複雜度 (Time Complexity)。這為 Tbps 數據平面處理提供了Tbps 級別流量監控下的技術核心效能提升 研究路徑分析。這對 NSM 如何在 TB 級網路資料中維持 Tbps 級別查找速率之一致性提供了核心意義研究基石。"
         },
         {
             "sn": 27,
             "themeId": 2,
-            "link": "https://scholar.google.com/scholar?q=Role+of+Intrusion+Detection+Systems",
+            "pdf": "https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=6156710",
+            "html": "https://ieeexplore.ieee.org/document/6156710",
             "title_en": "Defending Yourself: The Role of Intrusion Detection Systems",
             "title_zh": "自我防禦：入侵偵測系統的角色",
             "authors": "J. McHugh et al.",
@@ -644,7 +672,8 @@
         {
             "sn": 28,
             "themeId": 4,
-            "link": "https://scholar.google.com/scholar?q=Hierarchical+Multi-Pattern+Matching+Algorithm",
+            "pdf": "https://www.sciencedirect.com/science/article/pii/S0020025508000893/pdfft?md5=5d5d5d307cd23af91408fc5d9e50266e&pid=1-s2.0-S0020025508000893-main.pdf",
+            "html": "https://www.sciencedirect.com/science/article/pii/S0020025508000893",
             "title_en": "Hierarchical Multi-Pattern Matching Algorithm for Network Content Inspection",
             "title_zh": "網路內容檢查的分層多模式匹配演算法",
             "authors": "T.F. Sheu et al.",
@@ -654,7 +683,8 @@
         {
             "sn": 29,
             "themeId": 4,
-            "link": "https://scholar.google.com/scholar?q=MIDeA+Multi-Parallel+Intrusion+Detection",
+            "pdf": "https://dl.acm.org/doi/pdf/10.1145/2046707.2046741",
+            "html": "https://dl.acm.org/doi/10.1145/2046707.2046741",
             "title_en": "MIDeA: A Multi-Parallel Intrusion Detection Architecture",
             "title_zh": "MIDeA：一種多並行入侵偵測架構",
             "authors": "G. Vasiliadis et al.",
@@ -664,9 +694,10 @@
         {
             "sn": 30,
             "themeId": 4,
-            "link": "https://scholar.google.com/scholar?q=Robust+Scalable+String+Pattern+Matching+DPI",
-            "title_en": "Robust and Scalable String Pattern Matching for Deep Packet Inspection",
-            "title_zh": "強健且具可擴展性的深層封包檢測字串模式匹配",
+            "pdf": "https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=6247434",
+            "html": "https://ieeexplore.ieee.org/document/6247434",
+            "title_en": "Robust and Scalable String Pattern Matching for Deep Packet Inspection on Multicore Processors",
+            "title_zh": "用於多核處理器深度封包檢測的強健且可擴展的字串模式匹配",
             "authors": "Y.H. Yang & V.K. Prasanna",
             "date": "2013", "journal": "IEEE TPDS",
             "summary": "探討多核心架構下的高效字串匹配，重點在於正規表達式匹配的時間複雜度優化 (Target 達到 TBps)。結論指出，利用軟硬體協同設計優化硬體利用率極大化，能突破狀態爆炸問題在處理Tbps流量時的時間複雜度與頻寬牆限制。對處理 Tbps 查找速率提供技術基石研究路徑分析。"
@@ -674,20 +705,22 @@
         {
             "sn": 31,
             "themeId": 4,
-            "link": "https://scholar.google.com/scholar?q=Hybrid+CPU/GPU+Pattern+Matching+Algorithm",
+            "pdf": "https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0139301&type=printable",
+            "html": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0139301",
             "title_en": "A Hybrid CPU/GPU Pattern-Matching Algorithm for Deep Packet Inspection",
-            "title_zh": "一種用於深層封包檢測的 CPU/GPU 混合模式匹配演算法",
-            "authors": "C.L. Lee et al.",
+            "title_zh": "一種用於深度封包檢測的混合 CPU/GPU 模式匹配演算法",
+            "authors": "李春良 et al.",
             "date": "2015", "journal": "PLoS One",
             "summary": "採用異構運算架構中的 PCIe 匯流排傳輸延遲掩蓋技術核心。利用 CPU 處理控制流、GPU 海量執行緒處理 TBps 並行比對負載，有效優化 throughput 與延遲牆物理限制。這為Tbps查找速率與資料傳輸延遲掩蓋提供技術基石與研究路徑分析，在現代利用異構運算處理 Tbps 下具有重要技術深度切入。"
         },
         {
             "sn": 32,
             "themeId": 4,
-            "link": "https://scholar.google.com/scholar?q=Length-bounded+Hybrid+Matching+Algorithm",
-            "title_en": "Length-bounded Hybrid CPU/GPU Pattern Matching Algorithm",
-            "title_zh": "長度受限的 CPU/GPU 混合模式匹配演算法",
-            "authors": "Y.S. Lin et al.",
+            "pdf": "https://www.mdpi.com/1999-4893/10/1/16/pdf?version=1484739329",
+            "html": "https://www.mdpi.com/1999-4893/10/1/16",
+            "title_en": "Length-bounded Hybrid CPU/GPU Pattern Matching Algorithm for Deep Packet Inspection",
+            "title_zh": "用於深度封包檢測的長度有界混合 CPU/GPU 模式匹配演算法",
+            "authors": "Y.S. Lin, 李春良 et al.",
             "date": "2017", "journal": "Algorithms",
             "summary": "優化平行運算資源硬體利用率極大化。透過避免異構架構中之 GPU 執行緒發散 (Thread Divergence) 與延遲牆物理限制，實現極速 Tbps 深層封包檢測。這為處理 Tbps 查找速率提供技術基石，並針對 GPU 架構之硬體特性提供Tbps 級流量監控下之效能分析研究路徑。"
         }
@@ -720,28 +753,21 @@
         localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
     }
 
-    // ==========================================
-    // 佈景主題套用邏輯 (支援 Auto)
-    // ==========================================
     function applyTheme(themeValue) {
         let activeTheme = themeValue;
         if (themeValue === 'auto') {
-            // 偵測作業系統目前是否為深色模式
             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             activeTheme = prefersDark ? 'dark' : 'light';
         }
         document.documentElement.setAttribute('data-theme', activeTheme);
     }
 
-    // 監聽系統主題切換事件
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-        if (document.getElementById('themeSelect').value === 'auto') {
-            applyTheme('auto');
-        }
+        if (document.getElementById('themeSelect').value === 'auto') applyTheme('auto');
     });
 
     // ==========================================
-    // 渲染引擎
+    // 渲染引擎與動態連結邏輯
     // ==========================================
     function render() {
         const container = document.getElementById("mainContent");
@@ -800,7 +826,7 @@
             <thead>
                 <tr>
                     <th style="width: 2ch; white-space: nowrap; text-align: center">SN</th>
-                    <th style="width: 2ch; white-space: nowrap; text-align: center">Link</th>
+                    <th style="width: 7ch; white-space: nowrap; text-align: center">Links</th>
                     <th>Article Title</th>
                     <th style="width: 15%; font-size: 0.9em;">Authors / Source</th>
                     <th style="width: 5ch; white-space: nowrap; text-align: center">操作</th>
@@ -814,15 +840,39 @@
             const mainRow = document.createElement("tr");
             mainRow.className = "main-row";
             
+            // 1. 動態生成 Scholar 精確搜尋網址 (%22 title %22)
+            const exactSearchQuery = encodeURIComponent('"' + p.title_en + '"');
+            const scholarUrl = `https://scholar.google.com/scholar?q=${exactSearchQuery}`;
+            
+            // 2. 條件渲染 HTML 字串建構
+            let dynamicLinksHtml = `
+                <a href="${scholarUrl}" target="_blank" title="Google Scholar" style="text-decoration:none;">
+                    ${scholarIconSvg}
+                </a>`;
+                
+            if (p.pdf && p.pdf.trim() !== "") {
+                dynamicLinksHtml += `
+                    <a href="${p.pdf}" target="_blank" title="閱讀 PDF" style="text-decoration:none;">
+                        ${pdfIconSvg}
+                    </a>`;
+            }
+            
+            if (p.html && p.html.trim() !== "") {
+                dynamicLinksHtml += `
+                    <a href="${p.html}" target="_blank" title="閱讀網頁版 HTML" style="text-decoration:none;">
+                        ${htmlIconSvg}
+                    </a>`;
+            }
+
             const formattedLinkCell = `
-                <td style="text-align: center; vertical-align: middle;">
-                    <a href="${p.link}" target="_blank" style="text-decoration:none; display: flex; justify-content: center; align-items: center;" title="Google Scholar">
-                        ${linkIconSvg}
-                    </a>
+                <td style="vertical-align: middle;">
+                    <div class="links-container">
+                        ${dynamicLinksHtml}
+                    </div>
                 </td>`;
 
             mainRow.innerHTML = `
-                <td style="text-align: center; font-family: monospace; color: var(--text-sub);">${p.sn}</td>
+                <td style="text-align: center; font-family: monospace; color: var(--text-sub); font-size: 1.5em">${p.sn}</td>
                 ${formattedLinkCell}
                 <td style="font-weight:600;">
                     <div class="title-cell">
@@ -854,9 +904,7 @@
         return table;
     }
 
-    // ==========================================
     // 綁定事件監聽與初始化
-    // ==========================================
     document.getElementById("sortMode").addEventListener("change", () => { saveSettings(); render(); });
     document.getElementById("masterToggle").addEventListener("change", () => { saveSettings(); render(); });
     
@@ -873,7 +921,6 @@
         }
     });
 
-    // 啟動程序
     loadSettings();
     render();
 
