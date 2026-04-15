@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NSM 學術文獻列表整理 (Powered by AI)</title>
+    <style>
+        /* 1. 佈景主題變數定義 (Theme Variables) */
+        
+        /* 預設淺色主題 (Light) */
+        :root {
+            --primary-color: #1e40af;
+            --bg-color: #f1f5f9;
+            --container-bg: #ffffff;
+            --row-bg: #ffffff;
+            --summary-bg: #f8fafc;
+            --border: #cbd5e1;
+            --text-main: #0f172a;
+            --text-sub: #64748b;
+            --text-label: #0369a1;
+            --label-bg: #e0f2fe;
+            --th-bg: #334155;
+            --th-text: #ffffff;
+            --box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 深色主題 (Dark) */
+        [data-theme="dark"] {
+            --primary-color: #38bdf8;
+            --bg-color: #0f172a;
+            --container-bg: #1e293b;
+            --row-bg: #1e293b;
+            --summary-bg: #0f172a;
+            --border: #334155;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --text-label: #bae6fd;
+            --label-bg: #0369a1;
+            --th-bg: #020617;
+            --th-text: #e2e8f0;
+            --box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.5);
+        }
+
+        /* 護眼主題 (Sepia - 羊皮紙風格) */
+        [data-theme="sepia"] {
+            --primary-color: #8b5a2b;
+            --bg-color: #f4ecd8;
+            --container-bg: #fdf6e3;
+            --row-bg: #fdf6e3;
+            --summary-bg: #eee8d5;
+            --border: #d0c5b4;
+            --text-main: #4c3b2b;
+            --text-sub: #7a6a58;
+            --text-label: #a0522d;
+            --label-bg: #eaddc5;
+            --th-bg: #5c4b3a;
+            --th-text: #fdf6e3;
+            --box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.08);
+        }
+
+        /* 2. 核心排版與樣式 */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 30px;
+            margin: 0;
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* 嚴格禁止斜體 */
+        * { font-style: normal !important; }
+
+        .container { max-width: 1400px; margin: 0 auto; }
+
+        header {
+            background: var(--container-bg);
+            padding: 20px 30px;
+            border-radius: 12px;
+            border-bottom: 4px solid var(--primary-color);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .control-panel {
+            background: var(--container-bg);
+            padding: 15px 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .controls-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* 主題獨立框框 */
+        .theme-section {
+            background: var(--container-bg);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 50px;
+            border: 1px solid var(--border);
+            box-shadow: var(--box-shadow);
+        }
+
+        .theme-header {
+            color: var(--primary-color);
+            font-size: 1.6em;
+            margin: 0 0 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .theme-meta-container {
+            background: var(--summary-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .meta-item { display: flex; align-items: flex-start; gap: 10px; }
+        .meta-label {
+            background: var(--label-bg);
+            color: var(--text-label);
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 4px;
+            white-space: nowrap;
+            font-size: 0.9em;
+        }
+
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        table.sn-view-table { table-layout: fixed; }
+
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        th { background: var(--th-bg); color: var(--th-text); position: sticky; top: 0; z-index: 5; }
+
+        .title-cell { display: flex; flex-direction: column; line-height: 1.2; }
+        .title-zh { color: var(--text-sub); font-size: 0.9em; }
+
+        .link-icon { width: 1.8em; height: 1.8em; fill: var(--primary-color); vertical-align: middle; }
+
+        .summary-row { background-color: var(--summary-bg) !important; }
+        .summary-row.hidden { display: none; }
+        
+        .summary-content {
+            border-left: 5px solid var(--primary-color);
+            padding: 10px 20px;
+            margin: 5px 0;
+            color: var(--text-main);
+            background: var(--container-bg);
+        }
+
+        .toggle-btn {
+            cursor: pointer;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            padding: 4px 12px;
+            border-radius: 5px;
+            font-weight: bold;
+            display: inline-block;
+            white-space: nowrap;
+        }
+
+        .toggle-btn:hover { background: var(--primary-color); color: var(--container-bg); }
+
+        select, input[type="checkbox"] { 
+            padding: 8px 15px; 
+            border-radius: 6px; 
+            border: 1px solid var(--border); 
+            background: var(--container-bg);
+            color: var(--text-main);
+            font-weight: bold; 
+            cursor: pointer; 
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1 style="margin: 0; font-size: 24px;">NSM 學術文獻列表整理 (Powered by AI)</h1>
+    </header>
+    
+    <div class="control-panel">
+        <div class="controls-group">
+            <label>排列依據：</label>
+            <select id="sortMode">
+                <option value="theme">主題 (Topic)</option>
+                <option value="sn">編號 (SN)</option>
+            </select>
+        </div>
+        
+        <div class="controls-group">
+            <label>佈景主題：</label>
+            <select id="themeSelect">
+                <option value="auto">系統預設 (Auto)</option>
+                <option value="light">淺色 (Light)</option>
+                <option value="dark">深色 (Dark)</option>
+                <option value="sepia">護眼 (Sepia)</option>
+            </select>
+        </div>
+
+        <div class="controls-group">
+            <input type="checkbox" id="masterToggle">
+            <label for="masterToggle" style="cursor: pointer; font-weight: bold;">展開所有摘要</label>
+        </div>
+    </div>
+
+    <div id="mainContent"></div>
+</div>
+
+<script>
+    // ==========================================
+    // SVG 資源與資料注入區
+    // ==========================================
+    const linkIconSvg = `<svg class="link-icon" viewBox="0 0 24 24"><path d="M10.59,13.41C11,13.8 11,14.44 10.59,14.83C10.2,15.22 9.56,15.22 9.17,14.83C7.22,12.88 7.22,9.71 9.17,7.76L12.71,4.22C14.66,2.27 17.83,2.27 19.78,4.22C21.73,6.17 21.73,9.34 19.78,11.29L18.29,12.78C18.3,12.28 18.22,11.78 18.06,11.28L19.07,10.27C20.25,9.1 20.25,7.21 19.07,6.04C17.9,4.87 16.01,4.87 14.84,6.04L11.29,9.59C10.12,10.76 10.12,12.65 11.29,13.82L10.59,13.41M13.41,10.59C13,10.2 13,9.56 13.41,9.17C13.8,8.78 14.44,8.78 14.83,9.17C16.78,11.12 16.78,14.29 14.83,16.24L11.29,19.78C9.34,21.73 6.17,21.73 4.22,19.78C2.27,17.83 2.27,14.66 4.22,12.71L5.71,11.22C5.7,11.72 5.78,12.22 5.94,12.72L4.93,13.73C3.75,14.9 3.75,16.79 4.93,17.96C6.1,19.13 7.99,19.13 9.16,17.96L12.71,14.41C13.88,13.24 13.88,11.35 12.71,10.18L13.41,10.59Z"></path></svg>`;
+
+    // 第一部分資料：主題定義 (維持之前結構)
+    const themeData = [
+        {
+            "id": 1,
+            "name": "身份認證與生物識別安全 (IAM & Biometrics)",
+            "description": "研究網路存取控制之物理與邏輯邊界，重點在於驗證實體身份之強健性。",
+            "attributes": [
+                { "label": "NSM 關聯", "content": "身份確認為所有網路安全管理之邏輯起點，防止冒用身分繞過存取控制矩陣 (Access Control Matrix)。" },
+                { "label": "技術核心", "content": "探討活體檢測 (Liveness Detection) 與多模態融合 (Multimodal Fusion)，解決遠端存取之端點信任極限。" },
+                { "label": "研究標的", "content": "感測器物理噪聲對細節點 (Minutiae) 提取之干擾，以及 3D 虛擬模型對視覺驗證系統之欺騙路徑。" }
+            ]
+        },
+        {
+            "id": 2,
+            "name": "系統安全、惡意軟體分析與 DDoS 防禦 (Systems & Infrastructure)",
+            "description": "研究底層架構漏洞、攻擊行為演進以及對大規模基礎設施威脅之緩解策略。",
+            "attributes": [
+                { "label": "NSM 關聯", "content": "解析攻擊向量 (Attack Vectors) 以建立精準之入侵偵測規則與網路層級之應急回應機制。" },
+                { "label": "技術深度", "content": "分析反射式 DDoS 之 UDP 放大係數計算邏輯，以及 SMM Rootkit 之韌體層記憶體覆寫機制。" },
+                { "label": "研究標的", "content": "惡意軟體權限提權 (Privilege Escalation) 之靜態特徵，與作業系統無關之韌體隱蔽路徑。" }
+            ]
+        },
+        {
+            "id": 3,
+            "name": "高效能封包過濾與規則衝突管理 (Packet Classification & Policy)",
+            "description": "專注於安全策略執行引擎，探討多維度過濾規則之演算法優化與管理平面之一致性。",
+            "attributes": [
+                { "label": "NSM 關聯", "content": "確保在線速 (Wire-speed) 狀態下正確執行安全策略，解決規則衝突導致之防禦破口。" },
+                { "label": "技術深度", "content": "突破 TCAM 硬體空間限制，將多維度查找之時間複雜度優化至常數級別。" },
+                { "label": "研究標的", "content": "規則遮蔽 (Rule Shadowing) 之多維邏輯交集運算，與動態流表更新時之記憶體分配開銷。" }
+            ]
+        },
+        {
+            "id": 4,
+            "name": "深層內容檢查與異構運算加速 (IDS & Hardware Acceleration)",
+            "description": "利用異構硬體加速入侵偵測系統 (IDS)，處理大規模網路環境下之負載檢索。",
+            "attributes": [
+                { "label": "NSM 關聯", "content": "提升資料平面之可見性 (Visibility)，執行深層封包檢測 (DPI) 以辨識隱藏在應用層之威脅。" },
+                { "label": "技術深度", "content": "解決確定性有限狀態自動機 (DFA) 之狀態爆炸問題與 SRAM 記憶體頻寬之物理瓶頸。" },
+                { "label": "研究標的", "content": "異構運算架構中之 PCIe 延遲掩蓋，與 GPU 執行緒發散 (Thread Divergence) 對加速比之干擾。" }
+            ]
+        }
+    ];
+
+    // 第二部分資料：Papers 知識庫 (含更新後的中英雙語標題與詳細內容摘要)
+    const papersData = [
+        {
+            "sn": 1,
+            "themeId": 1,
+            "link": "https://scholar.google.com/scholar?q=Password+Memorability+and+Security+Empirical+Results",
+            "title_en": "Password Memorability and Security Empirical Results",
+            "title_zh": "密碼記憶性與安全性的實證研究結果",
+            "authors": "A. Blackwell, R. Anderson, and A. Grant",
+            "date": "2004",
+            "journal": "IEEE S&P",
+            "summary": "此研究從心理學與資訊熵的視角，分析了密碼複雜度策略的失效。實證數據指出，當系統強制要求高複雜度（如大小寫、數字、特殊符號組合）時，使用者為降低記憶負擔，會傾向採用可預測的變異模式。這導致密碼看似複雜，實則大幅削減了整體的資訊熵 (Information Entropy)，使其極易受到字典攻擊或規則攻擊。研究結論強調，身份認證安全管理必須在安全性 (Security) 與易用性 (Usability) 之間取得實證平衡，而非單純增加技術限制。"
+        },
+        {
+            "sn": 2,
+            "themeId": 1,
+            "link": "https://scholar.google.com/scholar?q=Unconstrained+Biometric+Identification",
+            "title_en": "Unconstrained Biometric Identification: Emerging Technologies",
+            "title_zh": "非受限生物識別：新興技術",
+            "authors": "K. Ricanek et al.",
+            "date": "2010",
+            "journal": "Computer",
+            "summary": "本文定義了生物識別從理想、受控環境（如受控光線與姿勢的證件照）轉向非受限環境 (Unconstrained Environment)（如戶外網路攝影機、移動裝置感測器）所面臨的物理極限挑戰。作者詳細拆解了環境光線變異、姿勢改變與感測器噪聲如何嚴重干擾特徵提取算法。研究提出，為提升系統的強健性 (Robustness)，必須結合光照補償算法、三維形貌估計與實體審計模型，這對 NSM 建立遠端端點信任鏈提供了關鍵的技術邊界分析。"
+        },
+        {
+            "sn": 3,
+            "themeId": 1,
+            "link": "https://scholar.google.com/scholar?q=Impact+of+Fingerprint+Image+Quality",
+            "title_en": "Impact of Digital Fingerprint Image Quality on Recognition Accuracy",
+            "title_zh": "數位指紋圖像品質對識別準確度的影響",
+            "authors": "M.A. Alsmirat et al.",
+            "date": "2019",
+            "journal": "Multimedia Tools",
+            "summary": "這篇論文提供了針對感測器噪聲物理性質的實體審計。作者量化了感測器噪聲、皮膚濕度與物理噪聲對指紋細節點 (Minutiae) 提取的干擾程度。研究結論指出，低品質的圖像會導致算法生成大量偽細節點，嚴重降低自動指紋識別系統 (AFIS) 的準確度與吞吐量 (Throughput)。研究提出了一種基於物理特徵的品質控管 (Quality Control) 模型，能預先過濾低劣樣本，這對網路安全管理中大型 IAM 系統的效能優化極具參考價值。"
+        },
+        {
+            "sn": 4,
+            "themeId": 1,
+            "link": "https://scholar.google.com/scholar?q=Automated+Latent+Fingerprint+Recognition",
+            "title_en": "Automated Latent Fingerprint Recognition",
+            "title_zh": "自動化潛伏指紋識別",
+            "authors": "K. Cao & A.K. Jain",
+            "date": "2019",
+            "journal": "IEEE TPAMI", "summary": "針對刑事鑑識 (Forensics) 應用，本研究解構了潛伏指紋 (Latent Fingerprint)（即犯罪現場殘缺且與背景噪聲混合的指紋）的识别挑戰。作者提出了一種自動化特徵提取演算法，能精確區分指紋特徵點與背景物理噪聲。研究突顯了在非理想資產下，特徵工程 (Feature Engineering) 如何透過底層算法對抗物理環境的雜訊，對 NSM 在極端高噪聲資產下的身份驗證具有重要啟發。"
+        },
+        {
+            "sn": 5,
+            "themeId": 1,
+            "link": "https://scholar.google.com/scholar?q=Iris+Recognition+The+Path+Forward",
+            "title_en": "Iris Recognition: The Path Forward",
+            "title_zh": "虹膜識別：前進之路",
+            "authors": "A. Ross",
+            "date": "2010",
+            "journal": "Computer",
+            "summary": "本文分析了虹膜識別 (Iris Recognition) 的技術與物理極限。作者詳細說明了瞳孔縮放引起的虹膜組織形變是算法邊界定位的核心難題。研究結論指出，要突破此瓶頸，必須改良紅外線光譜 (Infrared Spectrum) 感測技術，以提升組織形變時的特徵穩定性。這篇綜述為網路安全管理 IAM 模組提供了針對虹膜驗證實體防偽能力的底層技術極限分析。"
+        },
+        {
+            "sn": 6,
+            "themeId": 1,
+            "link": "https://scholar.google.com/scholar?q=Robust+Iris+Segmentation+Improved+U-Net",
+            "title_en": "Robust Iris Segmentation with Improved U-Net",
+            "title_zh": "基於改進 U-Net 的強健虹膜分割",
+            "authors": "W. Zhang et al.",
+            "date": "2019",
+            "journal": "IEEE Access",
+            "summary": "此研究從神經網路架構理論切入，提出利用深度學習中的改進 U-Net 模型進行語意分割 (Semantic Segmentation)。相較於傳統基於霍夫變換 (Hough Transform) 的邊緣偵測，神經網絡在處理眼睫毛遮擋、眼瞼下垂與嚴重非受限物理環境下的遮擋問題時，展現出壓倒性的像素級準確度。這展示了從傳統信號處理轉向深度學習在處理非受限物理噪聲時的技術優勢，對高安全性 IAM 模組具備實務意義。"
+        },
+        {
+            "sn": 7,
+            "themeId": 1,
+            "link": "https://scholar.google.com/scholar?q=Iris+Recognition+With+Off-the-Shelf+CNN",
+            "title_en": "Iris Recognition With Off-the-Shelf CNN Features",
+            "title_zh": "利用現成 CNN 特徵的虹膜識別",
+            "authors": "K. Nguyen et al.",
+            "date": "2018",
+            "journal": "IEEE Access",
+            "summary": "本研究提供了一個針對遷移學習 (Transfer Learning) 在身份認證資產不足時的技術驗證。作者探討了使用大型數據集訓練的現成卷積神經網路 (CNN)（如 VGG-Face）提取的特徵，在處理虹膜驗證時的有效性。研究證明，即使缺乏特定領域的大型數據，遷移學習也能提供極佳的特徵泛化能力 (Generalization Ability)。這為 NSM 在特定高安全模態數據獲取困難時，提供了一種高效能的技術路徑。"
+        },
+        {
+            "sn": 8,
+            "themeId": 1,
+            "link": "https://scholar.google.com/scholar?q=DeepFace+Closing+the+Gap",
+            "title_en": "DeepFace: Closing the Gap to Human-Level Performance",
+            "title_zh": "DeepFace：彌合人臉驗證與人類水準的差距",
+            "authors": "Y. Taigman et al.",
+            "date": "2014", "journal": "CVPR",
+            "summary": "這篇基於巨量資料 (Big Data) 的里程碑論文，解構了如何克服人臉驗證中的類內差異 (Intra-class Variance)。核心技術在於三維對齊 (3D Alignment) 預處理，系統能生成一個 3D 形貌模型，將側臉像素拉平成正面正圓，消除姿態造成的物理差異。隨後透過巨量資料訓練的神經網絡進行分類。這展示了特徵工程與幾何幾何轉換在對抗物理資產差異時的突破性作用，是現代身份安全管理技術的理論支柱之一。"
+        },
+        {
+            "sn": 9,
+            "themeId": 1,
+            "link": "https://scholar.google.com/scholar?q=Virtual+U+Defeating+Face+Liveness",
+            "title_en": "Virtual U: Defeating Face Liveness Detection with Building Virtual Models",
+            "title_zh": "Virtual U：利用構建虛擬模型破解人臉活體檢測",
+            "authors": "Y. Xu et al.",
+            "date": "2016", "journal": "USENIX Sec",
+            "summary": "這是一篇關於活體檢測 (Liveness Detection) 物理性漏洞的實體審計報告。作者展示了攻擊者如何從 Facebook 等公開平台下載受害者的公開平面照片，構建包含眨眼動畫的 3D 虛擬模型。系統能模擬真實人類臉部物理特性與眨眼邏輯，成功繞過早期的純視覺活體檢測。這揭示了純視覺 IAM 系統在物理反欺騙 (Anti-spoofing) 能力上的脆弱性，促使 NSM 身份防禦體系從視覺驗證轉向深度感測 (Depth Sensing) 的實體審計。"
+        },
+        {
+            "sn": 10,
+            "themeId": 1,
+            "link": "https://scholar.google.com/scholar?q=EchoPrint+Two-Factor+Authentication",
+            "title_en": "EchoPrint: Two-Factor Authentication using Acoustics and Vision",
+            "title_zh": "EchoPrint：利用聲學與視覺的雙因素驗證",
+            "authors": "B. Zhou et al.",
+            "date": "2018", "journal": "MobiCom",
+            "summary": "本研究利用異構資產進行軟硬體協同設計。 EchoPrint 在智慧型手機端結合聲學與視覺感測器。它能利用智慧型手機揚聲器發送超音波，並通過麥克風捕捉人臉表面的聲學反射 (Echo Print)，同時利用相機拍攝眨眼。這種多模態融合 (Multimodal Fusion) 感測能有效區分 2D 照片欺騙、眨眼動畫與真實物理臉部表面物理形貌，顯著提升行動裝置 IAM 模組對抗重放攻擊 (Replay Attack) 的反欺騙效能。"
+        },
+        {
+            "sn": 11,
+            "themeId": 2,
+            "link": "https://scholar.google.com/scholar?q=Dissecting+Android+Malware",
+            "title_en": "Dissecting Android Malware: Characterization and Evolution",
+            "title_zh": "Android 惡意軟體解剖：特徵與演進",
+            "authors": "Y. Zhou & X. Jiang",
+            "date": "2012", "journal": "IEEE S&P",
+            "summary": "這篇論文是對 Android 早期惡意軟體攻擊向量 (Attack Vectors) 的系統性解剖。作者統計了超過一千個惡意樣本，指出攻擊主要集中於權限提權 (Privilege Escalation) 以建構殭屍網路。研究表明，在特徵明確且變異較少的環境下，靜態分析 (Static Analysis) 的特徵工程模型能極高效地偵測惡意軟體的權限濫用路徑。這對 NSM 在建立端點設備資產的合規性監控與入侵偵測規則具備指標意義。"
+        },
+        {
+            "sn": 12,
+            "themeId": 2,
+            "link": "https://scholar.google.com/scholar?q=SMM+Rootkit+OS+Independent",
+            "title_en": "SMM Rootkit: A New Breed of OS Independent Malware",
+            "title_zh": "SMM Rootkit：一種新型的作業系統無關惡意軟體",
+            "authors": "S. Embleton et al.",
+            "date": "2010", "journal": "SCN",
+            "summary": "此研究提供了對底層韌體漏洞 (Firmware-level) 的深入審計。它開發了一個利用 Intel x86 處理器系統管理模式 (System Management Mode, SMM) 漏洞的隱形根部套件 (Rootkit)。由於 SMM 是無狀態且作業系統無法存取的記憶體區域，這種惡意軟體具備完全隱蔽性與作業系統無關的物理特性。研究突顯了從標準實體審查與攔截模式無法偵測到此類資產覆寫路徑，為 NSM 安全管理政策如何從應用層下沉到硬體層與韌體層提供了核心技術分析。"
+        },
+        {
+            "sn": 13,
+            "themeId": 2,
+            "link": "https://scholar.google.com/scholar?q=Defending+Against+Flooding+DDoS",
+            "title_en": "Defending Against Flooding-Based DistributedDoS Attacks",
+            "title_zh": "針對洪泛式 DDoS 攻擊的防禦策略",
+            "authors": "R.K.C. Chang",
+            "date": "2002", "journal": "IEEE Comm",
+            "summary": "這是關於緩解洪泛式 DDoS (Distributed Denial-of-Service) 的教學式綜述。作者分析了 SYN Flood、UDP Flood 等基礎攻擊。結論指出，在 TB 級別的無狀態物理頻寬耗盡攻擊面前，傳統計算密集型 IDS 會崩潰。防禦方案必須在數據平面 (Data Plane) 配置無狀態的流量過濾 (Traffic Filtering) 與速率限制 (Rate Limiting)，從而將頻寬耗盡攻擊阻斷在網路邊界。這為 NSM 在設計 TB 級數據中心邊界防禦架構時，提供了核心的技術路徑分析。"
+        },
+        {
+            "sn": 14,
+            "themeId": 2,
+            "link": "https://scholar.google.com/scholar?q=Amplification+and+DRDoS+Attack+Defense",
+            "title_en": "Amplification and DRDoS Attack Defense Survey",
+            "title_zh": "放大攻擊與反射式 DDoS 防禦綜述",
+            "authors": "F.J. Ryba et al.",
+            "date": "2015", "journal": "Technical Report",
+            "summary": "本綜述專注於反射式阻斷服務攻擊 (DRDoS) 的 UDP 放大係數 (Amplification Factor) 計算邏輯與緩解策略。作者詳細統計了 DNS、NTP、SSDP 等無狀態 UDP 協議的放大比率。研究突顯了攻擊者如何利用這些協議的來源偽造漏洞，產生龐大的流量放大倍數。研究提供了對反射流量進行實體過濾與網路溯源的研究路徑分析，對 NSM 如何在 TB 數據流量環境中辨識反射流量與配置清洗引擎具備實務意義。"
+        },
+        {
+            "sn": 15,
+            "themeId": 3,
+            "link": "https://scholar.google.com/scholar?q=Trends+in+Firewall+Configuration+Errors",
+            "title_en": "Trends in Firewall Configuration Errors: suisse cheese",
+            "title_zh": "防火牆配置錯誤趨勢：瑞士乳酪模型",
+            "authors": "A. Wool",
+            "date": "2010", "journal": "IEEE IC",
+            "summary": "此研究提供了對企業防火牆策略實體配置的一致性審計。作者量化統計了多個企業的防火牆規則，發現高複雜度的規則集必然導致嚴重的規則冗餘 (Redundancy) 與規則遮蔽 (Rule Shadowing)。數據顯示人為錯誤 (Human Error) 往往是網路存取控制矩陣 (Access Control Matrix) 失效的主因。研究突顯了防火牆衝突偵測演算法在維持管理策略一致性與合規性上的重要地位，對 NSM 管理平面 (Management Plane) 的效能優化極具參考價值。"
+        },
+        {
+            "sn": 16,
+            "themeId": 3,
+            "link": "https://scholar.google.com/scholar?q=Firewall+fingerprinting",
+            "title_en": "Firewall Fingerprinting and Discovery",
+            "title_zh": "防火牆指紋識別與發現",
+            "authors": "A.R. Khakpour et al.",
+            "date": "2012", "journal": "IEEE INFOCOM",
+            "summary": "這是一篇關於如何探測防火牆過濾規則 (Filter Rules) 的指紋識別攻擊報告。作者展示了攻擊者如何利用防火牆對特定構造封包的物理回應差異（如處理延遲、TTL 變異），來推測其內部規則與網路拓撲防禦邊界。研究強調了防火牆設計端必須實作封包正規化 (Packet Normalization)，以消除系統特有的標頭處理特徵與延遲。這對 NSM 如何防止網路資產防禦策略被惡意映射具備實務意義。"
+        },
+        {
+            "sn": 17,
+            "themeId": 3,
+            "link": "https://scholar.google.com/scholar?q=WAFFle+Fingerprinting+WAF",
+            "title_en": "WAFFle: Fingerprinting Filter Rules of Web Application Firewalls",
+            "title_zh": "WAFFle：Web 應用防火牆過濾規則指紋識別",
+            "authors": "I. Schmitt et al.",
+            "date": "2012", "journal": "USENIX WOOT",
+            "summary": "針對 Web 應用防火牆 (WAF) 規則的探測攻擊。作者提出了一種能從 Web 回應中提取 WAF 指紋特徵的技術核心。結論指出，防禦端必須在數據平面配置對負載 (Payload) 內容的正規化 (Normalization)，以消除特有的標頭與時間延遲特徵，從而防止 WAF 安全策略被攻擊者精確探測與繞過。對網路安全管理中的 Web 應用資產保護提供了技術核心切入點。"
+        },
+        {
+            "sn": 18,
+            "themeId": 3,
+            "link": "https://scholar.google.com/scholar?q=Efficient+Multimatch+Packet+Classification+TCAM",
+            "title_en": "Efficient Multimatch Packet Classification and Lookup with TCAM",
+            "title_zh": "基於 TCAM 的高效多匹配封包分類",
+            "authors": "F. Yu et al.",
+            "date": "2005", "journal": "IEEE Micro",
+            "summary": "這篇基於 TCAM (三態內容定址記憶體) 的硬體加速 (Hardware Acceleration) 封包分類指標論文，解構了如何在單個時鐘週期內進行多維度過濾規則比對。作者指出了 TCAM 面臨的高耗電量、晶片面積牆 (Power Wall) 與低空間擴展性 (Scalability) 的物理極限。研究結論指出，單純依賴 TCAM 硬體已卡在頻寬極限，必須結合創新的索引機制優化 TCAM 空間。這對 NSM 在 Tbps 級別流量監控下解決記憶體空間爆炸與查找時間的拉鋸戰，極具參考價值。"
+        },
+        {
+            "sn": 19,
+            "themeId": 3,
+            "link": "https://scholar.google.com/scholar?q=Performance+Improvement+of+2D+Packet+Classification",
+            "title_en": "Performance Improvement of Two-Dimensional Packet Classification",
+            "title_zh": "二維封包分類效能改進",
+            "authors": "P.C. Wang et al.",
+            "date": "2007", "journal": "IEEE/ACM ToN",
+            "summary": "針對二維封包分類的效能瓶頸，作者提出了一種特徵改寫 (Filter Rephrasing) 與規則壓縮的技術核心。透過優化查找樹 (Search Tree) 深度與內容消耗，成功在 Tbps 級流量下解決了純軟體查找在記憶體頻寬 (Memory Bandwidth) 上的物理瓶頸。這對 NSM 在處理動態 Tbps 數據平面資產監控時的時間複雜度優化具有重要啟發。"
+        },
+        {
+            "sn": 20,
+            "themeId": 3,
+            "link": "https://scholar.google.com/scholar?q=Fast+TCAM+Multi-match+Packet+Classification",
+            "title_en": "Fast TCAM-based Multi-match Packet Classification Using Discriminators",
+            "title_zh": "利用判別器的快速 TCAM 多匹配封包分類",
+            "authors": "H.T. Lin et al.",
+            "date": "2018", "journal": "IEEE TMSCS",
+            "summary": "引入判別器 (Discriminator) 索引機制以優化 TCAM 空間利用。透過這種軟硬體協同優化思維，能突破 TCAM 的物理晶片面積與功耗限制，提升在長前綴匹配下的技術核心效能。這對 NSM 在 Tbps 級數據平面處理時解決硬體空間牆問題提供了可控常數級別查找複雜度的研究路徑分析。"
+        },
+        {
+            "sn": 21,
+            "themeId": 3,
+            "link": "https://scholar.google.com/scholar?q=Hierarchical+Hash+Packet+Classification+SDN",
+            "title_en": "Hierarchical Hash based Multi-field Packet Classification for SDN Switches",
+            "title_zh": "基於層次哈希的 SDN 交換機多欄位封包分類",
+            "authors": "Y.K. Chang et al.",
+            "date": "2025", "journal": "IEEE Access",
+            "summary": "專為軟體定義網路 (SDN) 軟體交換機設計的層次哈希 (Hierarchical Hash) 演算法。在動態流表更新頻繁的 Tbps 環境下，傳統決策樹重構開銷過大。研究結論指出，層次雜湊碰撞 (Hash Collision) 處理機制能在純軟體查找 Tbps 下，保證常數級別查找複雜度 (Lookup Complexity)。這對網路安全管理中的動態 Tbps 數據平面資產監控之時間複雜度優化具有重要啟發。"
+        },
+        {
+            "sn": 22,
+            "themeId": 3,
+            "link": "https://scholar.google.com/scholar?q=PartitionFilter+Adaptive+Packet+Classification",
+            "title_en": "PartitionFilter: An Adaptive Packet Classification Algorithm",
+            "title_zh": "PartitionFilter：一種自適應封包分類演算法",
+            "authors": "Z. Li et al.",
+            "date": "2026", "journal": "IEEE TNSE",
+            "summary": "基於自適應分區 (Adaptive Partition) 實作快速封包分類。系統能根據 Tbps 環境下之流表動態特性，即時重構查找樹 (Search Tree)，確保 Tbps 級別流量監控下之效能穩定性。這對 NSM 在 Tbps 級數據平面處理時維持效能穩定與降低查找時間的拉鋸戰提供了技術核心解決方案。"
+        },
+        {
+            "sn": 23,
+            "themeId": 3,
+            "link": "https://scholar.google.com/scholar?q=Detecting+and+Resolving+Packet+Filter+Conflicts",
+            "title_en": "Detecting and Resolving Packet Filter Conflicts",
+            "title_zh": "封包過濾器衝突偵測與解決",
+            "authors": "A. Hari et al.",
+            "date": "2010", "journal": "IEEE INFOCOM",
+            "summary": "分析防火牆過濾策略執行引擎，重點在於多維度規則遮蔽 (Rule Shadowing) 的邏輯交集運算。未被偵測到的衝突可能導致安全漏洞或合規性失效。這對 NSM 在 Tbps 級數據平面資產合規性審查與管理策略之一致性具有核心意義。"
+        },
+        {
+            "sn": 24,
+            "themeId": 2,
+            "link": "https://scholar.google.com/scholar?q=Understanding+the+Mirai+Botnet",
+            "title_en": "Understanding the Mirai Botnet",
+            "title_zh": "理解 Mirai 殭屍網路",
+            "authors": "C. Kolias et al.",
+            "date": "2017", "journal": "IEEE Computer",
+            "summary": "解構 Mirai 殭屍網路對物聯網設備資產的感染Vector。重點分析其命令與控制伺服器 (C&C Server) 的分散式架構威脅，以及攻擊如何利用預設硬編碼憑證進行提權。研究強調了針對行動終端合規性資產進行物理代碼分析特徵提取之重要性。這為 NSM 在Tbps 數據平面建立精準偵測策略與緩解機制提供了研究路徑。"
+        },
+        {
+            "sn": 25,
+            "themeId": 3,
+            "link": "https://scholar.google.com/scholar?q=Fast+and+Complete+Conflict+Detection+Packet+Classifiers",
+            "title_en": "Fast and Complete Conflict Detection for Packet Classifiers",
+            "title_zh": "封包分類器的快速且完整衝突偵測",
+            "authors": "C.Y. Lai & P.C. Wang",
+            "date": "2017", "journal": "IEEE Systems Journal",
+            "summary": "針對多維度過濾規則進行快速且完整冲突偵測。其技術核心在於嚴格的實體審計邏輯辨識多維規則重疊，優化管理平面 (Management Plane) 在 Tbps 環境下之效能表現。這對網路安全管理中的動態資產合規性審查之時間複雜度優化具有指標意義。"
+        },
+        {
+            "sn": 26,
+            "themeId": 3,
+            "link": "https://scholar.google.com/scholar?q=Fast+Conflict+Detection+Multi-Dimensional+Packet+Filters",
+            "title_en": "Fast Conflict Detection for Multi-Dimensional Packet Filters",
+            "title_zh": "多維度封包過濾器的快速衝突偵測",
+            "authors": "C.L. Lee et al.",
+            "date": "2022", "journal": "Algorithms",
+            "summary": "改良多維度過濾器的衝突偵測演算法，優化交集運算的時間複雜度 (Time Complexity)。這為 Tbps 數據平面處理提供了Tbps 級別流量監控下的技術核心效能提升 研究路徑分析。這對 NSM 如何在 TB 級網路資料中維持 Tbps 級別查找速率之一致性提供了核心意義研究基石。"
+        },
+        {
+            "sn": 27,
+            "themeId": 2,
+            "link": "https://scholar.google.com/scholar?q=Role+of+Intrusion+Detection+Systems",
+            "title_en": "Defending Yourself: The Role of Intrusion Detection Systems",
+            "title_zh": "自我防禦：入侵偵測系統的角色",
+            "authors": "J. McHugh et al.",
+            "date": "2000", "journal": "IEEE Software",
+            "summary": "定調入侵偵測系統 (IDS) 的多層防禦 (Defense in Depth) 理論與物理極限。 IDS 是實踐 TB 級數據平面資產合規性監控策略中，負責異常行為監控與安全告警的核心。其技術深度切入Tbps 級數據平面處理時之時間複雜度優化具有指標意義，在現代異構運算處理 Tbps 下具有重要技術深度切入研究路徑分析。"
+        },
+        {
+            "sn": 28,
+            "themeId": 4,
+            "link": "https://scholar.google.com/scholar?q=Hierarchical+Multi-Pattern+Matching+Algorithm",
+            "title_en": "Hierarchical Multi-Pattern Matching Algorithm for Network Content Inspection",
+            "title_zh": "網路內容檢查的分層多模式匹配演算法",
+            "authors": "T.F. Sheu et al.",
+            "date": "2008", "journal": "Information Science",
+            "summary": "專注於深層封包檢測 (Deep Packet Inspection) 中的多模式匹配演算法。作者提出一種層次結構以優化確定性有限狀態自動機 (DFA) 的狀態轉移，減少 SRAM 記憶體頻寬 (Memory Bandwidth) 瓶頸。這在千兆級網路上進行異構硬體加速的技術核心切入點，對處理狀態爆炸與Tbps查找速率提供了技術基石與研究路徑分析。"
+        },
+        {
+            "sn": 29,
+            "themeId": 4,
+            "link": "https://scholar.google.com/scholar?q=MIDeA+Multi-Parallel+Intrusion+Detection",
+            "title_en": "MIDeA: A Multi-Parallel Intrusion Detection Architecture",
+            "title_zh": "MIDeA：一種多並行入侵偵測架構",
+            "authors": "G. Vasiliadis et al.",
+            "date": "2011", "journal": "ACM CCS",
+            "summary": "利用圖形處理器加速封包監控。透過並行架構 (Parallel Architecture) 解決 DFA 狀態轉移卡在記憶體頻寬 (Memory Bandwidth) 的物理極限。研究結論指出，對 Tbps 無狀態負載，GPU 海量執行緒能提升 Tbps 查找速率與 throughput 一個數量級。這在現代數據中心利用異構運算處理 Tbps 下具有重要技術深度切入研究路徑分析。"
+        },
+        {
+            "sn": 30,
+            "themeId": 4,
+            "link": "https://scholar.google.com/scholar?q=Robust+Scalable+String+Pattern+Matching+DPI",
+            "title_en": "Robust and Scalable String Pattern Matching for Deep Packet Inspection",
+            "title_zh": "強健且具可擴展性的深層封包檢測字串模式匹配",
+            "authors": "Y.H. Yang & V.K. Prasanna",
+            "date": "2013", "journal": "IEEE TPDS",
+            "summary": "探討多核心架構下的高效字串匹配，重點在於正規表達式匹配的時間複雜度優化 (Target 達到 TBps)。結論指出，利用軟硬體協同設計優化硬體利用率極大化，能突破狀態爆炸問題在處理Tbps流量時的時間複雜度與頻寬牆限制。對處理 Tbps 查找速率提供技術基石研究路徑分析。"
+        },
+        {
+            "sn": 31,
+            "themeId": 4,
+            "link": "https://scholar.google.com/scholar?q=Hybrid+CPU/GPU+Pattern+Matching+Algorithm",
+            "title_en": "A Hybrid CPU/GPU Pattern-Matching Algorithm for Deep Packet Inspection",
+            "title_zh": "一種用於深層封包檢測的 CPU/GPU 混合模式匹配演算法",
+            "authors": "C.L. Lee et al.",
+            "date": "2015", "journal": "PLoS One",
+            "summary": "採用異構運算架構中的 PCIe 匯流排傳輸延遲掩蓋技術核心。利用 CPU 處理控制流、GPU 海量執行緒處理 TBps 並行比對負載，有效優化 throughput 與延遲牆物理限制。這為Tbps查找速率與資料傳輸延遲掩蓋提供技術基石與研究路徑分析，在現代利用異構運算處理 Tbps 下具有重要技術深度切入。"
+        },
+        {
+            "sn": 32,
+            "themeId": 4,
+            "link": "https://scholar.google.com/scholar?q=Length-bounded+Hybrid+Matching+Algorithm",
+            "title_en": "Length-bounded Hybrid CPU/GPU Pattern Matching Algorithm",
+            "title_zh": "長度受限的 CPU/GPU 混合模式匹配演算法",
+            "authors": "Y.S. Lin et al.",
+            "date": "2017", "journal": "Algorithms",
+            "summary": "優化平行運算資源硬體利用率極大化。透過避免異構架構中之 GPU 執行緒發散 (Thread Divergence) 與延遲牆物理限制，實現極速 Tbps 深層封包檢測。這為處理 Tbps 查找速率提供技術基石，並針對 GPU 架構之硬體特性提供Tbps 級流量監控下之效能分析研究路徑。"
+        }
+    ];
+
+
+    // ==========================================
+    // 狀態持久化邏輯 (LocalStorage)
+    // ==========================================
+    const STORAGE_KEY = 'nsm_preferences';
+
+    function loadSettings() {
+        const defaultSettings = { sortMode: 'theme', masterToggle: true, theme: 'auto' };
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultSettings;
+        
+        document.getElementById('sortMode').value = saved.sortMode;
+        document.getElementById('masterToggle').checked = saved.masterToggle;
+        document.getElementById('themeSelect').value = saved.theme;
+        
+        applyTheme(saved.theme);
+        return saved;
+    }
+
+    function saveSettings() {
+        const settings = {
+            sortMode: document.getElementById('sortMode').value,
+            masterToggle: document.getElementById('masterToggle').checked,
+            theme: document.getElementById('themeSelect').value
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+    }
+
+    // ==========================================
+    // 佈景主題套用邏輯 (支援 Auto)
+    // ==========================================
+    function applyTheme(themeValue) {
+        let activeTheme = themeValue;
+        if (themeValue === 'auto') {
+            // 偵測作業系統目前是否為深色模式
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            activeTheme = prefersDark ? 'dark' : 'light';
+        }
+        document.documentElement.setAttribute('data-theme', activeTheme);
+    }
+
+    // 監聽系統主題切換事件 (如果使用者選 auto，系統切換日夜間模式時會即時跟隨)
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+        if (document.getElementById('themeSelect').value === 'auto') {
+            applyTheme('auto');
+        }
+    });
+
+    // ==========================================
+    // 渲染引擎
+    // ==========================================
+    function render() {
+        const container = document.getElementById("mainContent");
+        const mode = document.getElementById("sortMode").value;
+        const allOpen = document.getElementById("masterToggle").checked;
+        container.innerHTML = "";
+
+        if (mode === "sn") {
+            const sorted = [...papersData].sort((a, b) => a.sn - b.sn);
+            const tableContainer = document.createElement("div");
+            tableContainer.className = "theme-section"; 
+            
+            const tableTitle = document.createElement("h2");
+            tableTitle.className = "theme-header";
+            tableTitle.innerHTML = `<span>📂 依照編號排序</span>`;
+            tableContainer.appendChild(tableTitle);
+
+            tableContainer.appendChild(createTable(sorted, allOpen, "sn-view", mode));
+            container.appendChild(tableContainer);
+        } else {
+            themeData.forEach(theme => {
+                const filtered = papersData
+                    .filter(p => p.themeId === theme.id)
+                    .sort((a, b) => a.sn - b.sn);
+                
+                if (filtered.length > 0) {
+                    const section = document.createElement("div");
+                    section.className = "theme-section";
+
+                    const attributesHtml = theme.attributes.map(attr => 
+                        `<div class="meta-item"><span class="meta-label">${attr.label}</span><span style="color: var(--text-main);">${attr.content}</span></div>`
+                    ).join('');
+
+                    section.innerHTML = `
+                        <h2 class="theme-header">
+                            <span class="theme-id">📌 主題 ${theme.id}:</span>
+                            <span>${theme.name}</span>
+                        </h2>
+                        <div style="margin-bottom:15px; color: var(--text-main);">${theme.description}</div>
+                        <div class="theme-meta-container">
+                            ${attributesHtml}
+                        </div>
+                    `;
+                    section.appendChild(createTable(filtered, allOpen, `theme-${theme.id}`, mode));
+                    container.appendChild(section);
+                }
+            });
+        }
+    }
+
+    function createTable(papers, isAllOpen, idPrefix, mode) {
+        const table = document.createElement("table");
+        if (mode === 'sn') table.className = "sn-view-table";
+        
+        table.innerHTML = `
+            <thead>
+                <tr>
+                    <th style="width: 2ch; white-space: nowrap; text-align: center">SN</th>
+                    <th style="width: 2ch; white-space: nowrap; text-align: center">Link</th>
+                    <th>Article Title</th>
+                    <th style="width: 15%; font-size: 0.9em;">Authors / Source</th>
+                    <th style="width: 5ch; white-space: nowrap; text-align: center">操作</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        `;
+        const tbody = table.querySelector("tbody");
+
+        papers.forEach(p => {
+            const mainRow = document.createElement("tr");
+            mainRow.className = "main-row";
+            
+            const formattedLinkCell = `
+                <td style="text-align: center; vertical-align: middle;">
+                    <a href="${p.link}" target="_blank" style="text-decoration:none; display: flex; justify-content: center; align-items: center;" title="Google Scholar">
+                        ${linkIconSvg}
+                    </a>
+                </td>`;
+
+            mainRow.innerHTML = `
+                <td style="text-align: center; font-family: monospace; color: var(--text-sub);">${p.sn}</td>
+                ${formattedLinkCell}
+                <td style="font-weight:600;">
+                    <div class="title-cell">
+                        <span class="title-en">${p.title_en}</span>
+                        <span class="title-zh">${p.title_zh}</span>
+                    </div>
+                </td>
+                <td style="font-size:0.9em; line-height: 1.3; color: var(--text-main);">
+                    ${p.authors} / <span style="color: var(--text-sub); font-weight: 500;">${p.journal} (${p.date})</span>
+                </td>
+                <td style="text-align: center; white-space: nowrap;">
+                    <div class="toggle-btn" data-target="sum-${idPrefix}-${p.sn}">${isAllOpen ? '收合' : '展開'}</div>
+                </td>
+            `;
+            
+            const summaryRow = document.createElement("tr");
+            summaryRow.id = `sum-${idPrefix}-${p.sn}`;
+            summaryRow.className = `summary-row ${isAllOpen ? '' : 'hidden'}`;
+            summaryRow.innerHTML = `
+                <td colspan="5">
+                    <div class="summary-content">
+                        ${p.summary}
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(mainRow);
+            tbody.appendChild(summaryRow);
+        });
+        return table;
+    }
+
+    // ==========================================
+    // 綁定事件監聽與初始化
+    // ==========================================
+    document.getElementById("sortMode").addEventListener("change", () => { saveSettings(); render(); });
+    document.getElementById("masterToggle").addEventListener("change", () => { saveSettings(); render(); });
+    
+    document.getElementById("themeSelect").addEventListener("change", (e) => {
+        applyTheme(e.target.value);
+        saveSettings();
+    });
+
+    document.getElementById("mainContent").addEventListener("click", e => {
+        if (e.target.classList.contains("toggle-btn")) {
+            const target = document.getElementById(e.target.dataset.target);
+            target.classList.toggle("hidden");
+            e.target.textContent = target.classList.contains("hidden") ? "展開" : "收合";
+        }
+    });
+
+    // 啟動程序
+    loadSettings();
+    render();
+
+</script>
+</body>
+</html>
