@@ -1,0 +1,3048 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📝</text></svg>">
+    <title>Deep Learning & Python 期中模擬考試 V5 (Powered by AI)</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+    <style>
+        /* ==========================================
+           1. 佈景主題變數定義 (Theme Variables)
+           ========================================== */
+        :root {
+            --primary-color: #1e40af; --bg-color: #f1f5f9; --container-bg: #ffffff;
+            --row-bg: #ffffff; --summary-bg: #f8fafc; --border: #cbd5e1;
+            --text-main: #0f172a; --text-sub: #64748b; --text-label: #0369a1;
+            --label-bg: #e0f2fe; --th-bg: #334155; --th-text: #ffffff;
+            --box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.1);
+            --correct-bg: #dcfce7; --correct-text: #166534;
+            --incorrect-bg: #fee2e2; --incorrect-text: #991b1b;
+        }
+
+        [data-theme="dark"] { --primary-color: #38bdf8; --bg-color: #0f172a; --container-bg: #1e293b; --row-bg: #1e293b; --summary-bg: #0f172a; --border: #334155; --text-main: #f8fafc; --text-sub: #94a3b8; --text-label: #bae6fd; --label-bg: #0369a1; --th-bg: #020617; --th-text: #e2e8f0; --box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.5); --correct-bg: #064e3b; --correct-text: #a7f3d0; --incorrect-bg: #7f1d1d; --incorrect-text: #fecaca; }
+        [data-theme="sepia"] { --primary-color: #8b5a2b; --bg-color: #f4ecd8; --container-bg: #fdf6e3; --row-bg: #fdf6e3; --summary-bg: #eee8d5; --border: #d0c5b4; --text-main: #4c3b2b; --text-sub: #7a6a58; --text-label: #a0522d; --label-bg: #eaddc5; --th-bg: #5c4b3a; --th-text: #fdf6e3; --correct-bg: #dbe4c6; --correct-text: #3f4d23; --incorrect-bg: #f4d0cb; --incorrect-text: #662218;}
+        [data-theme="nord"] { --primary-color: #88c0d0; --bg-color: #2e3440; --container-bg: #3b4252; --row-bg: #3b4252; --summary-bg: #2e3440; --border: #4c566a; --text-main: #d8dee9; --text-sub: #94a3b8; --text-label: #88c0d0; --label-bg: #434c5e; --th-bg: #242933; --th-text: #eceff4; --correct-bg: #3b4252; --correct-text: #a3be8c; --incorrect-bg: #3b4252; --incorrect-text: #bf616a;}
+        [data-theme="dracula"] { --primary-color: #bd93f9; --bg-color: #282a36; --container-bg: #44475a; --row-bg: #44475a; --summary-bg: #282a36; --border: #6272a4; --text-main: #f8f8f2; --text-sub: #bd93f9; --text-label: #ff79c6; --label-bg: #282a36; --th-bg: #21222c; --th-text: #f8f8f2; --correct-bg: #44475a; --correct-text: #50fa7b; --incorrect-bg: #44475a; --incorrect-text: #ff5555;}
+        [data-theme="forest"] { --primary-color: #a7c080; --bg-color: #2d353b; --container-bg: #343f44; --row-bg: #343f44; --summary-bg: #2d353b; --border: #475258; --text-main: #d3c6aa; --text-sub: #859289; --text-label: #dbbc7f; --label-bg: #3d484d; --th-bg: #232a2e; --th-text: #d3c6aa; --correct-bg: #343f44; --correct-text: #a7c080; --incorrect-bg: #343f44; --incorrect-text: #e67e80;}
+        [data-theme="midnight"] { --primary-color: #6366f1; --bg-color: #000000; --container-bg: #0a0a0a; --row-bg: #0a0a0a; --summary-bg: #000000; --border: #1f1f1f; --text-main: #ffffff; --text-sub: #a1a1aa; --text-label: #818cf8; --label-bg: #111827; --th-bg: #000000; --th-text: #ffffff; --correct-bg: #022c22; --correct-text: #34d399; --incorrect-bg: #450a0a; --incorrect-text: #f87171;}
+        [data-theme="solarized-light"] { --primary-color: #268bd2; --bg-color: #fdf6e3; --container-bg: #eee8d5; --row-bg: #fdf6e3; --summary-bg: #eee8d5; --border: #d33682; --text-main: #657b83; --text-sub: #93a1a1; --text-label: #cb4b16; --label-bg: #eee8d5; --th-bg: #073642; --th-text: #fdf6e3; --correct-bg: #e6edd1; --correct-text: #859900; --incorrect-bg: #f8e1df; --incorrect-text: #dc322f;}
+        [data-theme="synthwave"] { --primary-color: #ff7edb; --bg-color: #241b2f; --container-bg: #2d233f; --row-bg: #2d233f; --summary-bg: #241b2f; --border: #72f1b8; --text-main: #ffffff; --text-sub: #fe4450; --text-label: #36f9f6; --label-bg: #241b2f; --th-bg: #1a1423; --th-text: #ffffff; --correct-bg: #2d233f; --correct-text: #72f1b8; --incorrect-bg: #2d233f; --incorrect-text: #fe4450;}
+        [data-theme="gruvbox"] { --primary-color: #fe8019; --bg-color: #282828; --container-bg: #3c3836; --row-bg: #3c3836; --summary-bg: #282828; --border: #ebdbb2; --text-main: #ebdbb2; --text-sub: #a89984; --text-label: #b8bb26; --label-bg: #282828; --th-bg: #1d2021; --th-text: #ebdbb2; --correct-bg: #3c3836; --correct-text: #b8bb26; --incorrect-bg: #3c3836; --incorrect-text: #fb4934;}
+
+        /* ==========================================
+           2. 核心排版與自訂樣式 (Markdown Code)
+           ========================================== */
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", sans-serif; background-color: var(--bg-color); color: var(--text-main); padding: 30px; margin: 0; line-height: 1.6; transition: background-color 0.3s, color 0.3s; }
+        * { font-style: normal !important; box-sizing: border-box; }
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        header { background: var(--container-bg); padding: 20px 30px; border-radius: 12px; border-bottom: 4px solid var(--primary-color); box-shadow: var(--box-shadow); margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
+        
+        .inline-code { font-family: 'Consolas', 'Monaco', 'Courier New', monospace; background-color: var(--label-bg); color: var(--text-label); padding: 0.15em 0.4em; border-radius: 4px; font-size: 0.9em; border: 1px solid var(--border); }
+
+        .control-panel { background: var(--container-bg); padding: 20px 30px; border-radius: 10px; margin-bottom: 30px; border: 1px solid var(--border); display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; }
+        .controls-group { display: flex; align-items: center; gap: 8px; }
+        .controls-group.full-width { grid-column: 1 / -1; justify-content: flex-start; flex-wrap: wrap; border-top: 1px dashed var(--border); padding-top: 15px;}
+
+        input[type="number"] { width: 60px; padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg-color); color: var(--text-main); font-weight: bold; }
+        input[type="number"]:disabled { opacity: 0.6; cursor: not-allowed; }
+        select, input[type="checkbox"] { padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg-color); color: var(--text-main); font-weight: bold; cursor: pointer; }
+
+        button { padding: 8px 16px; border-radius: 6px; border: 1px solid var(--primary-color); background: var(--primary-color); color: #fff; font-weight: bold; cursor: pointer; transition: all 0.2s; }
+        button:hover { opacity: 0.9; transform: translateY(-1px); }
+        button.danger { background: transparent; color: #ef4444; border-color: #ef4444; }
+        button.danger:hover { background: #ef4444; color: #fff; }
+        button.large-submit { width: 100%; font-size: 1.3em; padding: 15px; margin-top: 30px; background: var(--primary-color); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+
+        .eval-btn { background: transparent; border: 2px solid var(--border); color: var(--text-sub); }
+        .eval-btn:hover { background: var(--label-bg); }
+        .eval-btn.eval-c.active { background: var(--correct-bg); border-color: var(--correct-text); color: var(--correct-text); }
+        .eval-btn.eval-i.active { background: var(--incorrect-bg); border-color: var(--incorrect-text); color: var(--incorrect-text); }
+
+        /* ==========================================
+           3. 考卷渲染區塊樣式
+           ========================================== */
+        .theme-section { background: transparent; margin-bottom: 50px; }
+        .theme-header { color: var(--primary-color); font-size: 1.6em; margin: 0 0 20px 0; padding-bottom: 10px; border-bottom: 2px solid var(--primary-color); display: flex; justify-content: space-between;}
+        .section-score { font-size: 0.6em; background: var(--label-bg); color: var(--text-label); padding: 4px 12px; border-radius: 20px; vertical-align: middle;}
+
+        .question-card { background: var(--row-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: var(--box-shadow); transition: all 0.3s ease; }
+        
+        .q-header { display: flex; justify-content: space-between; margin-bottom: 15px; align-items: center; }
+        .q-meta { display: flex; gap: 10px; align-items: center; }
+        .q-sn { font-family: monospace; font-size: 1.2em; font-weight: bold; color: var(--text-label); background: var(--label-bg); padding: 4px 10px; border-radius: 6px; }
+        .q-pts { font-size: 0.9em; font-weight: bold; color: var(--primary-color); }
+        .q-rate { font-size: 0.85em; color: var(--text-sub); }
+        .q-text { font-size: 1.1em; font-weight: 600; line-height: 1.5; margin-bottom: 20px; }
+
+        .options-list { display: flex; flex-direction: column; gap: 10px; }
+        .option-label { display: flex; align-items: center; padding: 12px 15px; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; background: var(--bg-color); transition: background 0.2s, border-color 0.2s; }
+        .option-label:hover { border-color: var(--primary-color); }
+        .option-label input[type="radio"] { margin-right: 15px; transform: scale(1.2); }
+        
+        .question-card.answered-correct { border-color: var(--correct-text); }
+        .question-card.answered-incorrect { border-color: var(--incorrect-text); }
+        .option-label.is-correct { background: var(--correct-bg); border-color: var(--correct-text); color: var(--correct-text); font-weight: bold; }
+        .option-label.is-incorrect { background: var(--incorrect-bg); border-color: var(--incorrect-text); color: var(--incorrect-text); }
+        .option-label.disabled { pointer-events: none; opacity: 0.8; }
+
+        .sa-textarea { width: 100%; min-height: 100px; padding: 15px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-color); color: var(--text-main); font-family: inherit; resize: vertical; margin-bottom: 15px; }
+
+        .explanation-box { margin-top: 20px; padding: 15px; background: var(--summary-bg); border-left: 4px solid var(--primary-color); border-radius: 0 8px 8px 0; font-size: 0.95em; display: none; }
+        .explanation-box.show { display: block; animation: fadeIn 0.3s ease; }
+        .exp-title { font-weight: bold; margin-bottom: 8px; color: var(--primary-color); }
+        .exp-key { display: inline-block; background: var(--label-bg); color: var(--text-label); padding: 2px 8px; border-radius: 4px; font-size: 0.85em; margin-bottom: 10px; }
+        
+        .action-row { margin-top: 15px; display: flex; justify-content: flex-end; }
+        .toggle-exp-btn { background: transparent; color: var(--text-main); border: 1px solid var(--border); }
+        .toggle-exp-btn:hover { background: var(--border); }
+
+        .score-board { text-align: center; font-size: 2em; padding: 20px; background: var(--label-bg); color: var(--text-label); border-radius: 10px; margin-bottom: 30px; border: 2px solid var(--primary-color); display: none;}
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+        @media (max-width: 768px) { .control-panel { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1 style="margin: 0; font-size: 24px;">Deep Learning & Python 期中模擬考試 V5 (Powered by AI)</h1>
+    </header>
+    
+    <div class="control-panel">
+        <div class="controls-group">
+            <label>選擇題數：</label><input type="number" id="cfg_t1" min="0"> 
+            <label>總分:</label><input type="number" id="pts_t1" min="0">
+        </div>
+        <div class="controls-group">
+            <label>是非題數：</label><input type="number" id="cfg_t2" min="0">
+            <label>總分:</label><input type="number" id="pts_t2" min="0">
+        </div>
+        <div class="controls-group">
+            <label>簡答題數：</label><input type="number" id="cfg_t3" min="0">
+            <label>總分:</label><input type="number" id="pts_t3" min="0">
+        </div>
+        
+        <div class="controls-group">
+            <label>出題模式：</label>
+            <select id="cfg_mode">
+                <option value="random">🎲 隨機抽題</option>
+                <option value="review">🔥 複習 (錯題優先)</option>
+                <option value="scan">🚀 掃題 (未做過優先)</option>
+                <option value="all">📚 全部 (顯示所有題庫)</option>
+            </select>
+        </div>
+        <div class="controls-group">
+            <label>佈景主題：</label>
+            <select id="themeSelect">
+                <option value="auto">依系統設置</option>
+                <option value="light">淺色 (Light)</option>
+                <option value="dark">深色 (Dark)</option>
+                <option value="sepia">護眼 (Sepia)</option>
+                <option value="nord">北歐冰霜 (Nord)</option>
+                <option value="dracula">極客深紫 (Dracula)</option>
+            </select>
+        </div>
+        <div class="controls-group" style="grid-column: 1 / -1;">
+            <input type="checkbox" id="cfg_shuffle">
+            <label for="cfg_shuffle" style="margin-right: 20px;">選項亂序</label>
+            <input type="checkbox" id="cfg_delayed" checked>
+            <label for="cfg_delayed" style="color: var(--primary-color);">集中交卷 (不要立刻對答案)</label>
+        </div>
+
+        <div class="controls-group full-width">
+            <button id="btnGenerate" style="font-size: 1.1em; padding: 10px 24px;">📝 生成考卷</button>
+            <div style="width: 2px; height: 30px; background: var(--border); margin: 0 10px;"></div>
+            <label style="font-weight: bold; margin-right: 5px;">預設展開詳解：</label>
+            <input type="checkbox" id="exp_t1" class="exp-toggle" data-type="1"><label for="exp_t1">選擇</label>
+            <input type="checkbox" id="exp_t2" class="exp-toggle" data-type="2"><label for="exp_t2">是非</label>
+            <input type="checkbox" id="exp_t3" class="exp-toggle" data-type="3"><label for="exp_t3">簡答</label>
+            <div style="flex-grow: 1;"></div>
+            <button id="btnClearSettings" class="danger">清除設定</button>
+            <button id="btnClearHistory" class="danger">清除記錄</button>
+        </div>
+    </div>
+
+    <div id="scoreBoard" class="score-board"></div>
+
+    <div id="examContent">
+        <div style="text-align: center; color: var(--text-sub); padding: 50px;">
+            請設定題數後，點擊「生成考卷」開始測驗。
+        </div>
+    </div>
+</div>
+
+<script>
+// ==========================================
+// 1. 系統常數與題庫資料
+// ==========================================
+const KEY_SETTINGS = 'nsm_exam_settings_v5';
+const KEY_HISTORY = 'nsm_exam_history_v5';
+
+const TYPE_MAP = {
+    1: { id: 1, name: "選擇題", defaultCount: 20, defaultPts: 40 },
+    2: { id: 2, name: "是非題", defaultCount: 20, defaultPts: 40 },
+    3: { id: 3, name: "簡答題", defaultCount: 10, defaultPts: 20 }
+};
+
+// 請於此處手動內嵌題庫陣列 (維持空白供填入)
+const QUESTION_BANK = [
+    {
+        "n": 1,
+        "t": 1,
+        "q": "在深度學習與 PyTorch 中，單一數字（Single number）被稱為什麼級別的張量？\nIn PyTorch, what is a single number called in terms of tensors?",
+        "o": {
+            "o1": "1D 張量（1D Tensor） / Vector",
+            "o2": "2D 張量（2D Tensor） / Matrix",
+            "o3": "0D 張量（0D Tensor） / Scalar",
+            "o4": "3D 張量（3D Tensor） / Cube"
+        },
+        "a": 3,
+        "e": "{o3} 是正確的，0D 張量代表不具備陣列結構的單一數值（純量）。{o1} 錯誤，1D 張量是向量（一維陣列）。{o2} 錯誤，2D 張量是矩陣（二維陣列）。{o4} 錯誤，3D 張量通常表示為立方體（三維陣列）。",
+        "k": "張量的基本維度定義與術語（Scalar, Vector, Matrix, Tensor）。",
+        "g": 1
+    },
+    {
+        "n": 2,
+        "t": 1,
+        "q": "若要在 PyTorch 中取得張量 `x` 的維度數量（例如它是 1D 還是 2D），應使用下列哪個方法或屬性？\nWhich method or attribute is used to get the number of dimensions of a tensor `x` in PyTorch?",
+        "o": {
+            "o1": "x.shape",
+            "o2": "x.dim()",
+            "o3": "x.size()",
+            "o4": "x.view()"
+        },
+        "a": 2,
+        "e": "{o2} 是正確的，`x.dim()` 會回傳張量的維度數（等同於 NumPy 的 `ndim`）。{o1} 錯誤，`x.shape` 回傳的是各維度的大小（例如 $3 \\times 3$），而非單純的維度數量。{o3} 錯誤，`x.size()` 的功能與 `x.shape` 相同。{o4} 錯誤，`x.view()` 用於重塑張量形狀。",
+        "k": "張量屬性操作與維度查詢（ndim/dim）。",
+        "g": 1
+    },
+    {
+        "n": 3,
+        "t": 1,
+        "q": "相比於 NumPy，PyTorch 張量（Tensor）在深度學習中最關鍵的兩大優勢為何？\nWhat are the two most critical advantages of PyTorch Tensors over NumPy arrays in deep learning?",
+        "o": {
+            "o1": "支援更多統計函式與字串處理 / Supports more statistical functions and string parsing",
+            "o2": "支援自動微分（Automatic Differentiation）與 GPU 加速計算 / Supports automatic differentiation and GPU acceleration",
+            "o3": "檔案體積更小且無需安裝外部套件 / Smaller file size and requires no external packages",
+            "o4": "內建網頁視覺化工具與資料庫連線 / Built-in web visualization tools and database connections"
+        },
+        "a": 2,
+        "e": "{o2} 是正確的，PyTorch 的核心優勢在於 Autograd 機制以及能夠將資料送入 GPU 進行平行加速。{o1}、{o3}、{o4} 錯誤，這些都不是 PyTorch 取代 NumPy 進行模型訓練的主要原因，且 PyTorch 同樣需要安裝套件。",
+        "k": "PyTorch 與 NumPy 的核心差異與應用場景。",
+        "g": 2
+    },
+    {
+        "n": 4,
+        "t": 1,
+        "q": "如何在 Google Colab 或本地環境中，將 CPU 上的張量 `tensor_cpu` 轉移到 GPU 上？\nHow do you transfer a tensor `tensor_cpu` from CPU to GPU?",
+        "o": {
+            "o1": "tensor_gpu = tensor_cpu.gpu()",
+            "o2": "tensor_gpu = torch.cuda(tensor_cpu)",
+            "o3": "tensor_gpu = tensor_cpu.to('cuda')",
+            "o4": "tensor_gpu = tensor_cpu.move('GPU')"
+        },
+        "a": 3,
+        "e": "{o3} 是正確的，使用 `.to('cuda')` 方法可以將張量轉移至 GPU。{o1}、{o2}、{o4} 錯誤，這些都不是 PyTorch 標準的硬體轉移 API。",
+        "k": "張量的設備轉移（Device Transfer）。",
+        "g": 2
+    },
+    {
+        "n": 5,
+        "t": 1,
+        "q": "欲建立一個形狀為 $2 \\times 3$ 且數值全為 0 的張量，應使用哪一行程式碼？\nWhich code snippet creates a $2 \\times 3$ tensor filled with zeros?",
+        "o": {
+            "o1": "torch.zeros(2, 3)",
+            "o2": "torch.empty(2, 3)",
+            "o3": "torch.tensor([0, 0, 0], [0, 0, 0])",
+            "o4": "torch.null(2, 3)"
+        },
+        "a": 1,
+        "e": "{o1} 是正確的，`torch.zeros(2, 3)` 會生成指定形狀的全零張量。{o2} 錯誤，`torch.empty()` 會配置記憶體但不會初始化數值（內容為隨機垃圾值）。{o3} 錯誤，語法不合規，少了一層中括號 `[]`。{o4} 錯誤，PyTorch 沒有 `torch.null()` 函式。",
+        "k": "張量的初始化與建立函式（Creation Ops）。",
+        "g": 3
+    },
+    {
+        "n": 6,
+        "t": 1,
+        "q": "關於 PyTorch 的矩陣乘法，下列哪一個函式可用於計算兩個 2D 張量的矩陣乘積（Matrix Multiplication）？\nWhich function is used to perform matrix multiplication of two 2D tensors?",
+        "o": {
+            "o1": "torch.mul()",
+            "o2": "torch.matmul()",
+            "o3": "torch.add()",
+            "o4": "torch.cross()"
+        },
+        "a": 2,
+        "e": "{o2} 是正確的，`torch.matmul()` 執行矩陣乘法（內積）。{o1} 錯誤，`torch.mul()` 或直接使用 `*` 符號代表的是逐元素相乘（Element-wise multiplication）。{o3} 錯誤，這是加法。{o4} 錯誤，這是外積（Cross product）。",
+        "k": "張量數學運算：矩陣乘法 vs 逐元素乘法。",
+        "g": 3
+    },
+    {
+        "n": 7,
+        "t": 1,
+        "q": "給定一個 2D 張量 `x = torch.tensor([[1, 2, 3], [4, 5, 6], [7, 8, 9]])`，執行 `x[:, 1]` 會得到什麼結果？\nGiven `x = torch.tensor([[1, 2, 3], [4, 5, 6], [7, 8, 9]])`, what is the result of `x[:, 1]`?",
+        "o": {
+            "o1": "tensor([1, 2, 3])",
+            "o2": "tensor([4, 5, 6])",
+            "o3": "tensor([2, 5, 8])",
+            "o4": "tensor([1, 4, 7])"
+        },
+        "a": 3,
+        "e": "{o3} 是正確的，`[:, 1]` 代表選取所有列（`:`）的索引 1（第二欄）的元素，即 2, 5, 8。{o1} 錯誤，這是第一列。{o2} 錯誤，這是第二列。{o4} 錯誤，這是第一欄（索引 0）。",
+        "k": "張量的切片操作（Tensor Slicing）。",
+        "g": 4
+    },
+    {
+        "n": 8,
+        "t": 1,
+        "q": "在 `mazeGame.py` 範例中，初始化迷宮時，起點 `(0, 0)` 和終點 `(size-1, size-1)` 被強制設定為何值？代表什麼意義？\nIn `mazeGame.py`, what value are the start `(0, 0)` and exit `(size-1, size-1)` positions strictly set to, and what does it represent?",
+        "o": {
+            "o1": "設定為 1，代表通道（Path）",
+            "o2": "設定為 0，代表障礙物（Obstacle）",
+            "o3": "設定為 0，代表通道（Path）",
+            "o4": "設定為 2，代表特殊節點（Special Node）"
+        },
+        "a": 3,
+        "e": "{o3} 是正確的，程式碼中明確寫明 `self.maze[0, 0] = 0` 與 `0 表示通道`，以確保起終點不被隨機生成的障礙物堵死。{o1} 錯誤，1 是障礙物。{o2} 錯誤，0 是通道而非障礙。{o4} 錯誤，遊戲碼中只有 0 和 1 的設定。",
+        "k": "程式邏輯理解：迷宮生成與陣列賦值。",
+        "g": 5
+    },
+    {
+        "n": 9,
+        "t": 1,
+        "q": "當玩家在 `MazeGame` 中輸入方向 `'up'` 時，程式會檢查哪些條件以決定是否更新座標？\nWhen moving `'up'` in `MazeGame`, what conditions are checked before updating the position?",
+        "o": {
+            "o1": "x < size - 1 且目標位置為 0",
+            "o2": "y > 0 且目標位置為 0",
+            "o3": "x > 0 且目標位置為 0",
+            "o4": "y < size - 1 且目標位置為 0"
+        },
+        "a": 3,
+        "e": "{o3} 是正確的，向上移動意味著列索引 `x` 減 1，因此必須確保目前 `x > 0`（不超出上邊界），且 `self.maze[x-1, y] == 0`（目標是通道）。{o1} 錯誤，這是 down 的邏輯。{o2} 錯誤，這是 left 的邏輯。{o4} 錯誤，這是 right 的邏輯。",
+        "k": "陣列邊界檢查與二維座標系統理解。",
+        "g": 5
+    },
+    {
+        "n": 10,
+        "t": 1,
+        "q": "在 PyTorch 中，哪種資料型別代表 32 位元浮點數，同時也是神經網路中最常用的預設型別？\nWhich data type in PyTorch represents a 32-bit floating point number?",
+        "o": {
+            "o1": "torch.float64",
+            "o2": "torch.float16",
+            "o3": "torch.float32",
+            "o4": "torch.int32"
+        },
+        "a": 3,
+        "e": "{o3} 是正確的，`torch.float32` 是 32-bit 浮點數，能提供運算速度與精度的良好平衡。{o1} 錯誤，這是 64-bit 浮點數（雙精度）。{o2} 錯誤，這是 16-bit 浮點數（半精度）。{o4} 錯誤，這是整數型別。",
+        "k": "PyTorch 資料型別（Data Types）。",
+        "g": 1
+    },
+    {
+        "n": 11,
+        "t": 1,
+        "q": "在神經網路訓練期間，當使用 Autograd 計算梯度時，必須將目標張量的哪一個屬性設為 `True`？\nWhich attribute of a tensor must be set to `True` to compute gradients using Autograd?",
+        "o": {
+            "o1": "compute_grad=True",
+            "o2": "track_gradients=True",
+            "o3": "requires_grad=True",
+            "o4": "autograd=True"
+        },
+        "a": 3,
+        "e": "{o3} 是正確的，`requires_grad=True` 會告知 PyTorch 追蹤該張量的所有操作，以便在呼叫 `.backward()` 時計算梯度。{o1}、{o2}、{o4} 錯誤，這些都不是 PyTorch 的正確屬性名稱。",
+        "k": "自動微分機制（Automatic Differentiation）。",
+        "g": 2
+    },
+    {
+        "n": 12,
+        "t": 1,
+        "q": "若 `x` 是一個形狀為 $3 \\times 3$ 的張量，執行 `reshaped_tensor = x.view(1, 9)` 後，`reshaped_tensor` 的維度大小為何？\nAfter executing `x.view(1, 9)` on a $3 \\times 3$ tensor, what is the shape of the resulting tensor?",
+        "o": {
+            "o1": "1D Tensor，形狀為 [9]",
+            "o2": "2D Tensor，形狀為 [1, 9]",
+            "o3": "2D Tensor，形狀為 [9, 1]",
+            "o4": "3D Tensor，形狀為 [1, 3, 3]"
+        },
+        "a": 2,
+        "e": "{o2} 是正確的，`view(1, 9)` 會回傳一個具有 1 列 9 欄的二維張量。{o1} 錯誤，若要 1D 張量應使用 `view(9)` 或 `flatten()`。{o3} 錯誤，形狀參數順序不符。{o4} 錯誤，維度數量不符。",
+        "k": "張量形狀重塑（Reshape / View）。",
+        "g": 3
+    },
+    {
+        "n": 13,
+        "t": 1,
+        "q": "下列何者為將張量 `x` 儲存至本機硬碟的正確語法？\nWhat is the correct syntax to save a tensor `x` to a file?",
+        "o": {
+            "o1": "torch.save(x, 'tensor.pt')",
+            "o2": "x.save('tensor.pt')",
+            "o3": "torch.write(x, 'tensor.pt')",
+            "o4": "torch.dump(x, 'tensor.pt')"
+        },
+        "a": 1,
+        "e": "{o1} 是正確的，PyTorch 提供 `torch.save(object, filepath)` 來序列化並儲存張量或模型。{o2} 錯誤，張量本身沒有 `.save()` 方法。{o3}、{o4} 錯誤，PyTorch 無此 API 命名。",
+        "k": "張量的檔案 I/O 操作（Save / Load）。",
+        "g": 4
+    },
+    {
+        "n": 14,
+        "t": 1,
+        "q": "在講義中，哪一個操作被用於計算張量內所有元素的總和？\nWhich operation is used to compute the sum of all elements in a tensor?",
+        "o": {
+            "o1": "torch.total()",
+            "o2": "torch.sum()",
+            "o3": "torch.add_all()",
+            "o4": "torch.sigma()"
+        },
+        "a": 2,
+        "e": "{o2} 是正確的，`torch.sum()` 會加總張量內所有的元素。{o1}、{o3}、{o4} 錯誤，PyTorch 並未內建這些函式名稱。",
+        "k": "張量基礎數學運算。",
+        "g": 3
+    },
+    {
+        "n": 15,
+        "t": 1,
+        "q": "執行遮罩操作（Masking）時，若 `mask = x > 5`，則 `mask` 這個變數的資料型別為？\nWhen creating a mask via `mask = x > 5`, what is the data type of the `mask` tensor?",
+        "o": {
+            "o1": "torch.float32",
+            "o2": "torch.int8",
+            "o3": "torch.bool",
+            "o4": "torch.uint8"
+        },
+        "a": 3,
+        "e": "{o3} 是正確的，條件運算子 `>` 會對陣列進行逐元素比較，並回傳一個包含 `True` 和 `False` 的布林（Boolean）張量。{o1}、{o2}、{o4} 錯誤，條件判斷的結果不是數值型別。",
+        "k": "張量遮罩與邏輯比較資料型別。",
+        "g": 4
+    },
+    {
+        "n": 16,
+        "t": 1,
+        "q": "在 `MazeGame.check_game_status()` 中，如果玩家目前的位置等於終點位置，函式會回傳什麼字串？\nIn `MazeGame.check_game_status()`, what string is returned if the player reaches the exit?",
+        "o": {
+            "o1": "'Game Over'",
+            "o2": "'Win'",
+            "o3": "'Hit obstacle'",
+            "o4": "'Continue'"
+        },
+        "a": 2,
+        "e": "{o2} 是正確的，原始碼中寫道 `if self.player_position == self.exit_position: return 'Win'`。{o1} 錯誤，沒有這個回傳值。{o3} 錯誤，這是踩到障礙物的回傳值。{o4} 錯誤，這是一般移動的回傳值。",
+        "k": "遊戲狀態檢測邏輯閱讀。",
+        "g": 5
+    },
+    {
+        "n": 17,
+        "t": 1,
+        "q": "要取得張量中特定位置的純量數值（將 PyTorch 1D 張量轉為 Python 標準數字），經常使用下列哪一個方法？\nTo extract a standard Python number from a 1-element tensor, which method is commonly used?",
+        "o": {
+            "o1": ".val()",
+            "o2": ".get()",
+            "o3": ".item()",
+            "o4": ".number()"
+        },
+        "a": 3,
+        "e": "{o3} 是正確的，呼叫 `.item()` 可以將包含單一元素的張量轉換為純 Python 數值（如 int 或 float）。{o1}、{o2}、{o4} 錯誤，這些都不是正確的 API。",
+        "k": "純量提取方法（item）。",
+        "g": 1
+    },
+    {
+        "n": 18,
+        "t": 1,
+        "q": "講義中提到，如果將圖片輸入模型進行分類，圖片會被轉換成什麼資料結構？\nAccording to the slides, what data structure is an image converted into when used as input for a classification model?",
+        "o": {
+            "o1": "字串（String）",
+            "o2": "張量（Tensor）",
+            "o3": "布林陣列（Boolean Array）",
+            "o4": "連結串列（Linked List）"
+        },
+        "a": 2,
+        "e": "{o2} 是正確的，在 PyTorch 的生態系中，所有的模型輸入（如圖片、音訊）都必須被轉換為多維張量（Tensor）才能進行運算。{o1}、{o3}、{o4} 錯誤，這些資料結構無法直接用於高效的神經網路矩陣運算。",
+        "k": "張量在深度學習中的應用情境。",
+        "g": 1
+    },
+    {
+        "n": 19,
+        "t": 1,
+        "q": "關於 Google Colab 使用硬體加速，若想要檢視目前環境是否成功抓到 GPU，可執行下列哪段程式？\nTo verify if a GPU is available in Google Colab, which command should be executed?",
+        "o": {
+            "o1": "print(torch.cuda.is_available())",
+            "o2": "print(torch.gpu.status())",
+            "o3": "print(torch.has_cuda())",
+            "o4": "print(torch.check_gpu())"
+        },
+        "a": 1,
+        "e": "{o1} 是正確的，`torch.cuda.is_available()` 會回傳一個布林值，指示目前系統是否有可用的 NVIDIA GPU 資源。{o2}、{o3}、{o4} 錯誤，語法錯誤。",
+        "k": "Colab 環境檢查與 GPU 狀態驗證。",
+        "g": 2
+    },
+    {
+        "n": 20,
+        "t": 1,
+        "q": "在 `mazeGame.py` 中，使用 `torch.zeros(size, size)` 建立迷宮底板後，隨機生成障礙物是透過什麼模組完成的？\nIn `mazeGame.py`, after creating the maze board with `torch.zeros(size, size)`, which module is used to randomly generate obstacles?",
+        "o": {
+            "o1": "numpy.random",
+            "o2": "torch.rand",
+            "o3": "random.choice",
+            "o4": "math.random"
+        },
+        "a": 3,
+        "e": "{o3} 是正確的，講義原始碼匯入了原生的 `random` 模組，並使用 `random.choice([0, 1])` 來決定每個方格是通道還是障礙。{o1}、{o2}、{o4} 錯誤，雖然它們也能達成類似功能，但範例程式碼並未使用它們。",
+        "k": "程式碼細節與模組引用（Random）。",
+        "g": 5
+    },
+    {
+        "n": 21,
+        "t": 2,
+        "q": "張量（Tensor）最多只能擁有 3 個維度（3D Tensor），無法表示更高維度的資料矩陣。\nTensors can only have a maximum of 3 dimensions, and cannot represent higher-dimensional arrays.",
+        "a": 0,
+        "e": "錯誤。講義中明確提到「A tensor is an n-dimensional array with $n>2$」，表示張量可以有任意數量的維度（例如 4D、5D 張量等）。",
+        "k": "張量維度上限的認知。",
+        "g": 1
+    },
+    {
+        "n": 22,
+        "t": 2,
+        "q": "與 PyTorch 類似，NumPy 也內建了運算圖（Computation Graph）與自動微分（Automatic Differentiation）的功能。\nSimilar to PyTorch, NumPy has built-in support for computation graphs and automatic differentiation.",
+        "a": 0,
+        "e": "錯誤。講義第 13 頁明確指出「Numpy does not support computation graphs or automatic differentiation.」，這是兩者在深度學習應用上最大的差異點之一。",
+        "k": "NumPy 與 PyTorch 功能對比。",
+        "g": 2
+    },
+    {
+        "n": 23,
+        "t": 2,
+        "q": "在 PyTorch 中，執行 `result = tensor_a * 2` 時，會將 `tensor_a` 中的每一個元素都乘以 2。\nIn PyTorch, executing `result = tensor_a * 2` multiplies every element in `tensor_a` by 2.",
+        "a": 1,
+        "e": "正確。此操作稱為「逐元素乘法（Element-wise Multiplication）」，會被套用到張量內的每一個獨立數值上。",
+        "k": "逐元素數學運算。",
+        "g": 3
+    },
+    {
+        "n": 24,
+        "t": 2,
+        "q": "建立張量時，可以使用 `torch.tensor()` 函式將 Python 的串列（List）轉換為張量資料結構。\nWhen creating a tensor, the `torch.tensor()` function can be used to convert a Python list into a tensor data structure.",
+        "a": 1,
+        "e": "正確。如講義範例 `torch.tensor([1, 2, 3])`，可以將標準 Python list 無縫轉換為 PyTorch 張量。",
+        "k": "張量建構與資料轉換。",
+        "g": 3
+    },
+    {
+        "n": 25,
+        "t": 2,
+        "q": "呼叫 `tensor.view(1, 9)` 可以改變張量的形狀，且這個操作會直接覆蓋原變數的形狀，不需要指派給新的變數。\nCalling `tensor.view(1, 9)` changes the shape of the tensor in place without needing to assign it to a new variable.",
+        "a": 0,
+        "e": "錯誤。`view()` 會回傳一個具有新形狀的張量視圖，但不會修改原張量本身的形狀，必須指派給新變數，如 `new_tensor = tensor.view(1, 9)`。",
+        "k": "張量操作的不可變性（In-place vs Return）。",
+        "g": 3
+    },
+    {
+        "n": 26,
+        "t": 2,
+        "q": "在 `MazeGame` 遊戲中，迷宮的牆壁與通道資料是透過二維的 PyTorch 張量來儲存與管理的。\nIn the `MazeGame`, the maze layout containing walls and paths is stored and managed using a 2D PyTorch tensor.",
+        "a": 1,
+        "e": "正確。在 `__init__` 函式中，使用了 `self.maze = torch.zeros(size, size)` 建立了一個 2D 張量來記錄迷宮狀態。",
+        "k": "張量在實務專案中的應用實例。",
+        "g": 5
+    },
+    {
+        "n": 27,
+        "t": 2,
+        "q": "若想計算張量的指數函數值，可以使用 `torch.exp()` 方法。\nTo compute the exponential of tensor elements, you can use the `torch.exp()` method.",
+        "a": 1,
+        "e": "正確。講義明確列出 `torch.exp()` 會對張量元素進行逐元素的自然指數（$e^x$）計算。",
+        "k": "內建數學函數認知。",
+        "g": 3
+    },
+    {
+        "n": 28,
+        "t": 2,
+        "q": "在 `mazeGame.py` 中，如果玩家嘗試移出地圖邊界（例如 x 座標變成小於 0），遊戲會拋出錯誤並當機退出。\nIn `mazeGame.py`, if the player attempts to move out of bounds (e.g., x becomes less than 0), the game will throw an error and crash.",
+        "a": 0,
+        "e": "錯誤。在 `move_player()` 函式中，程式已經透過 `if direction == 'up' and x > 0` 的條件式保護了邊界，玩家只會在合法範圍內移動，不會產生越界存取當機。",
+        "k": "邊界條件與防呆邏輯。",
+        "g": 5
+    },
+    {
+        "n": 29,
+        "t": 2,
+        "q": "梯度（Gradients）在 PyTorch 中也是以張量（Tensor）的形式儲存與表示。\nGradients are also represented and stored as tensors in PyTorch.",
+        "a": 1,
+        "e": "正確。講義中提及「Gradients are also represented as tensors and are used to update model parameters.」，梯度本身就是具有維度資訊的資料。",
+        "k": "自動微分產物的資料結構。",
+        "g": 2
+    },
+    {
+        "n": 30,
+        "t": 2,
+        "q": "當使用 `torch.load('tensor.pt')` 時，可以直接從檔案中讀取先前儲存的張量狀態。\nUsing `torch.load('tensor.pt')` allows you to directly read a previously saved tensor state from a file.",
+        "a": 1,
+        "e": "正確。PyTorch 提供了對稱的 I/O 函式：`torch.save` 用於存檔，`torch.load` 用於讀取反序列化。",
+        "k": "張量磁碟存取。",
+        "g": 4
+    },
+    {
+        "n": 31,
+        "t": 2,
+        "q": "神經網路中，Loss Function（損失函數）的輸入通常包含模型的預測張量以及真實標籤張量。\nIn neural networks, the inputs to a Loss Function typically include the model's prediction tensor and the ground truth label tensor.",
+        "a": 1,
+        "e": "正確。Loss function 透過比較「預測輸出」和「真實答案」這兩個張量的差異，來量化模型的誤差程度。",
+        "k": "損失函數的輸入參數與核心概念。",
+        "g": 1
+    },
+    {
+        "n": 32,
+        "t": 2,
+        "q": "`torch.mean()` 只能應用在 1D 的張量上，無法計算二維矩陣全域的平均值。\n`torch.mean()` can only be applied to 1D tensors and cannot calculate the global mean of a 2D matrix.",
+        "a": 0,
+        "e": "錯誤。講義中給了 2D 矩陣計算全域平均的範例 `torch.mean(x)`，結果會將全部元素的數值加總後平均。它支援多維張量的計算。",
+        "k": "聚合函數對維度的支援度。",
+        "g": 3
+    },
+    {
+        "n": 33,
+        "t": 2,
+        "q": "若想檢查某元素是否大於 5，並僅保留該些元素，可以先用 `mask = x > 5` 建立遮罩，再執行 `x[mask]`。\nTo keep only elements greater than 5, you can create a mask `mask = x > 5` and then apply it using `x[mask]`.",
+        "a": 1,
+        "e": "正確。這是 PyTorch 與 NumPy 共有的 Masking（遮罩切片）技巧，`x[mask]` 會回傳一個一維張量，僅包含符合條件的數值。",
+        "k": "遮罩索引（Boolean Masking）。",
+        "g": 4
+    },
+    {
+        "n": 34,
+        "t": 2,
+        "q": "PyTorch 可以同時利用 CPU 與 GPU 進行運算，但張量預設是建立在 CPU 記憶體上的。\nPyTorch can compute on both CPU and GPU, but tensors are created in CPU memory by default.",
+        "a": 1,
+        "e": "正確。除非明確指定 `device='cuda'` 或呼叫 `.to('cuda')`，否則使用 `torch.tensor()` 建立的變數預設都在 CPU RAM 中。",
+        "k": "硬體資源分派與預設行為。",
+        "g": 2
+    },
+    {
+        "n": 35,
+        "t": 2,
+        "q": "在 `MazeGame.display_game()` 的繪圖邏輯中，符號 `'#'` 被用來代表終點位置（Exit）。\nIn the `MazeGame.display_game()` rendering logic, the symbol `'#'` is used to represent the exit position.",
+        "a": 0,
+        "e": "錯誤。根據程式碼：終點 `exit_position` 輸出為 `'E'`，玩家位置輸出為 `'P'`，而 `'#'` 代表的是障礙物（`self.maze[i, j] == 1`）。",
+        "k": "圖形化介面的映射邏輯。",
+        "g": 5
+    },
+    {
+        "n": 36,
+        "t": 2,
+        "q": "Python 程式執行中，呼叫 `x.backward()` 可以自動啟動反向傳播並計算具有 `requires_grad=True` 屬性的張量梯度。\nDuring Python execution, calling `x.backward()` automatically triggers backpropagation and calculates gradients for tensors with `requires_grad=True`.",
+        "a": 1,
+        "e": "正確。這是 PyTorch 核心的 Autograd 機制，透過 `.backward()` 從計算圖的尾端往前推導各參數偏導數。",
+        "k": "自動微分啟動指令。",
+        "g": 2
+    },
+    {
+        "n": 37,
+        "t": 2,
+        "q": "只要在電腦裡安裝 PyTorch，不論電腦硬體為何，都可以強制呼叫 `.to('cuda')` 進行 GPU 加速。\nAs long as PyTorch is installed, you can forcibly call `.to('cuda')` for GPU acceleration regardless of the computer's hardware.",
+        "a": 0,
+        "e": "錯誤。`.to('cuda')` 必須建立在實體具備 NVIDIA GPU 且正確安裝 CUDA 驅動的基礎上。如果硬體不支援，會拋出 Device 相關的錯誤。這也是為什麼講義中有 `if torch.cuda.is_available():` 的判斷。",
+        "k": "硬體加速的先決條件。",
+        "g": 2
+    },
+    {
+        "n": 38,
+        "t": 2,
+        "q": "向量（Vector）屬於一維張量，其形狀通常表示為僅有一個維度的大小，例如 `[5]`。\nA vector is a 1D tensor, and its shape is typically represented with a single dimension size, such as `[5]`.",
+        "a": 1,
+        "e": "正確。講義指出向量是 1D Tensor，且印出 `shape` 會呈現類似 `torch.Size([5])` 這樣的一維結構。",
+        "k": "張量幾何表示與 Shape。",
+        "g": 1
+    },
+    {
+        "n": 39,
+        "t": 2,
+        "q": "執行 `torch.zeros(2, 3)` 生成全零陣列後，無法再透過程式碼改變該張量內特定的數值。\nAfter creating a zero array with `torch.zeros(2, 3)`, it is impossible to modify specific values within that tensor programmatically.",
+        "a": 0,
+        "e": "錯誤。PyTorch 張量是可變的（Mutable），您可以隨時透過索引去修改特定位置的值，例如 `tensor[0, 1] = 5`。",
+        "k": "張量的可變性（Mutability）。",
+        "g": 3
+    },
+    {
+        "n": 40,
+        "t": 2,
+        "q": "Homework Part 1 的要求指出，原生 `MazeGame` 隨機生成的迷宮有可能完全堵死，無法走到終點，因此需要修改演算法確保至少有一條路徑。\nThe Homework Part 1 requirement implies that the native randomly generated maze might be completely blocked without a path to the exit, requiring an algorithmic fix.",
+        "a": 1,
+        "e": "正確。由於 `random.choice([0, 1])` 是純粹的獨立機率事件，極有可能產生將終點或起點包圍的實心牆壁，因此作業要求「Generate a maze with at least one path to exit」。",
+        "k": "作業實務問題分析。",
+        "g": 5
+    },
+    {
+        "n": 41,
+        "t": 3,
+        "q": "請簡述 `x.shape` 與 `x.dim()` 回傳值的差異。請舉一個 $2 \\times 3$ 張量的例子來說明。\nBriefly explain the difference between the return values of `x.shape` and `x.dim()`. Use a $2 \\times 3$ tensor as an example.",
+        "a": "`x.shape` 回傳張量在各個維度上的具體大小長度；`x.dim()` 回傳該張量總共有幾個維度。",
+        "e": "對於一個 $2 \\times 3$ 的張量而言，`x.shape` 會回傳 `torch.Size([2, 3])`，表示它有兩列三欄。而 `x.dim()` 會回傳整數 `2`，表示這是一個二維（2D）的矩陣。理解形狀與維度階層是操作張量時除錯的核心基礎。",
+        "k": "張量維度與結構描述屬性的辨析。",
+        "g": 1
+    },
+    {
+        "n": 42,
+        "t": 3,
+        "q": "在訓練神經網路時，為什麼我們需要對特定的變數張量設定 `requires_grad=True`？它啟動了什麼機制？\nWhy do we need to set `requires_grad=True` for specific tensor variables during neural network training? What mechanism does it trigger?",
+        "a": "設定 `requires_grad=True` 會啟動 PyTorch 的 Autograd（自動微分）機制。",
+        "e": "當此屬性被啟動後，PyTorch 會在背景自動建立計算圖（Computation Graph）來追蹤所有涉及該張量的數學操作。這樣一來，在執行 `.backward()` 反向傳播時，系統就能自動計算並得出對應的偏導數（Gradient），這對於使用梯度下降法更新模型權重是不可或缺的。",
+        "k": "Autograd 與梯度的概念聯結。",
+        "g": 2
+    },
+    {
+        "n": 43,
+        "t": 3,
+        "q": "請寫出將 PyTorch 張量從 CPU 轉移到 GPU 之前，為了避免硬體不支援導致當機，應使用的「安全檢查判斷式」與「轉移程式碼」。\nWrite down the safety check condition and the transfer code used to move a PyTorch tensor from CPU to GPU without crashing due to unsupported hardware.",
+        "a": "if torch.cuda.is_available():\n    tensor_gpu = tensor_cpu.to('cuda')",
+        "e": "這是一個標準的安全寫法（Safety Check）。首先利用 `torch.cuda.is_available()` 檢測目前的機器是否掛載了 NVIDIA GPU 與 CUDA 驅動；確認為 True 後，再呼叫 `.to('cuda')` 方法將資料從主機記憶體（RAM）複製到顯示卡的 VRAM 中。如果沒有 GPU 加速卻強行呼叫 `'cuda'` 會引發 RuntimeError。",
+        "k": "硬體資源安全調用邏輯。",
+        "g": 2
+    },
+    {
+        "n": 44,
+        "t": 3,
+        "q": "給定 `mazeGame.py` 中的 `move_player(self, direction)` 函式，若玩家當前座標在 `(0, 0)` 且輸入方向為 `'left'`，程式內部條件判斷 `y > 0` 會判定為 True 還是 False？這防止了什麼問題？\nGiven the `move_player` function, if the player is at `(0, 0)` and inputs `'left'`, will the internal check `y > 0` evaluate to True or False? What issue does this prevent?",
+        "a": "判定為 False。這防止了「陣列越界（Out of Bounds）」的問題。",
+        "e": "在二維張量中，左上角的起點座標通常為 `(0, 0)`。往左移動意味著 y 座標需要減 1。因為當前 `y = 0`，條件 `y > 0` 為 False，程式便會略過位置更新指令。這個防禦性設計避免了存取 `self.maze[0, -1]` 而造成的錯誤（雖然 Python 原生支援負索引，但這在迷宮邏輯中會導致玩家瞬移到地圖另一端或邏輯崩潰）。",
+        "k": "座標移動與邊界保護分析。",
+        "g": 5
+    },
+    {
+        "n": 45,
+        "t": 3,
+        "q": "在張量數學運算中，「逐元素相乘（Element-wise multiplication）」與「矩陣乘法（Matrix multiplication）」的差異是什麼？請列舉出 PyTorch 執行這兩個運算對應的語法。\nWhat is the difference between element-wise multiplication and matrix multiplication in tensor math operations? List the corresponding PyTorch syntax for each.",
+        "a": "逐元素相乘是將對應位置的數值獨立相乘（可用 `*`）。矩陣乘法是行列內積運算（需用 `torch.matmul()`）。",
+        "e": "逐元素相乘（Element-wise multiplication）要求兩個張量形狀相同（或可廣播），如 `tensor_a * tensor_b`，結果是位置對應的元素各自相乘。矩陣乘法（Matrix multiplication）則是遵守線性代數的行列內積規則，若運算 $A \\times B$，A 的欄數必須等於 B 的列數，在 PyTorch 中需呼叫專門的 API，即 `torch.matmul(tensor_a, tensor_b)`。兩者背後的數學意義完全不同。",
+        "k": "線性代數運算與對應函式的區別。",
+        "g": 3
+    },
+      {
+    "n": 46,
+    "t": 1,
+    "q": "在 PyTorch 中，下列哪一個函數用於建立一個全為 $0$ 的張量（Tensor）？",
+    "o": {
+      "o1": "torch.tensor()",
+      "o2": "torch.zeros()",
+      "o3": "torch.ones()",
+      "o4": "torch.empty()"
+    },
+    "a": 2,
+    "e": "{o2} 是正確的，因為 torch.zeros() 專門用於建立全零張量。{o1} 用於從現有資料建立，{o3} 建立全為 $1$ 的張量，{o4} 建立未初始化的張量。",
+    "k": "Tensor Creation",
+    "g": 1
+  },
+  {
+    "n": 47,
+    "t": 1,
+    "q": "給定程式碼 $x = \\text{torch.tensor}([1, 2, 3])$，此張量的維度（Shape）為何？",
+    "o": {
+      "o1": "(1, 3)",
+      "o2": "(3, 1)",
+      "o3": "(3,)",
+      "o4": "(1,)"
+    },
+    "a": 3,
+    "e": "{o3} 是正確的，因為傳入的是一個一維列表，包含 $3$ 個元素，因此形狀為 $(3,)$。{o1} 和 {o2} 是二維矩陣的形狀。",
+    "k": "Tensor Shape and Creation",
+    "g": 1
+  },
+  {
+    "n": 48,
+    "t": 1,
+    "q": "下列哪一個 PyTorch 函數用於執行矩陣乘法（Matrix Multiplication）？",
+    "o": {
+      "o1": "torch.add()",
+      "o2": "torch.mul()",
+      "o3": "torch.matmul()",
+      "o4": "torch.sum()"
+    },
+    "a": 3,
+    "e": "{o3} 是正確的，torch.matmul() 專門執行矩陣乘法。{o1} 是加法，{o2} 是逐元素相乘，{o4} 是元素總和。",
+    "k": "Tensor Operations",
+    "g": 2
+  },
+  {
+    "n": 49,
+    "t": 1,
+    "q": "如何取得張量 $x$ 中所有元素的平均值？",
+    "o": {
+      "o1": "torch.avg(x)",
+      "o2": "torch.mean(x)",
+      "o3": "torch.median(x)",
+      "o4": "torch.sum(x) / x.shape[0]"
+    },
+    "a": 2,
+    "e": "{o2} 是正確的，PyTorch 提供 torch.mean() 來計算平均值。PyTorch 中沒有 {o1} 這個內建函數。",
+    "k": "Math Operations",
+    "g": 2
+  },
+  {
+    "n": 50,
+    "t": 1,
+    "q": "如果張量 $x$ 的值為 $[1.0, 2.0, 3.0]$，呼叫 $\\text{torch.exp}(x)$ 會計算什麼？",
+    "o": {
+      "o1": "計算每個元素的平方",
+      "o2": "計算每個元素的自然指數函數 $e^x$",
+      "o3": "計算每個元素的自然對數 $\\ln(x)$",
+      "o4": "計算每個元素的正弦值"
+    },
+    "a": 2,
+    "e": "{o2} 是正確的，torch.exp() 用於計算自然指數 $e^x$。{o1} 應使用次方運算，{o4} 應使用 torch.sin()。",
+    "k": "Math Operations",
+    "g": 2
+  },
+  {
+    "n": 51,
+    "t": 1,
+    "q": "對於二維張量 $x$，指令 $x[1, 2]$ 的作用為何？",
+    "o": {
+      "o1": "存取第 $1$ 列、第 $2$ 欄的元素（從 $0$ 開始索引）",
+      "o2": "存取第 $2$ 列、第 $3$ 欄的元素（從 $1$ 開始索引）",
+      "o3": "切片取出第 $1$ 到第 $2$ 列的所有資料",
+      "o4": "建立一個大小為 $(1, 2)$ 的新張量"
+    },
+    "a": 1,
+    "e": "{o1} 是正確的，PyTorch 採用 $0$ 起始索引（0-based indexing），因此 $x[1, 2]$ 代表第 $2$ 列（index $1$）和第 $3$ 欄（index $2$）的交集元素。{o3} 的切片語法應為 $x[1:2, :]$。",
+    "k": "Accessing values",
+    "g": 1
+  },
+  {
+    "n": 52,
+    "t": 1,
+    "q": "在張量切片中，$x[:, 1]$ 代表什麼意思？",
+    "o": {
+      "o1": "選取第 $1$ 列的所有元素",
+      "o2": "選取所有列中的第 $1$ 欄元素（index $1$）",
+      "o3": "選取第 $0$ 到第 $1$ 欄的資料",
+      "o4": "反轉張量的列順序"
+    },
+    "a": 2,
+    "e": "{o2} 是正確的，冒號 $:$ 代表「該維度的所有元素」，因此 $x[:, 1]$ 表示取所有列的第 $1$ 欄。",
+    "k": "Tensor slicing",
+    "g": 1
+  },
+  {
+    "n": 53,
+    "t": 1,
+    "q": "若有一個張量形狀為 $(3, 3)$，使用 $\\text{x.view}(1, 9)$ 會有什麼效果？",
+    "o": {
+      "o1": "刪除張量中的元素，使其只剩 $9$ 個",
+      "o2": "將原本 $3 \\times 3$ 的矩陣重新排列成 $1$ 列 $9$ 欄的二維張量",
+      "o3": "建立一個新的全 $0$ 張量，大小為 $(1, 9)$",
+      "o4": "將張量的值全部替換為 $1$ 到 $9$"
+    },
+    "a": 2,
+    "e": "{o2} 是正確的，view() 函數用於改變張量的形狀（Reshape），但不改變記憶體中的原始數據內容。",
+    "k": "Tensor shape",
+    "g": 1
+  },
+  {
+    "n": 54,
+    "t": 1,
+    "q": "假設 $x$ 是一個包含數值 $1$ 到 $9$ 的二維張量，執行 $\\text{mask} = x > 5$ 以及 $\\text{masked\\_tensor} = x[\\text{mask}]$ 後，會得到什麼？",
+    "o": {
+      "o1": "一個與 $x$ 大小相同的布林張量",
+      "o2": "一個包含數值 $6, 7, 8, 9$ 的一維張量",
+      "o3": "一個將小於等於 $5$ 的元素補 $0$ 的二維張量",
+      "o4": "程式會報錯，因為無法這樣索引"
+    },
+    "a": 2,
+    "e": "{o2} 是正確的，使用布林遮罩作為索引會回傳一個攤平的（一維）張量，裡面只包含符合條件（大於 $5$）的元素。{o1} 是 mask 的結果，而非 masked_tensor。",
+    "k": "Masking operations",
+    "g": 1
+  },
+  {
+    "n": 55,
+    "t": 1,
+    "q": "下列哪一個指令可以將張量 $x$ 儲存到檔案中？",
+    "o": {
+      "o1": "torch.write(x, 'tensor.pt')",
+      "o2": "torch.save(x, 'tensor.pt')",
+      "o3": "x.to_file('tensor.pt')",
+      "o4": "torch.export(x, 'tensor.pt')"
+    },
+    "a": 2,
+    "e": "{o2} 是正確的，PyTorch 提供 torch.save() 函數來將張量序列化並儲存至檔案中。",
+    "k": "Saving/Loading tensor",
+    "g": 1
+  },
+  {
+    "n": 56,
+    "t": 1,
+    "q": "如何從檔案 'tensor.pt' 中讀取張量？",
+    "o": {
+      "o1": "torch.read('tensor.pt')",
+      "o2": "torch.open('tensor.pt')",
+      "o3": "torch.import('tensor.pt')",
+      "o4": "torch.load('tensor.pt')"
+    },
+    "a": 4,
+    "e": "{o4} 是正確的，與 save 對應，讀取儲存的 PyTorch 物件使用的是 torch.load() 函數。",
+    "k": "Saving/Loading tensor",
+    "g": 1
+  },
+  {
+    "n": 57,
+    "t": 1,
+    "q": "在講義的迷宮遊戲（MazeGame）中，張量中的數值 $0$ 代表什麼意義？",
+    "o": {
+      "o1": "障礙物（牆壁）",
+      "o2": "玩家的當前位置",
+      "o3": "可通行的通道",
+      "o4": "迷宮的出口"
+    },
+    "a": 3,
+    "e": "{o3} 是正確的，根據講義設計，$0$ 表示通道（path），$1$ 表示障礙物（obstacle/wall）。",
+    "k": "Maze Game Logic",
+    "g": 3
+  },
+  {
+    "n": 58,
+    "t": 1,
+    "q": "在迷宮遊戲的張量表示中，數值 $1$ 代表什麼？",
+    "o": {
+      "o1": "玩家的生命值",
+      "o2": "通道",
+      "o3": "迷宮出口",
+      "o4": "障礙物（牆壁）"
+    },
+    "a": 4,
+    "e": "{o4} 是正確的，講義中提到「1 -> obstacle (wall)」。",
+    "k": "Maze Game Logic",
+    "g": 3
+  },
+  {
+    "n": 59,
+    "t": 1,
+    "q": "MazeGame 類別在初始化時，使用了哪一個函數來建立初始的空白迷宮網格？",
+    "o": {
+      "o1": "torch.ones(size, size)",
+      "o2": "torch.zeros(size, size)",
+      "o3": "torch.empty(size, size)",
+      "o4": "torch.rand(size, size)"
+    },
+    "a": 2,
+    "e": "{o2} 是正確的，程式碼中使用 self.maze = torch.zeros(size, size) 來建立基礎的 2D 張量。",
+    "k": "Maze Game Logic",
+    "g": 3
+  },
+  {
+    "n": 60,
+    "t": 1,
+    "q": "迷宮遊戲的隨機生成機制中，如何確保玩家一定有地方可以出發和抵達？",
+    "o": {
+      "o1": "使用深度優先搜尋（DFS）預先檢查",
+      "o2": "將起點和終點的張量值強制設為 $0$",
+      "o3": "只在網格中心生成障礙物",
+      "o4": "將起點和終點的張量值強制設為 $1$"
+    },
+    "a": 2,
+    "e": "{o2} 是正確的，程式碼明確寫道確保起點和終點是通道：self.maze[0, 0] = 0 以及終點也設為 $0$。",
+    "k": "Maze Game Logic",
+    "g": 3
+  },
+  {
+    "n": 61,
+    "t": 1,
+    "q": "當玩家輸入 'up' 時，程式需要檢查兩個條件：一是確保不會超出邊界（$x > 0$），二是確保什麼？",
+    "o": {
+      "o1": "上方格子的張量值為 $1$",
+      "o2": "上方格子的張量值為 $0$",
+      "o3": "左方格子的張量值為 $0$",
+      "o4": "玩家座標 $y > 0$"
+    },
+    "a": 2,
+    "e": "{o2} 是正確的，必須檢查 self.maze[x-1, y] == 0，代表上方的格子是通道才可以移動。",
+    "k": "Maze Game Logic",
+    "g": 3
+  },
+  {
+    "n": 62,
+    "t": 1,
+    "q": "在 check_game_status() 中，如果判定 self.maze[player_x, player_y] 等於 $1$，則遊戲狀態為何？",
+    "o": {
+      "o1": "'Win'",
+      "o2": "'Hit obstacle'",
+      "o3": "'Continue'",
+      "o4": "'Game Over by Time'"
+    },
+    "a": 2,
+    "e": "{o2} 是正確的，因為走到了張量值為 $1$ 的格子，表示撞到牆壁，回傳 'Hit obstacle'。",
+    "k": "Maze Game Logic",
+    "g": 3
+  },
+  {
+    "n": 63,
+    "t": 1,
+    "q": "當玩家的位置（player_position）與出口位置（exit_position）相同時，會回傳什麼狀態？",
+    "o": {
+      "o1": "'Hit obstacle'",
+      "o2": "'Continue'",
+      "o3": "'Win'",
+      "o4": "不回傳任何值，程式直接結束"
+    },
+    "a": 3,
+    "e": "{o3} 是正確的，程式中若 self.player_position == self.exit_position，會回傳 'Win'。",
+    "k": "Maze Game Logic",
+    "g": 3
+  },
+  {
+    "n": 64,
+    "t": 1,
+    "q": "在 display_game() 函數中，若當前座標與玩家位置重合，會在畫面上印出什麼字元？",
+    "o": {
+      "o1": "E",
+      "o2": "P",
+      "o3": "#",
+      "o4": "."
+    },
+    "a": 2,
+    "e": "{o2} 是正確的，代表 Player 的縮寫 'P'。",
+    "k": "Maze Game Logic",
+    "g": 3
+  },
+  {
+    "n": 65,
+    "t": 1,
+    "q": "在 display_game() 函數中，若張量該格的值為 $1$，代表障礙物，此時會印出什麼字元？",
+    "o": {
+      "o1": "#",
+      "o2": ".",
+      "o3": "*",
+      "o4": "!"
+    },
+    "a": 1,
+    "e": "{o1} 是正確的，根據講義，若 self.maze[i, j] == 1，會執行 print('#', end=' ')。",
+    "k": "Maze Game Logic",
+    "g": 3
+  },
+  {
+    "n": 66,
+    "t": 2,
+    "q": "函數 $\\text{torch.ones}(2, 3)$ 會建立一個包含 $2$ 欄和 $3$ 列的全為 $1$ 的張量。",
+    "a": 0,
+    "e": "錯誤（False）。在 PyTorch 參數中，第一個數字代表列數（rows），第二個數字代表欄數（columns）。因此是 $2$ 列 $3$ 欄。",
+    "k": "Tensor Creation",
+    "g": 1
+  },
+  {
+    "n": 67,
+    "t": 2,
+    "q": "$\\text{torch.add}(x, y)$ 是用來執行兩個張量的矩陣乘法。",
+    "a": 0,
+    "e": "錯誤（False）。torch.add() 是執行逐元素相加（element-wise addition）。",
+    "k": "Tensor Operations",
+    "g": 2
+  },
+  {
+    "n": 68,
+    "t": 2,
+    "q": "$\\text{torch.sum}(x)$ 會計算並回傳張量中所有元素的總和。",
+    "a": 1,
+    "e": "正確（True）。torch.sum() 預設會將張量內的所有元素相加。",
+    "k": "Math Operations",
+    "g": 2
+  },
+  {
+    "n": 69,
+    "t": 2,
+    "q": "如果張量只包含一個數值（純量張量），可以使用 $\\text{.item()}$ 方法將其轉換為標準的 Python 數值（例如 float 或 int）。",
+    "a": 1,
+    "e": "正確（True）。講義中使用 mean_value.item() 將張量結果轉為 Python 浮點數輸出。",
+    "k": "Math Operations",
+    "g": 2
+  },
+  {
+    "n": 70,
+    "t": 2,
+    "q": "$\\text{torch.sin}()$ 函數可以用來計算張量元素的自然指數（Exponential）。",
+    "a": 0,
+    "e": "錯誤（False）。計算自然指數使用的是 torch.exp()，torch.sin() 是用來計算正弦值。",
+    "k": "Math Operations",
+    "g": 2
+  },
+  {
+    "n": 71,
+    "t": 2,
+    "q": "在二維張量中，$x[0, 0]$ 代表的是左上角的第一個元素。",
+    "a": 1,
+    "e": "正確（True）。因為 PyTorch 索引從 $0$ 開始，所以 $[0, 0]$ 是第 $0$ 列第 $0$ 欄，即左上角元素。",
+    "k": "Accessing values",
+    "g": 1
+  },
+  {
+    "n": 72,
+    "t": 2,
+    "q": "張量的屬性 $\\text{x.shape}$ 可以用來取得該張量在各個維度上的大小。",
+    "a": 1,
+    "e": "正確（True）。shape 屬性會回傳一個 torch.Size 物件，表示各個維度的尺寸。",
+    "k": "Tensor shape",
+    "g": 1
+  },
+  {
+    "n": 73,
+    "t": 2,
+    "q": "$\\text{x.view}(1, 9)$ 操作會直接刪除張量中的資料以符合新的維度大小。",
+    "a": 0,
+    "e": "錯誤（False）。view() 只會改變資料的解讀形狀（Reshape），不會新增或刪除資料元素。",
+    "k": "Tensor shape",
+    "g": 1
+  },
+  {
+    "n": 74,
+    "t": 2,
+    "q": "執行遮罩操作 $\\text{mask} = x > 5$ 時，產生的 $\\text{mask}$ 是一個布林（Boolean）張量，裡面充滿了 True 和 False。",
+    "a": 1,
+    "e": "正確（True）。條件運算符號會對張量的每個元素進行判斷，並回傳對應的布林值張量。",
+    "k": "Masking operations",
+    "g": 1
+  },
+  {
+    "n": 75,
+    "t": 2,
+    "q": "使用 $\\text{torch.save()}$ 儲存張量時，預設會將其轉換為可供人類直接閱讀的純文字格式（TXT）。",
+    "a": 0,
+    "e": "錯誤（False）。PyTorch 的 torch.save() 預設使用二進位序列化（通常是 pickle 格式）儲存，非純文字。",
+    "k": "Saving/Loading tensor",
+    "g": 1
+  },
+  {
+    "n": 76,
+    "t": 2,
+    "q": "在迷宮遊戲的初始化中，玩家的初始位置設定為 $(0, 0)$。",
+    "a": 1,
+    "e": "正確（True）。根據講義原始碼，self.player_position = (0, 0)。",
+    "k": "Maze Game Logic",
+    "g": 3
+  },
+  {
+    "n": 77,
+    "t": 2,
+    "q": "在 generate_maze 函數中，程式會完全隨機生成所有的格子，因此 $(0,0)$ 這個位置也有 $50\\%$ 的機率會變成障礙物。",
+    "a": 0,
+    "e": "錯誤（False）。雖然迴圈中是隨機生成的，但迴圈結束後，程式透過 self.maze[0, 0] = 0 強制確保了起點必定是通道。",
+    "k": "Maze Game Logic",
+    "g": 3
+  },
+  {
+    "n": 78,
+    "t": 2,
+    "q": "當玩家嘗試往 'up'（上）移動時，程式碼中的 $x > 0$ 條件是為了防止玩家走出迷宮的上邊界而產生索引錯誤。",
+    "a": 1,
+    "e": "正確（True）。$x > 0$ 確保了玩家位於第 $1$ 列或以下，因此 $x-1$ 不會是負數而越界。",
+    "k": "Maze Game Logic",
+    "g": 3
+  },
+  {
+    "n": 79,
+    "t": 2,
+    "q": "當玩家向 'right'（右）移動時，程式會將玩家的列索引 $x$ 增加 $1$。",
+    "a": 0,
+    "e": "錯誤（False）。向右移動是在同一列上向右移動，因此列索引 $x$ 不變，而是欄索引 $y$ 會增加 $1$（即 $y+1$）。",
+    "k": "Maze Game Logic",
+    "g": 3
+  },
+  {
+    "n": 80,
+    "t": 2,
+    "q": "在迷宮的文字渲染顯示中，若張量在該格的值為 $0$，則會印出 \".\" 以代表通道。",
+    "a": 1,
+    "e": "正確（True）。程式邏輯若不是玩家、不是出口、也不是障礙物（$1$），則歸類為通道並印出 \".\"。",
+    "k": "Maze Game Logic",
+    "g": 3
+  },
+  {
+    "n": 81,
+    "t": 2,
+    "q": "主程式的迴圈（while True）只會在玩家主動輸入 'exit' 時才會中斷（break）。",
+    "a": 0,
+    "e": "錯誤（False）。迴圈會在 status 變為 'Win'（走到出口）或 'Hit obstacle'（撞牆）時主動中斷（break）。",
+    "k": "Maze Game Logic",
+    "g": 3
+  },
+  {
+    "n": 82,
+    "t": 2,
+    "q": "講義在結尾的發想（The idea...）中，提及可以利用 DFS（深度優先搜尋）演算法來幫助生成一個保證有解的合法迷宮。",
+    "a": 1,
+    "e": "正確（True）。講義第 16、17 頁提到 Generate a Valid Maze 的想法，並放了 Depth-First Search (DFS) 的影片參考連結。",
+    "k": "Maze Game Logic",
+    "g": 3
+  },
+  {
+    "n": 83,
+    "t": 2,
+    "q": "程式中的 `random.choice([0, 1])` 代表每一格生成通道（$0$）與生成障礙物（$1$）的機率均為等比例。",
+    "a": 1,
+    "e": "正確（True）。random.choice 會從提供的列表中均等機率隨機抽取一個元素。",
+    "k": "Maze Game Logic",
+    "g": 3
+  },
+  {
+    "n": 84,
+    "t": 2,
+    "q": "在終端的迷宮畫面顯示中，字元 'E' 代表的是敵人的位置。",
+    "a": 0,
+    "e": "錯誤（False）。'E' 代表的是 Exit（出口）的位置，不是敵人。",
+    "k": "Maze Game Logic",
+    "g": 3
+  },
+  {
+    "n": 85,
+    "t": 2,
+    "q": "PyTorch 中的張量（Tensor）在講義的範例中，被用來儲存整個迷宮的地圖結構資訊。",
+    "a": 1,
+    "e": "正確（True）。講義強調「In our maze game, we use a tensor to store the maze map」。",
+    "k": "Maze Game Logic",
+    "g": 3
+  },
+  {
+    "n": 86,
+    "t": 3,
+    "q": "假設有一個 PyTorch 張量 $x$，其維度大小（Shape）為 $(3, 3)$。請用你自己的話簡述執行 $x.\\text{view}(1, 9)$ 的目的是什麼？",
+    "a": "其目的是將原本 $3 \\times 3$ 的二維矩陣，重塑（Reshape）為一個包含 $1$ 列 $9$ 欄的二維張量。",
+    "e": "view() 函數用於在不改變張量底層資料的前提下，改變其呈現的維度與形狀，常用於將資料攤平以配合神經網路的輸入層。",
+    "k": "Tensor shape",
+    "g": 1
+  },
+  {
+    "n": 87,
+    "t": 3,
+    "q": "在張量的切片（Slicing）語法中，$x[:, 1]$ 所代表的擷取範圍為何？請解釋其中冒號 `:` 的意義。",
+    "a": "$x[:, 1]$ 代表取出張量中「所有列」的「第 $1$ 欄」資料。冒號 `:` 代表選取該維度（在此為列方向）的所有元素。",
+    "e": "在 Python 及 PyTorch 的索引語法中，冒號單獨出現代表取該維度下的所有索引（從頭到尾）。配合第 $1$ 欄的索引（從 $0$ 起算為第二欄），因此可取出一整行的資料。",
+    "k": "Tensor slicing",
+    "g": 1
+  },
+  {
+    "n": 88,
+    "t": 3,
+    "q": "在講義的 MazeGame 類別中，`generate_maze()` 函數大量使用了隨機函數來決定每一格是 $0$ 或 $1$。程式是如何保證玩家的起點與終點不會被障礙物堵死？",
+    "a": "程式在執行完隨機生成的雙重迴圈之後，直接使用賦值語法強行將起點 `self.maze[0, 0]` 和終點 `self.maze[self.size - 1, self.size - 1]` 的值設定為 $0$（通道）。",
+    "e": "後續覆蓋前面的賦值，這是一種簡單且有效確保特定座標狀態的方式，不受隨機性影響。",
+    "k": "Maze Game Logic",
+    "g": 3
+  },
+  {
+    "n": 89,
+    "t": 3,
+    "q": "在迷宮遊戲的主迴圈中，當 `maze_game.check_game_status()` 回傳 `'Hit obstacle'` 時，畫面上會印出什麼文字，且遊戲迴圈會發生什麼事？",
+    "a": "畫面上會印出 \"Oops! You hit an obstacle. Game over!\"，接著執行 `break` 指令跳出無窮迴圈，遊戲結束。",
+    "e": "這考察了遊戲終止條件的邏輯。當玩家的座標所對應的張量值為 $1$ 時，狀態變為 Hit obstacle 並結束迴圈。",
+    "k": "Maze Game Logic",
+    "g": 3
+  },
+  {
+    "n": 90,
+    "t": 3,
+    "q": "講義最後（Part 1 - Generate a Valid Maze）提出了兩個「保證生成有效迷宮」的初步發想（Idea），請簡述其中一個想法的邏輯流程。",
+    "a": "想法一：先隨機生成迷宮，接著檢查是否存在起點到終點的路徑。如果不存在，就重新生成，直到存在合法路徑為止。想法二：先建立一條從起點到終點的暢通路徑，然後再隨機在空白處加上障礙物。",
+    "e": "這兩個想法分別對應了「生成後測試（Generate and Test）」以及「建構式確保（Constructive）」的演算法思維。講義也附帶提到了利用 DFS 來實現路徑檢查。",
+    "k": "Maze Game Logic",
+    "g": 3
+  },
+  {
+    "n": 91,
+    "t": 1,
+    "q": "Autograd 在 PyTorch 等深度學習框架中的主要功能是什麼？",
+    "o": {
+      "o1": "自動清理未使用的變數以節省記憶體",
+      "o2": "自動計算神經網路訓練所需的導數（梯度）",
+      "o3": "自動下載並前處理訓練資料",
+      "o4": "自動決定神經網路的層數與架構"
+    },
+    "a": 2,
+    "e": "{o2} 是正確的，講義明確指出 Autograd 是核心的自動微分引擎，用於計算訓練所需的導數。{o1}、{o3}、{o4} 並非 Autograd 的核心功能。",
+    "k": "Autograd 的定義與核心功能",
+    "g": 1
+  },
+  {
+    "n": 92,
+    "t": 1,
+    "q": "關於神經網路中的「前向傳播（Forward Pass）」，下列敘述何者正確？",
+    "o": {
+      "o1": "負責根據誤差調整網路參數",
+      "o2": "是神經網路的推理過程，不涉及參數更新",
+      "o3": "從輸出層開始反向工作計算梯度",
+      "o4": "用來計算損失函數對模型參數的偏導數"
+    },
+    "a": 2,
+    "e": "前向傳播是資料通過網路產生預測結果的過程，屬於推理階段，不涉及參數更新（{o2} 正確）。調整參數和計算梯度是反向傳播的工作（{o1}、{o3}、{o4} 錯誤）。",
+    "k": "前向傳播 (Forward Pass) 的概念",
+    "g": 2
+  },
+  {
+    "n": 93,
+    "t": 1,
+    "q": "反向傳播（Backpropagation）主要使用了微積分中的哪一種法則來計算梯度？",
+    "o": {
+      "o1": "連鎖律（Chain Rule）",
+      "o2": "乘法公式",
+      "o3": "羅必達法則",
+      "o4": "積分基本定理"
+    },
+    "a": 1,
+    "e": "講義指出，反向傳播是從輸出層開始反向應用微積分的連鎖律（Chain Rule）來計算損失對每個參數的梯度，因此 {o1} 正確。",
+    "k": "反向傳播與連鎖律的關係",
+    "g": 2
+  },
+  {
+    "n": 94,
+    "t": 1,
+    "q": "在深度學習中，「梯度（Gradient）」通常代表什麼意義？",
+    "o": {
+      "o1": "神經網路隱藏層的數量",
+      "o2": "預測值與實際值的絕對誤差總和",
+      "o3": "損失函數對模型參數的偏導數，指示更新方向",
+      "o4": "訓練資料的批次大小"
+    },
+    "a": 3,
+    "e": "梯度代表函數在某一點的斜率或導數。在深度學習中，特指損失函數對於模型參數的偏導數，告訴我們如何更新參數來最小化損失（{o3} 正確）。",
+    "k": "梯度 (Gradient) 的定義",
+    "g": 3
+  },
+  {
+    "n": 95,
+    "t": 1,
+    "q": "下列哪一個是均方誤差（MSE）的正確公式？",
+    "o": {
+      "o1": "$$MSE = \\sum_{i=1}^{N}(y_i - \\hat{y}_i)$$",
+      "o2": "$$MSE = \\frac{1}{N}\\sum_{i=1}^{N}(y_i - \\hat{y}_i)^2$$",
+      "o3": "$$MSE = \\frac{1}{N}\\sum_{i=1}^{N}|y_i - \\hat{y}_i|$$",
+      "o4": "$$MSE = \\sqrt{\\frac{1}{N}\\sum_{i=1}^{N}(y_i - \\hat{y}_i)^2}$$"
+    },
+    "a": 2,
+    "e": "均方誤差 (MSE) 的計算方式是先求差異、平方，再取平均，即 $MSE = \\frac{1}{N}\\sum_{i=1}^{N}(y_i - \\hat{y}_i)^2$，因此 {o2} 正確。",
+    "k": "損失函數 MSE 的公式",
+    "g": 3
+  },
+  {
+    "n": 96,
+    "t": 1,
+    "q": "在梯度下降法（Gradient Descent）中，參數 $w_i$ 的更新規則為何？（$\\alpha$ 為學習率）",
+    "o": {
+      "o1": "$w_i = w_i + \\alpha \\frac{\\partial MSE}{\\partial w_i}$",
+      "o2": "$w_i = w_i - \\alpha \\frac{\\partial MSE}{\\partial w_i}$",
+      "o3": "$w_i = w_i \\times \\alpha \\frac{\\partial MSE}{\\partial w_i}$",
+      "o4": "$w_i = w_i - \\frac{\\partial MSE}{\\partial w_i}$"
+    },
+    "a": 2,
+    "e": "為了最小化損失函數，必須朝著梯度的「反方向」更新權重，故更新規則為 $w_i = w_i - \\alpha \\frac{\\partial MSE}{\\partial w_i}$，{o2} 正確。",
+    "k": "梯度下降參數更新規則",
+    "g": 4
+  },
+  {
+    "n": 97,
+    "t": 1,
+    "q": "在 PyTorch 中宣告張量時，加入參數 `requires_grad=True` 的用意為何？",
+    "o": {
+      "o1": "將張量自動轉移到 GPU 進行計算",
+      "o2": "鎖定張量使其數值無法被修改",
+      "o3": "告訴 PyTorch 追蹤該張量的運算歷史，以便後續計算梯度",
+      "o4": "將張量的資料型態強制轉為浮點數"
+    },
+    "a": 3,
+    "e": "加入 `requires_grad=True` 是為了啟動 Autograd 機制，讓 PyTorch 追蹤對該張量的所有操作，以便在調用 `.backward()` 時計算梯度，因此 {o3} 正確。",
+    "k": "PyTorch 中的 requires_grad 參數設定",
+    "g": 5
+  },
+  {
+    "n": 98,
+    "t": 1,
+    "q": "在 PyTorch 訓練迴圈中，執行 `loss.backward()` 的主要目的是什麼？",
+    "o": {
+      "o1": "計算預測值與實際值之間的誤差",
+      "o2": "初始化神經網路的所有權重",
+      "o3": "執行前向傳播取得預測結果",
+      "o4": "計算損失函數對各參數的梯度"
+    },
+    "a": 4,
+    "e": "當呼叫 `loss.backward()` 時，PyTorch 會從損失節點開始反向傳播，計算並儲存所有 `requires_grad=True` 的張量的梯度（{o4} 正確）。計算誤差發生在執行損失函數本身（{o1} 錯誤）。",
+    "k": "PyTorch 中 loss.backward() 的作用",
+    "g": 5
+  },
+  {
+    "n": 99,
+    "t": 1,
+    "q": "為何在訓練迴圈更新參數後，必須呼叫 `w.grad.zero_()`？",
+    "o": {
+      "o1": "因為 PyTorch 預設會累加梯度，需手動歸零以免影響下一輪的計算",
+      "o2": "為了防止過度擬合（Overfitting）",
+      "o3": "為了將神經網路的權重重置為 0",
+      "o4": "因為不歸零會導致記憶體耗盡"
+    },
+    "a": 1,
+    "e": "PyTorch 中的梯度預設是累積（Accumulate）的。若不手動歸零，下一批次的梯度會加上前一批次的梯度，導致更新錯誤，因此 {o1} 正確。這與重置權重無關（{o3} 錯誤）。",
+    "k": "梯度歸零 (Zero Gradients) 的重要性",
+    "g": 5
+  },
+  {
+    "n": 100,
+    "t": 1,
+    "q": "若梯度下降的「學習率（Learning Rate, $\\alpha$）」設定得過大，最有可能發生什麼情況？",
+    "o": {
+      "o1": "模型會非常緩慢地收斂",
+      "o2": "模型會在最佳解附近震盪，甚至發散（無法收斂）",
+      "o3": "模型會自動調整層數",
+      "o4": "梯度計算會直接產生錯誤並終止程式"
+    },
+    "a": 2,
+    "e": "學習率控制每次權重更新的步長。若過大，會導致更新步長過大而越過（Overshoot）最佳解，造成損失震盪甚至發散（{o2} 正確）。若太小則會導致收斂緩慢（{o1} 錯誤）。",
+    "k": "學習率大小對訓練的影響",
+    "g": 4
+  },
+  {
+    "n": 101,
+    "t": 1,
+    "q": "執行 PyTorch 程式碼 `torch.arange(1, 10, step=3)`，產生的結果為何？",
+    "o": {
+      "o1": "tensor([1, 2, 3])",
+      "o2": "tensor([1, 4, 7])",
+      "o3": "tensor([1, 4, 7, 10])",
+      "o4": "tensor([3, 6, 9])"
+    },
+    "a": 2,
+    "e": "`torch.arange(start, end, step)` 會生成從 start 開始，每次增加 step，且不包含 end 的張量序列。因此產生 1, 4, 7（{o2} 正確）。",
+    "k": "torch.arange 的用法",
+    "g": 5
+  },
+  {
+    "n": 102,
+    "t": 1,
+    "q": "關於 ETF（指數股票型基金）的分類，下列何者通常被設計來「緊密追蹤市場指數，且不頻繁調整持股」？",
+    "o": {
+      "o1": "主動型 ETF (Active ETF)",
+      "o2": "被動型 ETF (Passive ETF)",
+      "o3": "避險型 ETF",
+      "o4": "期貨型 ETF"
+    },
+    "a": 2,
+    "e": "講義明確定義被動型 ETF (Passive ETF) 是追蹤特定指數（如 0050 追蹤台灣前 50 大市值公司），不試圖打敗市場也不頻繁變動（{o2} 正確）。主動型 ETF 則由經理人選股試圖打敗大盤（{o1} 錯誤）。",
+    "k": "被動型 ETF 的定義",
+    "g": 6
+  },
+  {
+    "n": 103,
+    "t": 1,
+    "q": "台灣「元大台灣卓越50基金（0050 ETF）」最大的成分股通常是哪一間公司？",
+    "o": {
+      "o1": "聯發科 (MediaTek)",
+      "o2": "鴻海 (Hon Hai)",
+      "o3": "台達電 (Delta Electronics)",
+      "o4": "台積電 (TSMC)"
+    },
+    "a": 4,
+    "e": "根據講義資料，台積電 (TSMC) 在 0050 ETF 中佔了最大的權重（約 62.77%），因此對其價格走勢影響最大（{o4} 正確）。",
+    "k": "ETF 0050 核心成分股與權重概念",
+    "g": 6
+  },
+  {
+    "n": 104,
+    "t": 1,
+    "q": "PyTorch 中的 `torch.cat((tensor1, tensor2), dim=0)` 指令作用為何？",
+    "o": {
+      "o1": "將兩個張量相加",
+      "o2": "將兩個張量相乘",
+      "o3": "在指定的維度（此為維度 0）上將張量連接（Concatenate）起來",
+      "o4": "將張量沿著列方向拆分成兩個子張量"
+    },
+    "a": 3,
+    "e": "`torch.cat` (Concatenate) 是用於沿著給定維度連接一連串的張量（{o3} 正確）。相加與相乘有其他運算子，拆分則是 `torch.split` 或 `torch.chunk` 的功能（{o4} 錯誤）。",
+    "k": "張量拼接 torch.cat",
+    "g": 5
+  },
+  {
+    "n": 105,
+    "t": 1,
+    "q": "在手動更新模型參數時，為何需要將更新程式碼包在 `with torch.no_grad():` 區塊中？",
+    "o": {
+      "o1": "因為更新參數本身不應該被 Autograd 追蹤計算新的梯度",
+      "o2": "為了將計算分配給 GPU 加速",
+      "o3": "這樣寫可以避免記憶體洩漏（Memory Leak）",
+      "o4": "這是在 PyTorch 中宣告常數的標準語法"
+    },
+    "a": 1,
+    "e": "當使用 `requires_grad=True` 時，對變數的操作都會被追蹤建構計算圖。在更新權重時，我們只是要改變其數值，並不希望這個「減去梯度」的動作也被列入下一次計算梯度的歷史中，故需用 `torch.no_grad()` 包覆（{o1} 正確）。",
+    "k": "torch.no_grad() 的應用場景與原理",
+    "g": 5
+  },
+  {
+    "n": 106,
+    "t": 1,
+    "q": "假設昨天的股價是 100 元，今天是 105 元，那麼計算出的「每日報酬率（Daily Return）」為多少？",
+    "o": {
+      "o1": "$5$",
+      "o2": "$0.05$",
+      "o3": "$1.05$",
+      "o4": "$105$"
+    },
+    "a": 2,
+    "e": "根據講義範例，每日報酬率代表價格變動百分比。從 100 變到 105，公式為 $\\frac{105 - 100}{100} = 0.05$ (即 5% increase)，因此 {o2} 正確。",
+    "k": "每日報酬率 (Daily Return) 的計算方式",
+    "g": 6
+  },
+  {
+    "n": 107,
+    "t": 1,
+    "q": "PyTorch 中 `torch.randn(2, 3)` 生成的張量，其數值分布為何？",
+    "o": {
+      "o1": "0 到 1 之間的均勻分佈（Uniform Distribution）",
+      "o2": "平均值為 0、變異數為 1 的標準常態分佈（Standard Normal Distribution）",
+      "o3": "只有 0 和 1 的伯努利分佈（Bernoulli Distribution）",
+      "o4": "0 到 9 之間的隨機整數"
+    },
+    "a": 2,
+    "e": "`torch.randn` 生成的是從標準常態分佈 (Standard Normal Distribution, mean=0, variance=1) 隨機取樣的浮點數（{o2} 正確）。均勻分佈應使用 `torch.rand`，隨機整數則是 `torch.randint`。",
+    "k": "隨機張量生成函數 torch.randn",
+    "g": 5
+  },
+  {
+    "n": 108,
+    "t": 1,
+    "q": "根據計算圖 (Computation Graph)，若方程式為 $g = (x+y)*z$，前向傳播輸入為 $x=1, y=3, z=-3$，請問結果 $g$ 等於多少？",
+    "o": {
+      "o1": "$-12$",
+      "o2": "$0$",
+      "o3": "$12$",
+      "o4": "$-6$"
+    },
+    "a": 1,
+    "e": "前向傳播計算順序：先算 $p = x+y = 1+3 = 4$。接著算 $g = p*z = 4*(-3) = -12$（{o1} 正確）。此為講義中的經典計算圖範例。",
+    "k": "計算圖的前向傳播計算",
+    "g": 2
+  },
+  {
+    "n": 109,
+    "t": 1,
+    "q": "在機器學習中，設計「損失函數（Loss Function）」的最終目標是什麼？",
+    "o": {
+      "o1": "最大化預測值，以得到更高的準確率",
+      "o2": "最小化函數值，使模型預測值與實際目標值越接近越好",
+      "o3": "讓函數值達到 100",
+      "o4": "計算神經網路的運算效能並降低延遲"
+    },
+    "a": 2,
+    "e": "損失函數用來衡量模型預測值與實際目標值的差異（誤差）。訓練的目標是「最小化（Minimize）」這個函數，這代表模型做出了更準確的預測（{o2} 正確）。",
+    "k": "損失函數的目標",
+    "g": 3
+  },
+  {
+    "n": 110,
+    "t": 1,
+    "q": "要改變一個現有 PyTorch 張量的形狀（例如將 2x2 轉為 4x1），而不改變其內容數據，應該使用哪個函數？",
+    "o": {
+      "o1": "`torch.transpose()`",
+      "o2": "`torch.split()`",
+      "o3": "`torch.reshape()`",
+      "o4": "`torch.gather()`"
+    },
+    "a": 3,
+    "e": "`torch.reshape(input_tensor, shape)` 用於改變張量形狀但不變更內部資料數量與元素（{o3} 正確）。`torch.transpose` 是交換維度（轉置），`torch.split` 是拆分張量。",
+    "k": "張量形狀變換 torch.reshape",
+    "g": 5
+  },
+  {
+    "n": 111,
+    "t": 2,
+    "q": "前向傳播（Forward Propagation）是神經網路推理（Inference）的過程，在此過程中不會進行任何模型參數的更新。",
+    "a": 1,
+    "e": "正確 (True)。講義指出「The forward pass is the inference process of a neural network and does not involve parameter updates.」參數更新發生在反向傳播之後。",
+    "k": "前向傳播的定義",
+    "g": 2
+  },
+  {
+    "n": 112,
+    "t": 2,
+    "q": "均方誤差（MSE）的計算方式是將預測值與實際值的差值取平方，然後直接加總起來，不需要取平均。",
+    "a": 0,
+    "e": "錯誤 (False)。MSE 的全名是 Mean Squared Error，除了計算差值並平方外，最後還必須取平均值（即公式中的 $\\frac{1}{N}$）。",
+    "k": "MSE 的計算公式",
+    "g": 3
+  },
+  {
+    "n": 113,
+    "t": 2,
+    "q": "梯度（Gradient）告訴我們模型參數空間中，損失函數值增加或減少的方向。",
+    "a": 1,
+    "e": "正確 (True)。梯度指示了函數在該點的變化率，也就是沿著該方向移動會使函數值增加，其反方向則會使函數值減少。",
+    "k": "梯度的物理意義",
+    "g": 3
+  },
+  {
+    "n": 114,
+    "t": 2,
+    "q": "為了最小化損失函數，梯度下降法會沿著與梯度「相同」的方向更新模型參數。",
+    "a": 0,
+    "e": "錯誤 (False)。梯度指示函數增長最快的方向，為了要「最小化」損失，我們必須往梯度的「反方向」（Opposite direction）走，公式為減去梯度 $w_i = w_i - \\alpha \\times gradient$。",
+    "k": "梯度下降的更新方向",
+    "g": 4
+  },
+  {
+    "n": 115,
+    "t": 2,
+    "q": "學習率（Learning Rate）是一個超參數（Hyperparameter），用來控制優化過程中每次參數更新的步伐大小。",
+    "a": 1,
+    "e": "正確 (True)。講義定義 learning rate $\\alpha$ 是一個超參數，用來控制 optimization 過程中所踏出步伐的尺寸大小 (controls the size of the steps)。",
+    "k": "學習率的定義",
+    "g": 4
+  },
+  {
+    "n": 116,
+    "t": 2,
+    "q": "在 PyTorch 的訓練迴圈中，呼叫 `w1.grad.zero_()` 是為了在每一輪（Epoch）開始前清空之前累積的梯度。",
+    "a": 1,
+    "e": "正確 (True)。PyTorch 預設在執行 `backward()` 時會累積梯度。若不使用 `zero_()` 將其歸零，梯度會與前幾次的計算結果混合而導致更新出錯。",
+    "k": "梯度歸零機制",
+    "g": 5
+  },
+  {
+    "n": 117,
+    "t": 2,
+    "q": "主動型 ETF (Active ETF) 的經理人會試圖透過頻繁挑選與買賣成分股，來打敗市場的平均報酬。",
+    "a": 1,
+    "e": "正確 (True)。講義提到「Active ETF means people manage it... Managers will adjust the stocks often, try to beat the market.」主動型 ETF 會積極調整持股。",
+    "k": "主動型 ETF 的特性",
+    "g": 6
+  },
+  {
+    "n": 118,
+    "t": 2,
+    "q": "台灣「元大台灣卓越50基金（0050 ETF）」屬於主動型 ETF。",
+    "a": 0,
+    "e": "錯誤 (False)。講義明確指出「Taiwan Top 50 ETF is a Passive ETF.」它追蹤市值前 50 大公司，屬於被動跟蹤市場指數的被動型 ETF。",
+    "k": "0050 ETF 的類型",
+    "g": 6
+  },
+  {
+    "n": 119,
+    "t": 2,
+    "q": "在 PyTorch 中宣告張量時，如果沒有設定 `requires_grad=True`，Autograd 引擎將不會追蹤針對這個張量的操作，也無法計算其梯度。",
+    "a": 1,
+    "e": "正確 (True)。需要計算梯度的權重參數必須顯式地設定 `requires_grad=True`，否則無法使用 `loss.backward()` 來求導。",
+    "k": "requires_grad 的必要性",
+    "g": 5
+  },
+  {
+    "n": 120,
+    "t": 2,
+    "q": "使用 `torch.bernoulli()` 函數可以生成服從常態分佈（Normal Distribution）的浮點數。",
+    "a": 0,
+    "e": "錯誤 (False)。`torch.bernoulli()` 生成的是二元隨機變數 (0 或 1)。生成常態分佈應使用 `torch.normal()` 或 `torch.randn()`。",
+    "k": "PyTorch 分佈生成函數",
+    "g": 5
+  },
+  {
+    "n": 121,
+    "t": 2,
+    "q": "反向傳播（Backpropagation）演算法的流程是由神經網路的輸入層開始，一直計算到輸出層結束。",
+    "a": 0,
+    "e": "錯誤 (False)。反向傳播顧名思義，是「從輸出層開始，反向工作通過網路 (starts from the output layer and works backward)」來計算梯度的。",
+    "k": "反向傳播的方向",
+    "g": 2
+  },
+  {
+    "n": 122,
+    "t": 2,
+    "q": "`torch.split()` 函數可以將一個張量沿著指定的維度拆分成特定大小或數量的多個子張量。",
+    "a": 1,
+    "e": "正確 (True)。`torch.split` 根據指定的 `split_size_or_sections` 將張量沿著給定維度拆分為多個區塊。",
+    "k": "張量拆分 torch.split",
+    "g": 5
+  },
+  {
+    "n": 123,
+    "t": 2,
+    "q": "使用 `yfinance` 等 Python 套件獲取的股票每日報酬率（Daily Return）可以直接等同於當日的收盤股價。",
+    "a": 0,
+    "e": "錯誤 (False)。每日報酬率（Daily Return）指的是兩天股價之間的「變動百分比 (price change from one day to next day)」，並非股票當日的絕對價格。",
+    "k": "每日報酬率與股價的差異",
+    "g": 6
+  },
+  {
+    "n": 124,
+    "t": 2,
+    "q": "根據計算圖的原理，網路中的每一個節點都代表一個運算操作（如加法、乘法等）。",
+    "a": 1,
+    "e": "正確 (True)。在計算圖 (Computation Graph) 中，資料 (張量) 在節點之間流動，而圖中的節點就代表各種數學運算 (如 +、*)，這有助於後續的連鎖律求導。",
+    "k": "計算圖的結構",
+    "g": 2
+  },
+  {
+    "n": 125,
+    "t": 2,
+    "q": "若使用梯度下降法來尋找最佳參數，模型必須持續迭代更新，直到損失函數的變化量變得極小或達到設定的迭代次數為止。",
+    "a": 1,
+    "e": "正確 (True)。這被稱為收斂（Convergence）。我們需要重複計算梯度並更新權重的步驟，直到損失不再明顯下降或達到最大 epochs。",
+    "k": "梯度下降的收斂條件",
+    "g": 4
+  },
+  {
+    "n": 126,
+    "t": 2,
+    "q": "在講義的範例程式碼中，`torch.transpose(input_tensor, 0, 1)` 會將張量的第 0 維度與第 1 維度進行交換。",
+    "a": 1,
+    "e": "正確 (True)。`torch.transpose` 的作用就是交換張量中給定的兩個維度（在這裡是維度 0 和維度 1），使行列互換。",
+    "k": "轉置操作 torch.transpose",
+    "g": 5
+  },
+  {
+    "n": 127,
+    "t": 2,
+    "q": "若預測房價的公式為 $v = w_1 \\times size + w_2 \\times bedrooms$，在深度學習中，我們輸入的資料集需要包含隨機產生的 $w_1$ 與 $w_2$ 當作特徵。",
+    "a": 0,
+    "e": "錯誤 (False)。$size$ 和 $bedrooms$ 是輸入資料集（特徵）。$w_1$ 和 $w_2$ 是模型要學習的內部權重參數（Weights），而非外部提供的資料。",
+    "k": "特徵與模型權重的差別",
+    "g": 3
+  },
+  {
+    "n": 128,
+    "t": 2,
+    "q": "「Data.gov.tw」是台灣政府的政府資料開放平台，提供 CSV、JSON 等機讀格式的公開數據，可作為機器學習的訓練資料來源。",
+    "a": 1,
+    "e": "正確 (True)。講義介紹了這是官方的 Open Data Portal，提供政府機構釋放予大眾使用的機讀格式資料。",
+    "k": "資料獲取來源平台",
+    "g": 6
+  },
+  {
+    "n": 129,
+    "t": 2,
+    "q": "我們使用神經網路進行分類預測時，Loss 數值越高，代表預測越準確。",
+    "a": 0,
+    "e": "錯誤 (False)。Loss（損失）測量的是預測值與實際目標的「誤差」。Loss 數值越高代表誤差越大、模型越不準確。訓練的目標是最小化 Loss。",
+    "k": "損失數值的意義",
+    "g": 3
+  },
+  {
+    "n": 130,
+    "t": 2,
+    "q": " PyTorch 中的 `torch.randint(low=0, high=10, size=(2, 3))` 函數，會生成一個形狀為 $2 \\times 3$ 的張量，內容全都是大於等於 10 的整數。",
+    "a": 0,
+    "e": "錯誤 (False)。`low=0` 與 `high=10` 代表生成的整數會落在 0 到 9 之間（不包含 10）。",
+    "k": "隨機整數生成 torch.randint",
+    "g": 5
+  },
+  {
+    "n": 131,
+    "t": 3,
+    "q": "請簡述深度學習中，梯度下降演算法（Gradient Descent Algorithm）的四個主要步驟為何？",
+    "a": "1. 隨機或歸零初始化權重參數 (Initialize the weights)。\n2. 計算損失函數對各權重參數的梯度 (Calculate the gradient of the loss)。\n3. 朝梯度的反方向更新權重以最小化損失 (Update the weights in the opposite direction)。\n4. 重複步驟 2 與 3 直到收斂 (Repeat until convergence)。",
+    "e": "梯度下降是優化的核心流程，必須反覆利用前向傳播算損失、反向傳播算梯度，並更新參數直到誤差變化微乎其微。",
+    "k": "梯度下降演算法的四個標準步驟",
+    "g": 4
+  },
+  {
+    "n": 132,
+    "t": 3,
+    "q": "在訓練神經網路的 PyTorch 迴圈中，為何必須在每一次迴圈內手動執行 `w1.grad.zero_()` 將梯度歸零？",
+    "a": "因為 PyTorch 在呼叫 `backward()` 時，預設會將新計算出來的梯度「累加（Accumulate）」到變數現有的梯度數值上。如果不進行歸零，當前迭代的梯度將會錯誤地混入前次迭代的結果，導致參數更新方向錯誤，無法正確收斂。",
+    "e": "這是一個深度學習框架的重要特性設計（有助於累積梯度的特定應用如微型批次訓練），但在標準梯度下降時，必須在更新後立即將其清空。",
+    "k": "PyTorch 中梯度累積特性與 zero_() 的必要性",
+    "g": 5
+  },
+  {
+    "n": 133,
+    "t": 3,
+    "q": "什麼是主動型 ETF (Active ETF) 與被動型 ETF (Passive ETF)？兩者有何區別？",
+    "a": "主動型 ETF 由經理人主動管理，經理人會頻繁挑選並調整持股，試圖打敗市場的平均報酬。被動型 ETF 則是以追蹤特定市場指數（如台灣 50 指數）為目標，持股不頻繁變動，主要是跟隨整體市場表現。",
+    "e": "在講義的實作提案中，藉由預測 0050 等被動 ETF 作為範例，是因為其成分股相對固定，較容易透過權重回歸（線性回歸）找出其與成分股（如台積電、鴻海）的關係。",
+    "k": "主被動 ETF 的定義差別",
+    "g": 6
+  },
+  {
+    "n": 134,
+    "t": 3,
+    "q": "試比較神經網路中「前向傳播（Forward Pass）」與「反向傳播（Backward Pass）」的功能與目的。",
+    "a": "前向傳播的功能是將輸入資料通過神經網路各層的轉換，計算出模型的預測結果，屬於推理過程，且不牽涉參數更新。反向傳播的目的是從預測結果與實際資料之間的損失（Loss）開始，反向通過網路並利用連鎖律計算所有權重的梯度，以為後續的梯度下降參數更新做準備。",
+    "e": "前向傳播：輸入 $\\rightarrow$ 預測 $\\rightarrow$ 算誤差。反向傳播：誤差 $\\rightarrow$ 梯度 $\\rightarrow$ 更新權重。",
+    "k": "前向傳播與反向傳播的核心對比",
+    "g": 2
+  },
+  {
+    "n": 135,
+    "t": 3,
+    "q": "假設有一個模型用於預測房價，權重分別是 $w_1=200, w_2=12,000$。預測公式為 $v = w_1 \\times size + w_2 \\times bedrooms$。請給定一個大小為 1500 (sqft) 且有 3 個臥室的房子，計算其預測價格為何？",
+    "a": "預測價格 $v = (200 \\times 1500) + (12,000 \\times 3) = 300,000 + 36,000 = 336,000$。",
+    "e": "此為講義中計算 MSE 範例的一環，主要是測試能否正確代入線性回歸方程式前向傳播獲得預測值。",
+    "k": "多變數線性模型的前向預測計算",
+    "g": 3
+  },
+  {
+    "n": 136,
+    "t": 1,
+    "q": "在人工神經網路（ANN）中，權重（Weights, $w$）與偏差值（Bias, $b$）是如何取得的？",
+    "o": {
+      "o1": "由使用者每次輸入時隨機決定 / Randomly determined by user input",
+      "o2": "透過模型訓練獲得的常數 / Constant obtained through model training",
+      "o3": "由激活函數（Activation function）計算得出 / Calculated by the activation function",
+      "o4": "固定為 $w=3, b=2$ 不會改變 / Fixed at w=3, b=2 and never change"
+    },
+    "a": 2,
+    "e": "{o2} 是正確的，根據講義，參數 w 和 b 是常數，是透過模型訓練（model training）獲得的。{o1}、{o3}、{o4} 皆為錯誤的描述。",
+    "k": "了解人工神經元中權重與偏差值的來源與特性。",
+    "g": 2
+  },
+  {
+    "n": 137,
+    "t": 1,
+    "q": "下列關於感知器（Perceptron）的描述，何者最為準確？",
+    "o": {
+      "o1": "它是一個多層的神經網路 / It is a multi-layer neural network",
+      "o2": "它只能處理單一輸入值 / It can only process a single input",
+      "o3": "它是一個單層的神經網路，作為複雜網路的基礎建構區塊 / It is a single-layer neural network serving as a fundamental building block",
+      "o4": "它不需要激活函數 / It does not require an activation function"
+    },
+    "a": 3,
+    "e": "{o3} 是正確的，講義明確保指感知器為單層神經網路且為複雜網路的基礎。{o1} 錯在多層，{o2} 錯在它可以有多個輸入，{o4} 錯在它依然需要激活函數處理輸出。",
+    "k": "感知器的基本定義與架構。",
+    "g": 3
+  },
+  {
+    "n": 138,
+    "t": 1,
+    "q": "在一個人工神經元中，若有 $m$ 個輸入值，加權總和（Weighted sum）的數學表示式為何？",
+    "o": {
+      "o1": "$\\sum_{i=1}^{m} x_i + b$",
+      "o2": "$\\sum_{i=1}^{m} (w_i + x_i) + b$",
+      "o3": "$\\sum_{i=1}^{m} w_i x_i + b$",
+      "o4": "$w_m x_m + b$"
+    },
+    "a": 3,
+    "e": "{o3} 是正確的，輸入值 $x_i$ 必須先乘上對應的權重 $w_i$ 後加總，最後再加上偏差值 $b$。{o1} 缺少權重，{o2} 是相加而非相乘，{o4} 只計算了最後一個輸入。",
+    "k": "神經元內部線性組合的數學表達能力。",
+    "g": 2
+  },
+  {
+    "n": 139,
+    "t": 1,
+    "q": "若一個具有 2 個輸入的神經元，給定 $w_1=3, w_2=2, b=1$，當輸入 $x_1=1, x_2=-1$ 時，進入激活函數前的數值 $z$ 為何？",
+    "o": {
+      "o1": "1",
+      "o2": "2",
+      "o3": "4",
+      "o4": "6"
+    },
+    "a": 2,
+    "e": "{o2} 是正確的，$z = (3 \\times 1) + (2 \\times -1) + 1 = 3 - 2 + 1 = 2$。其他選項計算錯誤。",
+    "k": "計算多輸入神經元的線性加權總和。",
+    "g": 3
+  },
+  {
+    "n": 140,
+    "t": 1,
+    "q": "在講義的設計神經元範例中，當計算出的 $z = 13$，且使用 Step 激活函數（條件：若 $z \\ge 10$ 則 output=1，若 $z < 10$ 則 output=0），則最終輸出為何？",
+    "o": {
+      "o1": "0",
+      "o2": "1",
+      "o3": "10",
+      "o4": "13"
+    },
+    "a": 2,
+    "e": "{o2} 是正確的，因為 $z=13 \\ge 10$，滿足 Step 函數輸出 1 的條件。{o1} 條件不符，{o3} 與 {o4} 不是該激活函數的輸出值範圍。",
+    "k": "理解並應用條件式激活函數（Step function）。",
+    "g": 4
+  },
+  {
+    "n": 141,
+    "t": 1,
+    "q": "下列哪一個「非」講義中提到的生物神經網路相關名詞？",
+    "o": {
+      "o1": "Soma",
+      "o2": "Dendrites",
+      "o3": "Axon",
+      "o4": "Perceptron"
+    },
+    "a": 4,
+    "e": "{o4} 是正確的，Perceptron（感知器）是人工神經網路的名詞，不是生物神經細胞的結構。{o1}、{o2}、{o3} 皆為生物神經元構造。",
+    "k": "區分生物神經元與人工神經元的專有名詞。",
+    "g": 1
+  },
+  {
+    "n": 142,
+    "t": 1,
+    "q": "根據講義中的 ReLU 函數圖形，當輸入 $x = -2$ 時，函數的輸出值為何？",
+    "o": {
+      "o1": "-2",
+      "o2": "0",
+      "o3": "1",
+      "o4": "2"
+    },
+    "a": 2,
+    "e": "{o2} 是正確的，根據 ReLU 的圖形，當 $x < 0$ 時，輸出皆為 0。{o1} 是線性函數的行為，{o3} 和 {o4} 不符合圖表。",
+    "k": "判讀 ReLU 激活函數的圖形與輸出特徵。",
+    "g": 4
+  },
+  {
+    "n": 143,
+    "t": 1,
+    "q": "在講義中提及了多種神經傳導物質（Neurotransmitters），下列何者出現在講義清單中？",
+    "o": {
+      "o1": "Dopamine",
+      "o2": "Serotonin",
+      "o3": "Adrenaline",
+      "o4": "Endorphin"
+    },
+    "a": 2,
+    "e": "{o2} 是正確的，講義第 2 頁中提到了 Serotonin（血清素）。其他選項並未直接列於該頁筆記中。",
+    "k": "生物神經網絡名詞回顧。",
+    "g": 1
+  },
+  {
+    "n": 144,
+    "t": 1,
+    "q": "根據講義，Sigmoid 函數的輸出值範圍大約落在何處？",
+    "o": {
+      "o1": "0 到 1 之間",
+      "o2": "-1 到 1 之間",
+      "o3": "0 到無限大",
+      "o4": "-無限大到無限大"
+    },
+    "a": 1,
+    "e": "{o1} 是正確的，從講義的 Sigmoid 函數圖表可看出，Y 軸範圍介於 0.0 到 1.0 之間。{o2} 是 Tanh 函數的範圍，{o3} 是 ReLU 正半軸的範圍。",
+    "k": "認識 Sigmoid 激活函數的輸出特性。",
+    "g": 4
+  },
+  {
+    "n": 145,
+    "t": 1,
+    "q": "使用 PyTorch 計算神經元內積時，最對應的張量操作指令為何？",
+    "o": {
+      "o1": "torch.add(w, x)",
+      "o2": "torch.matmul(w, x)",
+      "o3": "torch.sum(w, x)",
+      "o4": "torch.cat(w, x)"
+    },
+    "a": 2,
+    "e": "{o2} 是正確的，講義中明確提到使用 `torch.matmul(w, x)` 來計算權重與輸入的內積。{o1} 是相加，{o3} 是總和，{o4} 是拼接。",
+    "k": "神經網路計算與 PyTorch 程式碼的連結。",
+    "g": 3
+  },
+  {
+    "n": 146,
+    "t": 1,
+    "q": "矩陣乘法中，若計算矩陣 A (大小 2x3) 與矩陣 B (大小 3x2) 的內積 (Dot Product)，所得結果的矩陣大小為何？",
+    "o": {
+      "o1": "2x3",
+      "o2": "3x2",
+      "o3": "2x2",
+      "o4": "3x3"
+    },
+    "a": 3,
+    "e": "{o3} 是正確的，根據矩陣乘法規則 (m x n) 乘以 (n x p) 會得到 (m x p) 的矩陣，故 2x3 與 3x2 內積為 2x2。講義範例展示了此類點積。",
+    "k": "理解張量與矩陣內積的基本維度概念。",
+    "g": 3
+  },
+  {
+    "n": 147,
+    "t": 1,
+    "q": "若一個 1 個輸入的單節點神經元，權重 $w=3$，偏差值 $b=2$，請問當 $z=0$ 時，對應的輸入 $x$ 為多少？",
+    "o": {
+      "o1": "2/3",
+      "o2": "-2/3",
+      "o3": "1.5",
+      "o4": "-1.5"
+    },
+    "a": 2,
+    "e": "{o2} 是正確的。公式為 $z = wx + b$，代入得 $0 = 3x + 2$，解得 $x = -2/3$。{o1}、{o3}、{o4} 計算皆誤。",
+    "k": "反向推導神經元的線性方程式。",
+    "g": 2
+  },
+  {
+    "n": 148,
+    "t": 1,
+    "q": "為何我們在神經網路中需要「不同」的激活函數（Different activation functions）？",
+    "o": {
+      "o1": "為了讓程式碼看起來更複雜",
+      "o2": "因為不同的激活函數適用於不同類型的數值資料 (Suitable for different types of numerical data)",
+      "o3": "為了減少記憶體的使用量",
+      "o4": "激活函數其實只有一種，只是名稱不同"
+    },
+    "a": 2,
+    "e": "{o2} 是正確的，講義最後一頁指出「Different activation functions are suitable for different types of numerical data」。{o1}、{o3}、{o4} 皆非正當理由。",
+    "k": "理解激活函數多樣性的目的。",
+    "g": 4
+  },
+  {
+    "n": 149,
+    "t": 1,
+    "q": "在人工神經網路中，符號 $\\phi$ 通常代表什麼？",
+    "o": {
+      "o1": "偏差值 (Bias)",
+      "o2": "輸入資料 (Input data)",
+      "o3": "權重 (Weight)",
+      "o4": "激活函數 (Activation function)"
+    },
+    "a": 4,
+    "e": "{o4} 是正確的，講義中的公式 $\\phi(\\sum w_i x_i)$，$\\phi$ 指向了 Activation function。{o1} 是 b，{o2} 是 x，{o3} 是 w。",
+    "k": "熟悉人工神經元的數學符號表示。",
+    "g": 2
+  },
+  {
+    "n": 150,
+    "t": 1,
+    "q": "給定一個感知器，其運算邏輯為 $z = activate([x_1, x_2] \\cdot [3, 2]^T + 1)$。若激活函數 $f(x) = 1$ (if $x < 0$) 且 $f(x) = 0$ (if $x \\ge 0$)，當輸入 $x_1=-1, x_2=-1$ 時，輸出為何？",
+    "o": {
+      "o1": "0",
+      "o2": "1",
+      "o3": "-4",
+      "o4": "2"
+    },
+    "a": 2,
+    "e": "{o2} 是正確的。首先計算加權總和 $z = 3(-1) + 2(-1) + 1 = -3 - 2 + 1 = -4$。因為 $-4 < 0$，根據該激活函數條件，輸出為 1。",
+    "k": "綜合運用點積與條件式激活函數進行計算。",
+    "g": 3
+  },
+  {
+    "n": 151,
+    "t": 1,
+    "q": "從講義圖形判斷，Tanh 函數與 Sigmoid 函數最大的不同在於？",
+    "o": {
+      "o1": "Tanh 函數只有正數輸出",
+      "o2": "Sigmoid 函數輸出範圍包含負數",
+      "o3": "Tanh 函數輸出範圍為 -1 到 1，而 Sigmoid 為 0 到 1",
+      "o4": "兩者圖形完全沒有相似的 S 型曲線"
+    },
+    "a": 3,
+    "e": "{o3} 是正確的，比較兩者圖表可知 Tanh 介於 -1.0 到 1.0，Sigmoid 介於 0.0 到 1.0。{o1} 與 {o2} 的描述剛好相反。{o4} 錯誤，兩者皆呈 S 型。",
+    "k": "比較不同激活函數的數值特性。",
+    "g": 4
+  },
+  {
+    "n": 152,
+    "t": 1,
+    "q": "關於單一神經元計算的公式 $z = activate(w x + b)$，下列敘述何者錯誤？",
+    "o": {
+      "o1": "括號內的 $w x + b$ 代表線性轉換",
+      "o2": "計算必須先通過 activate 函數，再乘上權重",
+      "o3": "$x$ 代表來自前一層或外界的輸入訊號",
+      "o4": "$b$ 具有平移線性函數的功能"
+    },
+    "a": 2,
+    "e": "{o2} 是正確答案（因為它是錯誤描述）。神經網路的計算順序是先進行加權總和（乘上權重並加偏差），然後才通過激活函數。{o1}、{o3}、{o4} 皆為正確描述。",
+    "k": "確認神經元內部計算的先後順序。",
+    "g": 3
+  },
+  {
+    "n": 153,
+    "t": 1,
+    "q": "在講義第 6 頁的 2 輸入節點神經元中，偏差值 $b$ 等於多少？",
+    "o": {
+      "o1": "0",
+      "o2": "1",
+      "o3": "2",
+      "o4": "3"
+    },
+    "a": 2,
+    "e": "{o2} 是正確的，講義上方明確標示了粉紅色的圓圈 $b=1$。{o3} 是 $w_2$，{o4} 是 $w_1$。",
+    "k": "讀取並提取講義模型中的特定參數值。",
+    "g": 2
+  },
+  {
+    "n": 154,
+    "t": 1,
+    "q": "根據 ReLU 的圖表，當 $x = 4$ 時，輸出值為？",
+    "o": {
+      "o1": "0",
+      "o2": "2",
+      "o3": "4",
+      "o4": "16"
+    },
+    "a": 3,
+    "e": "{o3} 是正確的，從 ReLU 函數圖形可以看出，在正半軸 $x \\ge 0$ 時，$y = x$，因此當 $x = 4$ 時輸出也是 4。{o1} 是負數區的結果，{o2}、{o4} 數值不符。",
+    "k": "分析 ReLU 函數正半軸的輸出特性。",
+    "g": 4
+  },
+  {
+    "n": 155,
+    "t": 1,
+    "q": "講義中「Dot Product」範例計算 $(\\begin{matrix}2 & 1 \\\\ 4 & 3\\end{matrix}) \\times (\\begin{matrix}1 & 2 \\\\ 1 & 0\\end{matrix})$ 的結果矩陣左上角元素（第一列第一行）的值為？",
+    "o": {
+      "o1": "2",
+      "o2": "3",
+      "o3": "4",
+      "o4": "7"
+    },
+    "a": 2,
+    "e": "{o2} 是正確的。計算方式為 $(2 \\times 1) + (1 \\times 1) = 2 + 1 = 3$。這與講義中提供的結果矩陣 $\\begin{pmatrix}3 & 4 \\\\ 7 & 8\\end{pmatrix}$ 相符。",
+    "k": "驗證矩陣點積的實際計算能力。",
+    "g": 3
+  },
+  {
+    "n": 156,
+    "t": 2,
+    "q": "Soma（細胞本體）是構成人工神經元（ANN）演算法的核心數學參數之一。",
+    "a": 0,
+    "e": "False。Soma 是生物神經元的構造，而非人工神經元的數學參數（如權重或偏差）。",
+    "k": "區分生物與人工神經元的專有名詞。",
+    "g": 1
+  },
+  {
+    "n": 157,
+    "t": 2,
+    "q": "在人工神經網路中，參數 $w$（權重）和 $b$（偏差值）是常數，且是透過模型訓練（model training）所獲得的。",
+    "a": 1,
+    "e": "True。講義第 4 頁明確註明：The parameters w and b are constant, obtained through model training.",
+    "k": "理解神經網路參數的性質與來源。",
+    "g": 2
+  },
+  {
+    "n": 158,
+    "t": 2,
+    "q": "感知器（Perceptron）是一種多層（multi-layer）的神經網路。",
+    "a": 0,
+    "e": "False。講義指出：A perceptron is a single-layer neural network...（感知器是單層的神經網路）。",
+    "k": "理解感知器的基礎定義。",
+    "g": 3
+  },
+  {
+    "n": 159,
+    "t": 2,
+    "q": "計算神經元的輸出時，我們必須先將輸入值通過激活函數（Activation function），然後再乘上對應的權重並加上偏差值。",
+    "a": 0,
+    "e": "False。順序相反。必須先計算加權總和（乘上權重加偏差值 $wx + b$），最後才將該結果輸入至激活函數 $\\phi$ 中。",
+    "k": "掌握神經元內部運算的正確順序。",
+    "g": 3
+  },
+  {
+    "n": 160,
+    "t": 2,
+    "q": "對於線性方程 $z = 3x + 2$，如果輸入 $x = -2$，則 $z$ 的結果為 -4。",
+    "a": 1,
+    "e": "True。計算 $z = 3(-2) + 2 = -6 + 2 = -4$，這與講義第 5 頁的表格計算相符。",
+    "k": "基本線性方程的代數計算能力。",
+    "g": 2
+  },
+  {
+    "n": 161,
+    "t": 2,
+    "q": "根據講義，`torch.matmul(w, x)` 在 PyTorch 中可以用來執行權重張量與輸入張量之間的點積（Dot Product）。",
+    "a": 1,
+    "e": "True。講義第 6、7 頁將 `tensorw` 和 `tensorx` 的乘積對應到 `torch.matmul(w, x)`。",
+    "k": "將數學運算與 PyTorch 函式庫對應。",
+    "g": 3
+  },
+  {
+    "n": 162,
+    "t": 2,
+    "q": "在神經元的設計範例中，若設定激活函數條件為：如果 $z \\ge 10$ 輸出 $1$，如果 $z < 10$ 輸出 $0$。當計算出 $z = 9.9$ 時，神經元的最終輸出為 1。",
+    "a": 0,
+    "e": "False。因為 $9.9 < 10$，所以根據條件輸出應該為 0。",
+    "k": "應用條件式（Step）激活函數的閾值判斷。",
+    "g": 4
+  },
+  {
+    "n": 163,
+    "t": 2,
+    "q": "Sigmoid 激活函數可以產生大於 1 的輸出值（例如 2.5 或 5.0）。",
+    "a": 0,
+    "e": "False。根據講義中的 Sigmoid 函數圖形，其 Y 軸的最大極限值為 1.0，不會產生大於 1 的輸出。",
+    "k": "熟悉 Sigmoid 函數的值域範圍。",
+    "g": 4
+  },
+  {
+    "n": 164,
+    "t": 2,
+    "q": "Tanh 激活函數的輸出範圍包含負數。",
+    "a": 1,
+    "e": "True。根據 Tanh 函數圖形，其輸出範圍涵蓋了 -1.0 到 1.0 之間，包含負數部分。",
+    "k": "熟悉 Tanh 函數的值域範圍。",
+    "g": 4
+  },
+  {
+    "n": 165,
+    "t": 2,
+    "q": "在機器學習中，不同的資料型態通常需要搭配不同的激活函數才能達到最佳效果。",
+    "a": 1,
+    "e": "True。講義的最後一句話結論為：Different activation functions are suitable for different types of numerical data.",
+    "k": "理解採用多種激活函數的實務意義。",
+    "g": 4
+  },
+  {
+    "n": 166,
+    "t": 2,
+    "q": "在講義第 9 頁的範例中，三個輸入的值分別為 $x_1=2, x_2=4, x_3=1$，權重為 $w_1=3, w_2=1, w_3=2$，在不考慮偏差值（即 $b=0$）的情況下，加權總和為 12。",
+    "a": 1,
+    "e": "True。計算 $z = (3\\times2) + (1\\times4) + (2\\times1) = 6 + 4 + 2 = 12$。加權總和為 12。",
+    "k": "多變數加權總和計算。",
+    "g": 3
+  },
+  {
+    "n": 167,
+    "t": 2,
+    "q": "ReLU（Rectified Linear Unit）函數在輸入值為負數（$x < 0$）時，會將其轉換為絕對值使其變為正數。",
+    "a": 0,
+    "e": "False。根據 ReLU 函數圖形，當輸入為負數時，輸出固定為 0，而非絕對值。",
+    "k": "正確理解 ReLU 在負半軸的行為。",
+    "g": 4
+  },
+  {
+    "n": 168,
+    "t": 2,
+    "q": "GABA 是一種在生物神經網路中存在的物質。",
+    "a": 1,
+    "e": "True。講義第 2 頁將 GABA 列為神經元網絡中的相關物質（神經傳導物質）。",
+    "k": "生物神經元的知識回顧。",
+    "g": 1
+  },
+  {
+    "n": 169,
+    "t": 2,
+    "q": "感知器（Perceptron）的輸出，在還沒通過激活函數之前，就必定是一個介於 0 與 1 之間的小數。",
+    "a": 0,
+    "e": "False。在通過激活函數之前，輸出的值 $z$ 只是權重與輸入的線性組合（可正可負可大可小）。是激活函數（如 Sigmoid）將其壓縮到 0 與 1 之間。",
+    "k": "理解激活函數對數值範圍的約束作用。",
+    "g": 4
+  },
+  {
+    "n": 170,
+    "t": 2,
+    "q": "神經元模型中的偏差值 $b$（Bias）會與權重一樣，先乘上輸入值 $x$ 後再進行加總。",
+    "a": 0,
+    "e": "False。偏差值 $b$ 是獨立加上去的常數項，不需要與輸入值 $x$ 相乘。公式為 $\\sum w_i x_i + b$。",
+    "k": "釐清權重與偏差值在數學公式中的差異。",
+    "g": 2
+  },
+  {
+    "n": 171,
+    "t": 2,
+    "q": "兩個矩陣 $\\begin{pmatrix}1 & 2 & 3 \\\\ 4 & 5 & 6\\end{pmatrix}$ 和 $\\begin{pmatrix}7 & 8 \\\\ 9 & 10 \\\\ 11 & 12\\end{pmatrix}$ 進行點積運算後，得到的新矩陣包含數字 58。",
+    "a": 1,
+    "e": "True。第一列與第一行內積：$1\\times7 + 2\\times9 + 3\\times11 = 7 + 18 + 33 = 58$。講義第 6 頁有此範例。",
+    "k": "驗證矩陣點積的實際結果。",
+    "g": 3
+  },
+  {
+    "n": 172,
+    "t": 2,
+    "q": "若改變一個感知器的權重 $w$，圖形上的線性分界線斜率或位置通常也會隨之改變。",
+    "a": 1,
+    "e": "True。線性方程式 $z = wx + b$ 中，$w$ 控制著變數間的比例關係，反映在多維空間中即會改變超平面的斜率/方向。",
+    "k": "理解權重對線性方程幾何圖形的影響。",
+    "g": 2
+  },
+  {
+    "n": 173,
+    "t": 2,
+    "q": "Sigmoid 和 Tanh 的圖形特徵都呈現某種「S」型曲線（S-shaped curve）。",
+    "a": 1,
+    "e": "True。從講義第 10 頁的圖形可以看出，兩者皆屬於具有飽和區的 S 型曲線，只是中心點和 Y 軸範圍不同。",
+    "k": "比較激活函數圖形的視覺相似性。",
+    "g": 4
+  },
+  {
+    "n": 174,
+    "t": 2,
+    "q": "人工神經元只能模擬一個輸入和一個輸出的簡單關係，無法處理 3 個以上的輸入變數。",
+    "a": 0,
+    "e": "False。講義第 7 頁展示了「1 node neuron: 3 input」，且公式 $\\sum_{i=1}^{n}$ 說明了支援 $n$ 個輸入。",
+    "k": "理解神經元可擴展的輸入維度。",
+    "g": 2
+  },
+  {
+    "n": 175,
+    "t": 2,
+    "q": "在人工神經網路中，激活函數 $\\phi$ 是必須存在的，因為它負責引入非線性特性或執行特定閾值的判定（如輸出 0 或 1）。",
+    "a": 1,
+    "e": "True。由範例（Step, Sigmoid, ReLU）可知，激活函數將線性加總的結果進行轉換，是決定神經元最終輸出訊號的關鍵步驟。",
+    "k": "總結激活函數在神經元中的核心地位。",
+    "g": 4
+  },
+  {
+    "n": 176,
+    "t": 3,
+    "q": "請簡要解釋什麼是感知器（Perceptron）？並說明它在更大型的神經網路中扮演什麼角色？",
+    "a": "感知器是一種單層的類神經網路（single-layer neural network）。它作為更複雜、多層類神經網路架構的基礎建構區塊（fundamental building block）。",
+    "e": "這題測驗學生對感知器基本定義的掌握。根據講義第 6、7 頁，Perceptron 是構成複雜模型的基本單元。答題關鍵字包含「單層網路」與「基礎建構區塊」。",
+    "k": "定義感知器與其在深度學習架構中的定位。",
+    "g": 3
+  },
+  {
+    "n": 177,
+    "t": 3,
+    "q": "請用自己的話或數學方程式，說明人工神經元（ANN node）是透過哪兩個主要步驟來計算出最終輸出（Output）的？",
+    "a": "步驟一：計算輸入變數的線性加權總和（包含偏差值），即 $z = \\sum w_i x_i + b$ 或矩陣點積。步驟二：將加權總和 $z$ 傳遞給激活函數（Activation function）進行轉換，產生最終的 output。",
+    "e": "測驗學生對神經元內部資訊流（Forward pass）的理解。必須清楚區分「線性組合」與「非線性激活」這兩個階段。",
+    "k": "人工神經元的兩階段運算架構。",
+    "g": 3
+  },
+  {
+    "n": 178,
+    "t": 3,
+    "q": "請列舉出講義第 10 頁中提到的三種不同的激活函數（Activation functions）。",
+    "a": "1. Sigmoid 函數 (Sigmoid Function)\n2. Tanh 函數 (Tanh Function)\n3. ReLU 函數 (ReLU Function)",
+    "e": "基本名詞回憶題。這三種是現代神經網路最基礎且常見的激活函數。學生只需準確列出英文名稱或縮寫即可得分。",
+    "k": "回憶並辨識常見的激活函數名稱。",
+    "g": 4
+  },
+  {
+    "n": 179,
+    "t": 3,
+    "q": "假設你正在設計一個具備 2 個輸入的神經元，權重分別為 $w_1 = 4$, $w_2 = -2$，偏差值 $b = 3$。當輸入值為 $x_1 = 2$, $x_2 = 3$ 時，請寫出加權總和 $z$ 的計算過程與最終數值。",
+    "a": "計算過程：$z = (w_1 \\times x_1) + (w_2 \\times x_2) + b$ \n代入數值：$z = (4 \\times 2) + (-2 \\times 3) + 3$ \n$z = 8 - 6 + 3 = 5$\n最終加權總和數值為 5。",
+    "e": "本題測驗學生是否具備實際代入數值進行神經元方程式計算的能力。過程必須展現出正確的乘法與加法組合。",
+    "k": "執行神經元的數學運算實作。",
+    "g": 2
+  },
+  {
+    "n": 180,
+    "t": 3,
+    "q": "講義中提到「不同的激活函數適用於不同類型的數值資料」。請根據 ReLU 與 Sigmoid 的圖形特徵，簡要推論如果我們希望神經元的輸出「只能是 0 到 1 之間的機率值」，應該選擇哪一個？為什麼？",
+    "a": "應該選擇 Sigmoid 函數。因為從圖形中可以看出，Sigmoid 函數會將任何輸入值壓縮（映射）到 0.0 到 1.0 的範圍之間，非常適合用來表示機率。而 ReLU 函數的正半軸輸出可以無限大（大於 1），不符合機率的要求。",
+    "e": "綜合應用題。學生必須結合「激活函數的圖形特徵」與「資料的需求（0到1之間）」來做出合理的選擇並給出解釋。測驗 Understanding key concepts。",
+    "k": "根據資料需求選擇合適的激活函數。",
+    "g": 4
+  },
+  {
+        "n": 181,
+        "t": 1,
+        "q": "在 TensorBoard 中，哪個 API 函數用於記錄模型參數（權重與偏差值）的分佈，有助於偵測梯度消失或爆炸問題？",
+        "o": {
+            "o1": "add_scalar()",
+            "o2": "add_graph()",
+            "o3": "add_histogram()",
+            "o4": "add_image()"
+        },
+        "a": 3,
+        "e": "根據講義，{o3} 用於記錄張量的完整數值分佈並以直方圖呈現，有助偵測梯度問題。{o1} 用於記錄單一純量（如損失值），{o2} 用於記錄計算圖，{o4} 用於記錄圖片。",
+        "k": "TensorBoard API 功能與梯度問題檢測",
+        "g": 1
+    },
+    {
+        "n": 182,
+        "t": 1,
+        "q": "根據講義，關於全連接網路（Fully Connected Network, FCN）的敘述，下列何者「錯誤」？",
+        "o": {
+            "o1": "又被稱為多層感知器（MLP）。",
+            "o2": "每個神經元僅與前一層的部分神經元連接。",
+            "o3": "神經元接收前層輸入後會進行加權求和並通過激活函數。",
+            "o4": "通常使用反向傳播演算法來訓練模型。"
+        },
+        "a": 2,
+        "e": "在全連接網路中，每個神經元都與前一層的「每個」神經元相連接，形成完全連接的架構，因此 {o2} 錯誤。{o1}、{o3}、{o4} 皆為講義中明確提及的正確描述。",
+        "k": "全連接網路（FCN）的定義與架構",
+        "g": 2
+    },
+    {
+        "n": 183,
+        "t": 1,
+        "q": "在觀察 TensorBoard 的 Accuracy 曲線時，下列哪一種現象代表模型可能發生了「過擬合（Overfitting）」？",
+        "o": {
+            "o1": "Training accuracy 與 Validation accuracy 同時穩定上升。",
+            "o2": "Training accuracy 持續上升，但 Validation accuracy 開始下降。",
+            "o3": "Training accuracy 與 Validation accuracy 皆停滯不前，無顯著變化。",
+            "o4": "Validation accuracy 高於 Training accuracy 許多。"
+        },
+        "a": 2,
+        "e": "過擬合（Overfitting）的特徵是模型在訓練集上表現越來越好（Training accuracy 上升），但在未見過的測試/驗證集上表現變差（Validation accuracy 下降），因此 {o2} 正確。{o1} 代表模型正在良好學習。",
+        "k": "利用 TensorBoard 判讀過擬合現象",
+        "g": 1
+    },
+    {
+        "n": 184,
+        "t": 1,
+        "q": "在 PyTorch 中使用 SummaryWriter 記錄實驗數據時，為何在訓練結束後必須呼叫 `writer.close()`？",
+        "o": {
+            "o1": "為了自動刪除不必要的暫存檔案。",
+            "o2": "為了釋放 GPU 記憶體空間。",
+            "o3": "為了將內部緩衝區的剩餘事件寫入磁碟並釋放檔案句柄，避免資料遺失。",
+            "o4": "為了自動將模型權重上傳至雲端伺服器。"
+        },
+        "a": 3,
+        "e": "講義強調，呼叫 `writer.close()` 是為了確保所有緩衝的日誌資料都已正確寫入磁碟（Flushes all remaining events）。若未呼叫，最後部分的日誌可能不完整或遺失。因此 {o3} 正確。",
+        "k": "SummaryWriter 的正確關閉與資源釋放",
+        "g": 1
+    },
+    {
+        "n": 185,
+        "t": 1,
+        "q": "在深度學習的術語中，什麼樣的結構才能被嚴格稱為一個「層（layer）」？",
+        "o": {
+            "o1": "任何執行數學運算的步驟皆可稱為層。",
+            "o2": "通常指包含「可學習參數（learnable parameters）」（如權重與偏差值）的層。",
+            "o3": "僅有執行非線性轉換的激活函數（Activation function）才能稱為層。",
+            "o4": "資料前處理的步驟（如 Flatten）就是最標準的層。"
+        },
+        "a": 2,
+        "e": "講義中特別標註「What is a 'layer'? In deep learning, a 'layer' typically refers to a layer that contains learnable parameters-specifically, layers that have weights and biases.」因此 {o2} 正確。",
+        "k": "深度學習中「層」的精確定義",
+        "g": 2
+    },
+    {
+        "n": 186,
+        "t": 1,
+        "q": "若要在 TensorBoard 中繪製模型的計算圖（Computation Graph），`writer.add_graph()` 函數需要提供哪些輸入？",
+        "o": {
+            "o1": "僅需要提供模型本身（model）。",
+            "o2": "僅需要提供優化器（optimizer）與損失函數（loss function）。",
+            "o3": "需要提供模型本身（model）以及一組範例輸入張量（example inputs）。",
+            "o4": "需要提供模型本身以及標籤資料（labels）。"
+        },
+        "a": 3,
+        "e": "根據 `add_graph(model, input_tensor)` 的說明，該函數會使用提供的範例輸入執行一次前向傳播（traces a forward pass），藉此記錄所得到的計算圖。因此 {o3} 必須提供模型與範例輸入。",
+        "k": "add_graph 函數的參數需求",
+        "g": 3
+    },
+    {
+        "n": 187,
+        "t": 1,
+        "q": "在給定的神經元運算模型中，輸出（Output）的計算順序為何？",
+        "o": {
+            "o1": "先通過激活函數，再將所有輸入進行加權求和。",
+            "o2": "先計算所有輸入的加權求和（包括偏差值），再通過激活函數。",
+            "o3": "將權重與偏差值相乘後，再加上輸入值。",
+            "o4": "輸入值先互相相乘，再乘上權重並加上偏差值。"
+        },
+        "a": 2,
+        "e": "神經元的基礎運算是先接收輸入，進行加權求和（$\\sum_{i=1}^{m}w_{i}x_{i} + b$），然後再將此加權總和傳入激活函數（$\\phi$）產生最終輸出，因此 {o2} 正確。",
+        "k": "神經元基礎運算流程",
+        "g": 2
+    },
+    {
+        "n": 188,
+        "t": 1,
+        "q": "比較講義中的單層（1-layer）、雙層（2-layers）與三層（3-layers）DNN 模型實驗結果，下列敘述何者最符合觀察？",
+        "o": {
+            "o1": "單層模型的訓練損失（Training Loss）降得最低，擬合效果最好。",
+            "o2": "三種深度的模型在 Accuracy 上的表現完全相同，無顯著差異。",
+            "o3": "較深的模型（雙層與三層）傾向於達到更高的 Accuracy，且訓練損失更低。",
+            "o4": "層數越多，模型越容易發生嚴重的梯度消失，導致 Accuracy 大幅下降。"
+        },
+        "a": 3,
+        "e": "在 TensorBoard 比較不同實驗的圖表中指出：「deeper models (2-layer and 3-layer) tend to reach higher accuracy」且「Orange and pink lines (deeper models) have lower final loss values, meaning they fit the training data better.」因此 {o3} 正確。",
+        "k": "模型深度與訓練表現之關聯",
+        "g": 1
+    },
+    {
+        "n": 189,
+        "t": 1,
+        "q": "在 PyTorch 程式碼 `img_grid = torchvision.utils.make_grid(example_images[:16])` 中，`make_grid` 的主要功能是什麼？",
+        "o": {
+            "o1": "將圖片轉換為灰階格式以節省記憶體。",
+            "o2": "將多張圖片排列組合為單一格狀張量，方便後續在 TensorBoard 中一次性視覺化。",
+            "o3": "自動為圖片加上標籤（Label）文字。",
+            "o4": "對圖片進行隨機裁切與翻轉等資料增強（Data Augmentation）操作。"
+        },
+        "a": 2,
+        "e": "根據程式碼註解與講義，`torchvision.utils.make_grid()` 的功能是將多張圖片排列成單一格狀張量（arranges multiple images into a single grid tensor），以便用 `add_image` 記錄，因此 {o2} 正確。",
+        "k": "torchvision.utils.make_grid 功能解析",
+        "g": 3
+    },
+    {
+        "n": 190,
+        "t": 1,
+        "q": "要在一張 TensorBoard 圖表中同時並排比較 'Train' 與 'Validation' 準確率曲線，應使用下列哪一個 API？",
+        "o": {
+            "o1": "add_scalar()",
+            "o2": "add_histogram()",
+            "o3": "add_scalars()",
+            "o4": "add_graph()"
+        },
+        "a": 3,
+        "e": "`add_scalars(main_tag, tag_scalar_dict, global_step)` 允許在同一個圖表下記錄多個純量序列（如 Train 與 Validation accuracy），便於並排比較。{o1} 只能記錄單一純量。",
+        "k": "add_scalars 的多變數圖表繪製功能",
+        "g": 1
+    },
+    {
+        "n": 191,
+        "t": 2,
+        "q": "全連接網路（Fully Connected Network, FCN）的另一個常見名稱為多層感知器（Multilayer Perceptron, MLP）。",
+        "a": 1,
+        "e": "正確。講義中明確提到「A Fully Connected Network (FCN), also known as a Multilayer Perceptron (MLP)」。",
+        "k": "FCN 與 MLP 術語的等價性",
+        "g": 2
+    },
+    {
+        "n": 192,
+        "t": 2,
+        "q": "若在 TensorBoard 中觀察到權重（Weights）的直方圖分佈隨著 epoch 增加而變得極度寬廣，這通常代表模型發生了梯度消失（Vanishing Gradients）問題。",
+        "a": 0,
+        "e": "錯誤。若直方圖變得極度寬廣（too wide），代表權重數值發散，屬於「梯度爆炸（Exploding Gradients）」；若分佈縮小至趨近於零，才是「梯度消失（Vanishing Gradients）」。",
+        "k": "透過直方圖判斷梯度問題",
+        "g": 1
+    },
+    {
+        "n": 193,
+        "t": 2,
+        "q": "在提供的 PyTorch 模型訓練迴圈中，必須在呼叫 `loss.backward()` 計算梯度之前，先呼叫 `optimizer.zero_grad()` 清空前一次的梯度。",
+        "a": 1,
+        "e": "正確。PyTorch 的梯度預設會累加，因此在每個 batch 進行反向傳播 `loss.backward()` 前，必須透過 `optimizer.zero_grad()` 將梯度歸零，這是標準的模型訓練流程。",
+        "k": "PyTorch 模型訓練的核心步驟與順序",
+        "g": 3
+    },
+    {
+        "n": 194,
+        "t": 2,
+        "q": "講義中提到，深度學習中的「層（layer）」泛指所有神經網路架構中的節點，包含不具備任何可學習參數的 Flatten 或 ReLU 操作，也嚴格算作獨立的神經網路層。",
+        "a": 0,
+        "e": "錯誤。講義定義「In deep learning, a 'layer' typically refers to a layer that contains learnable parameters-specifically, layers that have weights and biases.」因此單純的操作（如 Flatten）通常不被計入具備學習能力的「層數」。",
+        "k": "層（Layer）的嚴格定義",
+        "g": 2
+    },
+    {
+        "n": 195,
+        "t": 2,
+        "q": "使用 `writer.add_histogram()` 定期記錄模型參數時，除了權重（weights）外，通常也會一併記錄偏差值（biases）的分佈狀態。",
+        "a": 1,
+        "e": "正確。講義範例中透過 `for name, param in model.named_parameters(): writer.add_histogram(...)` 疊代所有參數，包含了 fc1.weight 以及 fc1.bias 等權重與偏差值。",
+        "k": "add_histogram 記錄的參數範疇",
+        "g": 3
+    },
+    {
+        "n": 196,
+        "t": 2,
+        "q": "在 Colab 環境中，可以透過 `%load_ext tensorboard` 與 `%tensorboard --logdir runs` 指令來啟動並內嵌 TensorBoard 面板。",
+        "a": 1,
+        "e": "正確。此為講義中提供的 Colab 啟動 TensorBoard 的標準魔法指令（Magic commands）。",
+        "k": "Colab 中啟動 TensorBoard 的方法",
+        "g": 1
+    },
+    {
+        "n": 197,
+        "t": 2,
+        "q": "感知器（Perceptron）的輸出公式中，當加權總和 $\\sum w_i x_i > 0$ 時，輸出必定等於其加權總和的實際數值。",
+        "a": 0,
+        "e": "錯誤。根據講義中的 Perceptron 定義，當 $\\sum w_i x_i > 0$ 時，輸出通常經過階段函數映射為 1（或特定類別標籤），而非直接輸出加權總和的原始數值。",
+        "k": "Perceptron 激活函數機制",
+        "g": 2
+    },
+    {
+        "n": 198,
+        "t": 2,
+        "q": "在比較不同深度的模型實驗中，越深的模型（例如三層）比起單層模型，因具備更多參數而擁有更強的學習能力（More learning ability）與靈活性（flexible）。",
+        "a": 1,
+        "e": "正確。講義中提到 \"More parameters. More learning ability. The model becomes more flexible.\" 這也是深層網路能達到更高準確率的原因之一。",
+        "k": "模型深度與學習能力之關聯",
+        "g": 2
+    },
+    {
+        "n": 199,
+        "t": 2,
+        "q": "TensorBoard 的 DISTRIBUTIONS 頁籤與 HISTOGRAMS 頁籤功能完全不相關，前者用於監控記憶體用量，後者用於監控準確率。",
+        "a": 0,
+        "e": "錯誤。兩者皆用於可視化張量（如權重、偏差值）的數值分佈情形。DISTRIBUTIONS 以分位數折線圖呈現，而 HISTOGRAMS 以 3D 直方圖隨時間（step）的變化呈現。",
+        "k": "TensorBoard 面板功能認知",
+        "g": 1
+    },
+    {
+        "n": 200,
+        "t": 2,
+        "q": "若忘記呼叫 `writer.close()`，程式執行完畢後會自動觸發垃圾回收機制，保證日誌檔案 100% 完整，不會對 TensorBoard 的顯示造成任何影響。",
+        "a": 0,
+        "e": "錯誤。講義明確警告 \"Without it, the last portion of logs may be incomplete or missing when TensorBoard reads the event file.\"，未關閉會導致緩衝區內最後的日誌遺失。",
+        "k": "writer.close() 的重要性",
+        "g": 1
+    },
+    {
+        "n": 201,
+        "t": 3,
+        "q": "請簡述何謂「過擬合（Overfitting）」？並說明在 TensorBoard 中可以透過觀察哪些指標的曲線來判斷模型是否發生過擬合現象？",
+        "a": "過擬合是指模型過度學習訓練資料的特徵（甚至雜訊），導致在未見過的測試集或驗證集上表現不佳。在 TensorBoard 中，可透過比較 Training Accuracy 與 Validation Accuracy 的曲線判斷：若 Training Accuracy 持續上升，但 Validation Accuracy 停滯甚至開始下降，兩者曲線產生顯著開口（large gaps），即代表發生過擬合。",
+        "e": "此題考查對機器學習核心概念「過擬合」的理解，以及如何利用 TensorBoard 的 `add_scalars` 圖表進行視覺化診斷，對應講義中 'Is it overfitting?' 段落。",
+        "k": "過擬合定義與 TensorBoard 判讀",
+        "g": 1
+    },
+    {
+        "n": 202,
+        "t": 3,
+        "q": "在模型訓練過程中，梯度爆炸（Exploding Gradients）與梯度消失（Vanishing Gradients）會對權重分佈造成什麼影響？在 TensorBoard 的 Histogram 面板中分別會呈現何種視覺特徵？",
+        "a": "梯度爆炸會導致模型權重更新幅度過大，權重數值發散；在 Histogram 中會觀察到分佈隨時間變得極度寬廣（too wide）。梯度消失則是梯度趨近於零，導致權重無法有效更新；在 Histogram 中會觀察到分佈逐漸縮小並集中於零附近（shrinks to near zero）。",
+        "e": "此題考查對梯度問題的掌握，並連結到 TensorBoard 中 `add_histogram` 的實務應用，對應講義 'Are the weights exploding or vanishing?' 段落。",
+        "k": "梯度問題與 Histogram 圖表特徵對應",
+        "g": 1
+    },
+    {
+        "n": 203,
+        "t": 3,
+        "q": "請根據講義提供的 PyTorch 範例程式碼，說明 1-layer 模型與 2-layer 模型在架構定義（`__init__` 與 `forward`）上的主要差異？",
+        "a": "1-layer 模型將 28x28 的輸入直接透過單一全連接層 `nn.Linear(28*28, 10)` 映射到 10 個輸出類別。2-layer 模型則加入了一層隱藏層，輸入先經過 `nn.Linear(28*28, 128)`，接著通過 ReLU 激活函數（`nn.ReLU()`）引入非線性，最後再透過第二層全連接層 `nn.Linear(128, 10)` 輸出結果。",
+        "e": "此題考查對 PyTorch 模型類別建構的理解，要求學生能分辨不同深度模型的程式碼實作差異，特別是隱藏層與激活函數的加入。",
+        "k": "PyTorch DNN 模型層次結構差異",
+        "g": 3
+    },
+    {
+        "n": 204,
+        "t": 3,
+        "q": "何謂「全連接網路（Fully Connected Network, FCN）」？請描述其單一神經元計算輸出的基本數學流程。",
+        "a": "全連接網路是一種神經網路架構，其中每一層的每個神經元皆與前一層的所有神經元相連。其單一神經元的計算流程為：接收來自前層的輸入向量 $X$，將其與對應的權重向量 $W$ 進行內積（加權求和 $\\sum w_i x_i$），加上偏差值（bias），最後將結果傳入激活函數（Activation Function）以產生非線性輸出。",
+        "e": "此題考查基礎神經網路的定義與核心數學模型，測驗學生對底層神經元運算（線性組合+非線性激活）的理解程度。",
+        "k": "FCN 定義與神經元數學模型",
+        "g": 2
+    },
+    {
+        "n": 205,
+        "t": 3,
+        "q": "為什麼在 PyTorch 訓練迴圈中，需要在每一次疊代（iteration）呼叫 `loss.backward()` 之前執行 `optimizer.zero_grad()`？若未執行會產生什麼後果？",
+        "a": "因為 PyTorch 在呼叫 `backward()` 計算梯度時，預設會將新算出的梯度「累加（accumulate）」到參數既有的 `grad` 屬性中。若不透過 `optimizer.zero_grad()` 將前一個 batch 的梯度清空，梯度將會不斷累加，導致優化器（optimizer）朝著錯誤的方向更新參數，使模型無法正常收斂。",
+        "e": "此題考查 PyTorch 訓練機制中最常犯錯的地雷之一，確保學生深刻理解梯度累加機制的運作原理與歸零的必要性。",
+        "k": "PyTorch 梯度累加機制與 zero_grad 作用",
+        "g": 3
+    }
+];
+
+// ==========================================
+// 2. 狀態管理 (LocalStorage)
+// ==========================================
+let sysSettings = {};
+let userHistory = {}; 
+let currentExamData = []; 
+let currentAnswers = {}; 
+let currentSAStatus = {}; 
+let isGraded = false;
+
+function initStorage() {
+    const defaultSettings = { 
+        counts: { 1: TYPE_MAP[1].defaultCount, 2: TYPE_MAP[2].defaultCount, 3: TYPE_MAP[3].defaultCount },
+        pts: { 1: TYPE_MAP[1].defaultPts, 2: TYPE_MAP[2].defaultPts, 3: TYPE_MAP[3].defaultPts },
+        mode: 'random', shuffle: true, delayed: true, theme: 'auto',
+        expStates: { 1: false, 2: false, 3: false }
+    };
+    sysSettings = JSON.parse(localStorage.getItem(KEY_SETTINGS)) || defaultSettings;
+    userHistory = JSON.parse(localStorage.getItem(KEY_HISTORY)) || {};
+
+    document.getElementById('pts_t1').value = sysSettings.pts[1];
+    document.getElementById('pts_t2').value = sysSettings.pts[2];
+    document.getElementById('pts_t3').value = sysSettings.pts[3];
+    document.getElementById('cfg_mode').value = sysSettings.mode || 'random';
+    document.getElementById('cfg_shuffle').checked = sysSettings.shuffle;
+    document.getElementById('cfg_delayed').checked = sysSettings.delayed;
+    document.getElementById('themeSelect').value = sysSettings.theme;
+    document.getElementById('exp_t1').checked = sysSettings.expStates[1];
+    document.getElementById('exp_t2').checked = sysSettings.expStates[2];
+    document.getElementById('exp_t3').checked = sysSettings.expStates[3];
+
+    updateCountUI(); 
+    applyTheme(sysSettings.theme);
+}
+
+function updateCountUI() {
+    const mode = document.getElementById('cfg_mode').value;
+    const t1 = document.getElementById('cfg_t1');
+    const t2 = document.getElementById('cfg_t2');
+    const t3 = document.getElementById('cfg_t3');
+
+    if (mode === 'all') {
+        t1.value = QUESTION_BANK.filter(q => q.t === 1).length;
+        t2.value = QUESTION_BANK.filter(q => q.t === 2).length;
+        t3.value = QUESTION_BANK.filter(q => q.t === 3).length;
+        t1.disabled = true; t2.disabled = true; t3.disabled = true;
+    } else {
+        t1.disabled = false; t2.disabled = false; t3.disabled = false;
+        t1.value = sysSettings.counts[1] || TYPE_MAP[1].defaultCount;
+        t2.value = sysSettings.counts[2] || TYPE_MAP[2].defaultCount;
+        t3.value = sysSettings.counts[3] || TYPE_MAP[3].defaultCount;
+    }
+}
+
+function saveSettings() {
+    const mode = document.getElementById('cfg_mode').value;
+    
+    if (mode !== 'all') {
+        sysSettings.counts = { 
+            1: parseInt(document.getElementById('cfg_t1').value)||0, 
+            2: parseInt(document.getElementById('cfg_t2').value)||0, 
+            3: parseInt(document.getElementById('cfg_t3').value)||0 
+        };
+    }
+    
+    sysSettings.pts = { 
+        1: parseInt(document.getElementById('pts_t1').value)||0, 
+        2: parseInt(document.getElementById('pts_t2').value)||0, 
+        3: parseInt(document.getElementById('pts_t3').value)||0 
+    };
+    sysSettings.mode = mode;
+    sysSettings.shuffle = document.getElementById('cfg_shuffle').checked;
+    sysSettings.delayed = document.getElementById('cfg_delayed').checked;
+    sysSettings.theme = document.getElementById('themeSelect').value;
+    sysSettings.expStates = { 1: document.getElementById('exp_t1').checked, 2: document.getElementById('exp_t2').checked, 3: document.getElementById('exp_t3').checked };
+    
+    localStorage.setItem(KEY_SETTINGS, JSON.stringify(sysSettings));
+}
+
+function updateHistory(n, isCorrect) {
+    if (!userHistory[n]) userHistory[n] = { attempts: 0, correct: 0 };
+    userHistory[n].attempts += 1;
+    if (isCorrect) userHistory[n].correct += 1;
+    localStorage.setItem(KEY_HISTORY, JSON.stringify(userHistory));
+}
+
+function getCorrectRateText(n) {
+    const h = userHistory[n];
+    if (!h || h.attempts === 0) return "未作答過";
+    const rate = Math.round((h.correct / h.attempts) * 100);
+    return `歷史正確率: ${rate}% (${h.correct}/${h.attempts})`;
+}
+
+// ==========================================
+// 3. 解析與邏輯工具
+// ==========================================
+function parseMarkdownCode(text) {
+    if (!text) return text;
+    return text.replace(/`([^`]+)`/g, '<code class="inline-code">$1</code>');
+}
+
+function triggerKaTeX() {
+    if (typeof renderMathInElement === "function") {
+        renderMathInElement(document.body, {
+            delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}],
+            throwOnError: false
+        });
+    }
+}
+
+function applyTheme(themeValue) {
+    let activeTheme = themeValue === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : themeValue;
+    document.documentElement.setAttribute('data-theme', activeTheme);
+}
+
+// ==========================================
+// 4. 排序策略引擎
+// ==========================================
+function shuffleArray(array) {
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
+
+function sortQuestionPool(pool, mode) {
+    if (mode === 'all') {
+        return [...pool].sort((a, b) => a.n - b.n); 
+    }
+    
+    let arr = shuffleArray(pool); 
+    if (mode === 'scan') {
+        arr.sort((a, b) => ((userHistory[a.n] || {}).attempts || 0) - ((userHistory[b.n] || {}).attempts || 0));
+    } else if (mode === 'review') {
+        const getErrRate = (n) => {
+            const h = userHistory[n];
+            if (!h || h.attempts === 0) return 0.5; 
+            return 1 - (h.correct / h.attempts);
+        };
+        arr.sort((a, b) => getErrRate(b.n) - getErrRate(a.n));
+    }
+    return arr;
+}
+
+// ==========================================
+// 5. 考卷生成核心
+// ==========================================
+function generateExam() {
+    saveSettings();
+    document.getElementById("scoreBoard").style.display = 'none';
+    const container = document.getElementById("examContent");
+    container.innerHTML = "";
+    currentExamData = [];
+    currentAnswers = {};
+    currentSAStatus = {}; 
+    isGraded = false;
+
+    Object.keys(TYPE_MAP).forEach(typeId => {
+        const typeNum = parseInt(typeId);
+        let pool = QUESTION_BANK.filter(q => q.t === typeNum);
+        
+        const reqCount = sysSettings.mode === 'all' ? pool.length : sysSettings.counts[typeNum];
+        const totalPts = sysSettings.pts[typeNum];
+        
+        if (reqCount <= 0 || pool.length === 0) return;
+
+        let selectedQs = sortQuestionPool(pool, sysSettings.mode).slice(0, reqCount);
+        
+        // 僅計算用作 UI 顯示的大約配分
+        const ptsPerQ = Math.round((totalPts / selectedQs.length) * 100) / 100;
+        
+        const section = document.createElement("div");
+        section.className = "theme-section";
+        section.innerHTML = `<h2 class="theme-header">
+            <span>📜 ${TYPE_MAP[typeNum].name} (${selectedQs.length} 題)</span>
+            <span class="section-score">總分: ${totalPts} | 每題: ${ptsPerQ} 分</span>
+        </h2>`;
+        
+        selectedQs.forEach((q, index) => {
+            const renderData = processQuestionData(q, ptsPerQ);
+            currentExamData.push(renderData);
+            section.appendChild(buildQuestionDOM(renderData, index + 1));
+        });
+
+        container.appendChild(section);
+    });
+
+    if (currentExamData.length === 0) {
+        container.innerHTML = `<div style="text-align: center; color: var(--text-sub); padding: 50px;">題庫中沒有符合條件的題目，或未設定題數。</div>`;
+    } else if (sysSettings.delayed) {
+        const btn = document.createElement("button");
+        btn.className = "large-submit";
+        btn.innerHTML = "📝 繳交試卷並計算成績";
+        btn.onclick = gradeAllExam;
+        container.appendChild(btn);
+    }
+
+    triggerKaTeX(); 
+}
+
+function processQuestionData(q, ptsPerQ) {
+    let data = { ...q, displayPts: ptsPerQ, mapKeyToLabel: {}, mapLabelToKey: {} };
+    data.parsedQ = parseMarkdownCode(q.q);
+    data.parsedExp = parseMarkdownCode(q.e);
+    
+    if (q.t === 3) data.parsedA = parseMarkdownCode(String(q.a || ''));
+    
+    if (q.t === 1 && q.o) {
+        data.parsedOpts = {};
+        const labels = ['A', 'B', 'C', 'D', 'E', 'F'];
+        const keys = Object.keys(q.o);
+        const displayKeys = sysSettings.shuffle ? shuffleArray(keys) : keys;
+        
+        displayKeys.forEach((k, idx) => {
+            data.mapKeyToLabel[k] = labels[idx];
+            data.mapLabelToKey[labels[idx]] = k;
+            data.parsedOpts[k] = parseMarkdownCode(q.o[k]);
+        });
+        data.parsedExp = data.parsedExp.replace(/{o(\d+)}/g, (m, p1) => data.mapKeyToLabel['o' + p1] ? `(${data.mapKeyToLabel['o' + p1]})` : m);
+    }
+    return data;
+}
+
+function buildQuestionDOM(qData, displayIdx) {
+    const card = document.createElement("div");
+    card.className = "question-card";
+    card.id = `qcard_${qData.n}`;
+    const isAutoExpand = sysSettings.expStates[qData.t];
+
+    const answerBlock = qData.t === 3 
+        ? `<div class="exp-title">🔑 參考解答：</div><div style="margin-bottom:15px;">${qData.parsedA}</div><hr style="border:0; border-top:1px dashed var(--border); margin:15px 0;">` 
+        : '';
+
+    let html = `
+        <div class="q-header">
+            <div class="q-meta">
+                <span class="q-sn">#${qData.n}</span>
+                <span class="q-pts">[${qData.displayPts} 分]</span>
+                <span class="q-rate" id="rate_${qData.n}">${getCorrectRateText(qData.n)}</span>
+            </div>
+        </div>
+        <div class="q-text">${displayIdx}. ${qData.parsedQ}</div>
+        <div class="interaction-area">${renderInteractionArea(qData)}</div>
+        <div class="action-row" id="act_${qData.n}" style="${sysSettings.delayed && qData.t !== 3 ? 'display:none;' : ''}">
+            <button class="toggle-exp-btn" onclick="toggleExp(${qData.n})">${isAutoExpand ? '隱藏詳解' : '查看詳解'}</button>
+        </div>
+        <div class="explanation-box ${isAutoExpand ? 'show' : ''}" id="exp_${qData.n}">
+            ${answerBlock}
+            <div class="exp-key">💡 觀念：${qData.k}</div>
+            <div class="exp-title">📝 分析：</div>
+            <div>${qData.parsedExp}</div>
+        </div>
+    `;
+    card.innerHTML = html;
+    return card;
+}
+
+function renderInteractionArea(qData) {
+    if (qData.t === 1) {
+        const labels = ['A', 'B', 'C', 'D'];
+        let optsHtml = labels.map(L => {
+            const key = qData.mapLabelToKey[L];
+            if (!key) return '';
+            return `<label class="option-label" id="lbl_${qData.n}_${key}">
+                        <input type="radio" name="ans_${qData.n}" value="${key}" onchange="handleSelect(${qData.n}, '${key}')">
+                        (${L}) ${qData.parsedOpts[key]}
+                    </label>`;
+        }).join('');
+        return `<div class="options-list">${optsHtml}</div>`;
+    } 
+    else if (qData.t === 2) {
+        return `<div class="options-list">
+                    <label class="option-label" id="lbl_${qData.n}_1"><input type="radio" name="ans_${qData.n}" value="1" onchange="handleSelect(${qData.n}, 1)">(O) 正確</label>
+                    <label class="option-label" id="lbl_${qData.n}_0"><input type="radio" name="ans_${qData.n}" value="0" onchange="handleSelect(${qData.n}, 0)">(X) 錯誤</label>
+                </div>`;
+    }
+    else if (qData.t === 3) {
+        return `
+            <textarea class="sa-textarea" id="sa_text_${qData.n}" placeholder="輸入作答..."></textarea>
+            <div id="sa_actions_${qData.n}" style="text-align:right;">
+                <button onclick="submitSA(${qData.n})" id="btn_sa_${qData.n}">完成 (對答案)</button>
+            </div>
+            <div id="sa_eval_${qData.n}" style="display:none; justify-content: flex-end; gap: 10px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border);">
+                <span style="align-self: center; font-weight: bold; color: var(--text-sub);">請根據解答自評：</span>
+                <button id="eval_c_${qData.n}" class="eval-btn eval-c" onclick="evaluateSA(${qData.n}, true)">✅ 答對</button>
+                <button id="eval_i_${qData.n}" class="eval-btn eval-i" onclick="evaluateSA(${qData.n}, false)">❌ 答錯</button>
+            </div>`;
+    }
+    return '';
+}
+
+// ==========================================
+// 6. 互動與批改邏輯
+// ==========================================
+function handleSelect(n, value) {
+    if (isGraded) return;
+    currentAnswers[n] = value.toString();
+    if (!sysSettings.delayed) gradeSingle(n);
+}
+
+function gradeSingle(n) {
+    const qData = currentExamData.find(q => q.n === n);
+    if (!qData || qData.t === 3) return;
+
+    const userAns = currentAnswers[n];
+    const correctAns = qData.t === 1 ? `o${qData.a}` : qData.a.toString();
+    const isCorrect = (userAns === correctAns);
+
+    lockAndHighlight(n, userAns, correctAns, isCorrect);
+    updateHistory(n, isCorrect);
+    document.getElementById(`rate_${n}`).innerText = getCorrectRateText(n);
+    document.getElementById(`act_${n}`).style.display = 'flex';
+    if (!isCorrect) forceShowExp(n);
+}
+
+function submitSA(n) {
+    document.getElementById(`btn_sa_${n}`).style.display = 'none';
+    document.getElementById(`sa_text_${n}`).disabled = true;
+    document.getElementById(`sa_eval_${n}`).style.display = 'flex';
+    document.getElementById(`act_${n}`).style.display = 'flex';
+    forceShowExp(n);
+}
+
+function evaluateSA(n, isCorrect) {
+    const qData = currentExamData.find(q => q.n === n);
+    let h = userHistory[n] || { attempts: 0, correct: 0 };
+    
+    if (currentSAStatus[n] === undefined) {
+        h.attempts += 1;
+        if (isCorrect) h.correct += 1;
+    } else {
+        if (currentSAStatus[n] === false && isCorrect) h.correct += 1;
+        if (currentSAStatus[n] === true && !isCorrect) h.correct = Math.max(0, h.correct - 1);
+    }
+    
+    currentSAStatus[n] = isCorrect;
+    userHistory[n] = h;
+    localStorage.setItem(KEY_HISTORY, JSON.stringify(userHistory));
+    
+    document.getElementById(`rate_${n}`).innerText = getCorrectRateText(n);
+    
+    const card = document.getElementById(`qcard_${n}`);
+    card.classList.remove('answered-correct', 'answered-incorrect');
+    card.classList.add(isCorrect ? 'answered-correct' : 'answered-incorrect');
+    
+    document.getElementById(`eval_c_${n}`).classList.toggle('active', isCorrect);
+    document.getElementById(`eval_i_${n}`).classList.toggle('active', !isCorrect);
+    
+    if (isGraded) recalculateScoreBoard();
+}
+
+function gradeAllExam() {
+    if (isGraded) return;
+    isGraded = true;
+
+    currentExamData.forEach(qData => {
+        if (qData.t === 3) {
+            submitSA(qData.n); 
+        } else {
+            const userAns = currentAnswers[qData.n];
+            const correctAns = qData.t === 1 ? `o${qData.a}` : qData.a.toString();
+            const isCorrect = (userAns === correctAns);
+
+            lockAndHighlight(qData.n, userAns, correctAns, isCorrect);
+            updateHistory(qData.n, isCorrect);
+            document.getElementById(`rate_${qData.n}`).innerText = getCorrectRateText(qData.n);
+            document.getElementById(`act_${qData.n}`).style.display = 'flex';
+            if (!isCorrect) forceShowExp(qData.n);
+        }
+    });
+
+    recalculateScoreBoard();
+    document.getElementById("scoreBoard").style.display = 'block';
+    const submitBtn = document.querySelector('.large-submit');
+    if (submitBtn) submitBtn.style.display = 'none';
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    triggerKaTeX();
+}
+
+// 採用最新「區塊比例計分法」重算計分板
+function recalculateScoreBoard() {
+    let totalPossibleScore = 0;
+    let totalEarnedScore = 0;
+    
+    [1, 2, 3].forEach(typeNum => {
+        const sectionQs = currentExamData.filter(q => q.t === typeNum);
+        if (sectionQs.length === 0) return;
+        
+        const sectionTotalPts = sysSettings.pts[typeNum];
+        totalPossibleScore += sectionTotalPts;
+        
+        let correctCount = 0;
+        sectionQs.forEach(q => {
+            if (q.t === 1 || q.t === 2) {
+                const userAns = currentAnswers[q.n];
+                const correctAns = q.t === 1 ? `o${q.a}` : q.a.toString();
+                if (userAns === correctAns) correctCount++;
+            } else if (q.t === 3) {
+                if (currentSAStatus[q.n] === true) correctCount++;
+            }
+        });
+        
+        const sectionEarned = (correctCount / sectionQs.length) * sectionTotalPts;
+        totalEarnedScore += sectionEarned;
+    });
+
+    document.getElementById("scoreBoard").innerHTML = `🏁 測驗結束！您的總得分：<strong>${Math.round(totalEarnedScore * 100) / 100} / ${Math.round(totalPossibleScore * 100) / 100}</strong>`;
+}
+
+function lockAndHighlight(n, selectedVal, correctVal, isCorrect) {
+    const card = document.getElementById(`qcard_${n}`);
+    card.classList.add(isCorrect ? 'answered-correct' : 'answered-incorrect');
+    const inputs = document.querySelectorAll(`input[name="ans_${n}"]`);
+    inputs.forEach(input => {
+        input.disabled = true;
+        const lbl = document.getElementById(`lbl_${n}_${input.value}`);
+        lbl.classList.add('disabled');
+        if (input.value === correctVal) lbl.classList.add('is-correct');
+        else if (input.value === selectedVal && !isCorrect) lbl.classList.add('is-incorrect');
+    });
+}
+
+function toggleExp(n) {
+    const box = document.getElementById(`exp_${n}`);
+    const btn = document.querySelector(`#qcard_${n} .toggle-exp-btn`);
+    box.classList.toggle('show');
+    btn.innerText = box.classList.contains('show') ? '隱藏詳解' : '查看詳解';
+}
+function forceShowExp(n) {
+    const box = document.getElementById(`exp_${n}`);
+    const btn = document.querySelector(`#qcard_${n} .toggle-exp-btn`);
+    if (!box.classList.contains('show')) { box.classList.add('show'); btn.innerText = '隱藏詳解'; }
+}
+
+// ==========================================
+// 7. 初始化與事件綁定
+// ==========================================
+document.getElementById('btnGenerate').addEventListener('click', generateExam);
+document.getElementById('themeSelect').addEventListener('change', (e) => { applyTheme(e.target.value); saveSettings(); });
+
+document.getElementById('cfg_mode').addEventListener('change', (e) => {
+    if (e.target.value === 'all') {
+        sysSettings.counts[1] = parseInt(document.getElementById('cfg_t1').value)||0;
+        sysSettings.counts[2] = parseInt(document.getElementById('cfg_t2').value)||0;
+        sysSettings.counts[3] = parseInt(document.getElementById('cfg_t3').value)||0;
+    }
+    updateCountUI();
+    saveSettings();
+});
+
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { if(document.getElementById('themeSelect').value === 'auto') applyTheme('auto'); });
+
+document.getElementById('btnClearSettings').addEventListener('click', () => {
+    if(confirm("確定恢復設定預設值？")) { localStorage.removeItem(KEY_SETTINGS); initStorage(); }
+});
+document.getElementById('btnClearHistory').addEventListener('click', () => {
+    if(confirm("警告：將清除所有答題歷史，確定？")) { localStorage.removeItem(KEY_HISTORY); userHistory = {}; alert("已清除"); }
+});
+
+initStorage();
+</script>
+</body>
+</html>
